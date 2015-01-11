@@ -1,0 +1,48 @@
+html {
+	min-height: 100%;
+}
+
+body {
+	background-color: #303030;
+	min-height: 100%;
+}
+
+h1 {
+	text-align: center;
+	color: #B32C2C;
+}
+
+.col-xs-12 {
+	height: 600px; /*Delete after content added*/
+	padding: 30px; /* Gap between the cards */
+}
+.inner {
+	width: 100%;
+	height: 100%;
+	border: 5px solid black;
+	border-radius: 10px;
+	background: -webkit-linear-gradient(#B32C2C, #000000); /* For Safari 5.1 to 6.0 */
+	background: -o-linear-gradient(#B32C2C, #000000); /* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(#B32C2C, #000000); /* For Firefox 3.6 to 15 */
+	background: linear-gradient(#B32C2C, #000000); /* Standard syntax */
+}
+
+.inner:hover {
+	border: 5px solid #B32C2C;
+	cursor: pointer;
+}
+
+.inner h2 {
+	text-align: center;
+}
+
+.img-container img{
+	max-height: 250px;
+	display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#pagination-nav {
+	text-align: center;
+}
