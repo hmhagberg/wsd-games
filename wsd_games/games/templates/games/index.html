@@ -45,7 +45,7 @@
 						</li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
-						<li><a href="#">Sign In</a></li>
+						<li data-toggle="modal" data-target="#signInModal"><a href="#">Sign In</a></li>
 					</ul>
 					<form class="navbar-form navbar-right" role="search">
 						<div class="form-group">
@@ -55,17 +55,84 @@
 					</form>
 				</div><!-- /.navbar-collapse -->
 			</div><!-- /.container-fluid -->
+			<div class="modal fade" id="signInModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h4 class="modal-title">Sign In</h4>
+						</div>
+						<div class="modal-body">
+							<form>
+								<input type="text" name="username" placeholder="Username">
+								<br><br>
+								<input type="password" name="password" placeholder="Password">
+								<br><br>
+								<input type="checkbox" name="remember" value="remember">Remember me
+							</form>
+							<br>
+							<a data-dismiss="modal" data-toggle="modal" data-target="#signUpModal">Create an account</a>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-primary">Sign In</button>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+			<div class="modal fade" id="signUpModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h4 class="modal-title">Sign Up</h4>
+						</div>
+						<div class="modal-body">
+							<form>
+								<input type="text" name="username" placeholder="Username">
+								<br><br>
+								<input type="text" name="email" placeholder="Email">
+								<br><br>
+								<input type="password" name="password" placeholder="Password">
+							</form>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-primary">Sign Un</button>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
 		</nav>
 		<h1>WSD-Games</h1>
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-xs-12 col-sm-6 col-md-3 closed">
-					<div class="inner">
+					<div class="inner" data-toggle="modal" data-target="#modal1">
 						<h2>Worm game</h2>
 						<div class="img-container">
 							<img src="{% static 'games/worm.jpg' %}" class="img-responsive" alt="worm image">
 						</div>
 					</div>
+					<div class="modal fade" id="modal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+									<h4 class="modal-title">Worm Game</h4>
+								</div>
+								<div class="modal-body">
+									<div class="img-container">
+										<img src="{% static 'games/worm.jpg' %}" class="img-responsive img-circle" alt="worm image">
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+									<button type="button" class="btn btn-primary">Buy Game</button>
+								</div>
+							</div><!-- /.modal-content -->
+						</div><!-- /.modal-dialog -->
+					</div><!-- /.modal -->
 				</div>
 				<div class="col-xs-12 col-sm-6 col-md-3 closed">
 					<div class="inner">
