@@ -7,6 +7,7 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'games/login.html'}),
 
     url(r'^games/$', 'games.views.games_list'),
     url(r'^games/([a-z0-9\-])$', 'games.views.game'),

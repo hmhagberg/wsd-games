@@ -5,7 +5,7 @@ from django.http import Http404
 
 # Create your views here.
 def home(request):
-	return render_to_response('games/index.html')
+    return render_to_response('games/index.html')
 
 def games_list(request):
     raise Http404
