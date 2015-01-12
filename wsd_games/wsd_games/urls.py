@@ -13,4 +13,7 @@ urlpatterns = patterns('',
 
     url(r'^games/categories$', 'games.views.categories_list'),
     url(r'^games/categories/([a-z0-9\-])$', 'games.views.category'),
+
+    url(r'^games/developers$', 'games.views.developers_list'),
+    url(r'^games/developers/([a-z0-9\-])$', 'games.views.developer'),
 )

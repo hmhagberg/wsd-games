@@ -13,8 +13,14 @@ def games_list(request):
 def categories_list(request):
     raise Http404
 
+def developers_list(request):
+    raise Http404
+
 def game(request, game_slug):
     raise Http404
 
 def category(request, category_slug):
+    raise Http404
+
+def developer(request, developers_slug):
     raise Http404
