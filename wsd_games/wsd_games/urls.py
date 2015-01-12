@@ -7,4 +7,13 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
+
+    url(r'^games/$', 'games.views.games_list'),
+    url(r'^games/([a-z0-9\-])$', 'games.views.game'),
+
+    url(r'^games/categories$', 'games.views.categories_list'),
+    url(r'^games/categories/([a-z0-9\-])$', 'games.views.category'),
+
+    url(r'^games/developers$', 'games.views.developers_list'),
+    url(r'^games/developers/([a-z0-9\-])$', 'games.views.developer'),
 )
