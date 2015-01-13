@@ -19,7 +19,18 @@
         <field type="CharField" name="name">Matopeli</field>
         <field type="TextField" name="description">Hassu matopeli</field>
         <field type="URLField" name="url">www.url.com</field>
-        <field type="URLField" name="image_url">www.image-url.com</field>
+        <field type="URLField" name="image_url">http://www.allaboutworms.com/wp-content/uploads/2013/10/worm-cute-cartoon-flipped.jpg</field>
+        <field to="games.developer" name="developer" rel="ManyToOneRel">1</field>
+        <field to="games.category" name="categories" rel="ManyToManyRel">
+            <object pk="1"></object>
+        </field>
+    </object>
+
+    <object pk="2" model="games.game">
+        <field type="CharField" name="name">Angry Birds</field>
+        <field type="TextField" name="description">Super awesome game!!!</field>
+        <field type="URLField" name="url">www.rovio.com</field>
+        <field type="URLField" name="image_url">http://www.jbgnews.com/wp-content/uploads/2014/10/Angry-Birds-Maker-Rovio-Entertainment-Slashing-130-Jobs.jpg</field>
         <field to="games.developer" name="developer" rel="ManyToOneRel">1</field>
         <field to="games.category" name="categories" rel="ManyToManyRel">
             <object pk="1"></object>
