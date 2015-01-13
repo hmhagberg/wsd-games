@@ -9,7 +9,7 @@ class Player(models.Model):
         ordering = ["name"]
 
     def __str__(self):
-    	return self.name
+        return self.name
 
 
 class Developer(models.Model):
@@ -20,7 +20,8 @@ class Developer(models.Model):
         ordering = ["name"]
 
     def __str__(self):
-    	return self.name
+        return self.name
+
 
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -30,6 +31,7 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Game(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -47,14 +49,14 @@ class Game(models.Model):
 
 
 class Ownership(models.Model):
-    RATING_OPTIONS = ((1,1),(2,2),(3,3),(4,4),(5,5),)
+    RATING_OPTIONS = ((1, 1), (2, 2), (3, 3), (4, 4), (5, 5),)
     game = models.ForeignKey(Game)
     player = models.ForeignKey(Player, related_name='ownerships')
     highscore = models.PositiveIntegerField(default=0)
     rating = models.PositiveIntegerField(choices=RATING_OPTIONS)
 
     def __str__(self):
-        return player.name+" owns "+game.name
+        return player.name + " owns " + game.name
 
     def set_new_score(new_score):
         """Returns True if the given score is a new highscore"""

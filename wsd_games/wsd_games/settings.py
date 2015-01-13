@@ -82,3 +82,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# URL where users are redirected after login
+# TODO: Set this to something sensible
+LOGIN_REDIRECT_URL = '/'
