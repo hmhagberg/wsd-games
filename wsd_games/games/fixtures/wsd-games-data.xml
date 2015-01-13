@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<django-objects version="1.0">
+
+    <object pk="1" model="games.player">
+        <field type="CharField" name="name">Pekka Pelaaja</field>
+        <field type="EmailField" name="email">pekka@pelimies.fi</field>
+    </object>
+
+    <object pk="1" model="games.developer">
+        <field type="CharField" name="name">Pelifirma Oy</field>
+        <field type="EmailField" name="email">noreply@pelifirma.com</field>
+    </object>
+
+    <object pk="1" model="games.category">
+        <field type="CharField" name="name">Äksöni</field>
+    </object>
+
+    <object pk="1" model="games.game">
+        <field type="CharField" name="name">Matopeli</field>
+        <field type="TextField" name="description">Hassu matopeli</field>
+        <field type="URLField" name="url">www.url.com</field>
+        <field type="URLField" name="image_url">www.image-url.com</field>
+        <field to="games.developer" name="developer" rel="ManyToOneRel">1</field>
+        <field to="games.category" name="categories" rel="ManyToManyRel">
+            <object pk="1"></object>
+        </field>
+    </object>
+
+</django-objects>
