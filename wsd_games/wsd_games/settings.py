@@ -83,6 +83,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# URL where users are redirected after login
-# TODO: Set this to something sensible
+# TODO: Change these to appropriate values after authentication is implemented
+LOGIN_URL = '/login/'
+LOGOUT_URL = '/logout/'
 LOGIN_REDIRECT_URL = '/'

@@ -2,7 +2,9 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.http import Http404
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import authenticate, login
+
+from games.forms import SignupForm
 
 
 def home(request):
@@ -10,13 +12,19 @@ def home(request):
 
 
 def signup(request):
+    """
+    Register a new user and log him in if registration was succesful.
+    """
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = SignupForm(request.POST)  # SignupForm handles fields and saving the model
         if form.is_valid():
             form.save()
+            new_user = authenticate(username=request.POST["username"], password=request.POST["password1"])
+            if new_user is not None:
+                login(request, new_user)
             return HttpResponseRedirect('..')  # TODO: Redirect user to confirmation page
     else:
-        form = UserCreationForm()
+        form = SignupForm()
     return render(request, "games/signup.html", {'form': form, })
 
 

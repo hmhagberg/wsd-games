@@ -6,6 +6,7 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'games/login.html'}),
+    url(r'^logout/$', 'django.contrib.auth.views.logout'),  # TODO: Logout confirmation template?
     url(r'^signup/$', 'games.views.signup'),
 
     url(r'^games/$', 'games.views.games_list'),
