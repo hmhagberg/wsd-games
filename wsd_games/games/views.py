@@ -2,30 +2,56 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.http import Http404
-from games.models import Game
+from games.models import *
 
 # Create your views here.
 def home(request):
 	try:
 		games = Game.objects.all()
-	except Games.DoesNotExist:
+		categories = Category.objects.all()
+	except Game.DoesNotExist:
 		raise Http404
-	return render_to_response('games/base_grid_card.html', {'games': games})
+	return render_to_response('games/base_grid_gameCard.html', {'games': games, 'categories': categories})
 
 def games_list(request):
     raise Http404
 
 def categories_list(request):
-    raise Http404
+	try:
+		categories = Category.objects.all()
+	except Category.DoesNotExist:
+		raise Http404
+	return render_to_response('games/base_grid_categoryCard.html', {'categories': categories})
 
 def developers_list(request):
-    raise Http404
+	try:
+		developers = Developer.objects.all()
+		categories = Category.objects.all()
+	except Developer.DoesNotExist:
+		raise Http404
+	return render_to_response('games/base_grid_developerCard.html', {'developers': developers, 'categories': categories})
 
 def game(request, game_slug):
-    raise Http404
+	try:
+		game = Game.objects.get(id = game_slug)
+		categories = Category.objects.all()
+	except Game.DoesNotExist:
+		raise Http404
+	return render_to_response('games/base_game.html', {'game': game, 'categories': categories})
 
 def category(request, category_slug):
-    raise Http404
+	try:
+		category = Category.objects.get(id = category_slug)
+		games = Game.objects.all()
+		categories = Category.objects.all()
+	except Category.DoesNotExist:
+		raise Http404
+	return render_to_response('games/base_grid_gameCard.html', {'category': category, 'games': games, 'categories': categories})
 
 def developer(request, developers_slug):
-    raise Http404
+	try:
+		developer = Developer.objects.get(id = developers_slug)
+		categories = Category.objects.all()
+	except Developer.DoesNotExist:
+		raise Http404
+	return render_to_response('games/base_developer.html', {'developer': developer, 'categories': categories})

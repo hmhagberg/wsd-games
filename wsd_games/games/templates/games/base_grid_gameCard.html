@@ -1,0 +1,45 @@
+{% extends "games/base_grid.html" %}
+
+{% load staticfiles %}
+
+{% block header %}{{category.name}} Games{% endblock %}
+
+{% block cards %}
+{% for game in games %}
+<div class="col-xs-12 col-sm-6 col-md-3 ">
+	<div class="inner" data-toggle="modal" data-target="#modal{{game.id}}">
+		<h2>{{game.name}}</h2>
+		<div class="img-container">
+			<img src="{{game.image_url}}" class="img-responsive img-circle" alt="{{game.name}} image">
+		</div>
+		<p>{{game.description}}</p>
+		<p>{{game.url}}</p>
+		<p><a href="{% url 'games.views.developer' game.developer.id %}">{{game.developer}}</a></p>
+		<p>{% for category in game.categories.all %}<a href="{% url 'games.views.category' category.id %}">{{category}}</a> | {% endfor %}</p>
+	</div>
+	<div class="modal fade" id="modal{{game.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">{{game.name}}</h4>
+				</div>
+				<div class="modal-body">
+					<div class="img-container">
+						<img src="{{game.image_url}}" class="img-responsive img-circle" alt="{{game.name}} image">
+					</div>
+					<p>{{game.description}}</p>
+					<p>{{game.url}}</p>
+					<p><a href="{% url 'games.views.developer' game.developer.id %}">{{game.developer}}</a></p>
+					<p>{% for category in game.categories.all %}<a href="{% url 'games.views.category' category.id %}">{{category}}</a> | {% endfor %}</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary">Buy Game</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+</div>
+{% endfor %}
+{% endblock %}

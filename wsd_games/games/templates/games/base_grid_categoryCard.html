@@ -1,0 +1,21 @@
+{% extends "games/base_grid.html" %}
+
+{% load staticfiles %}
+
+{% block header %}Categories{% endblock %}
+
+{% block cards %}
+{% for category in categories %}
+<div class="col-xs-12 col-sm-6 col-md-3 ">
+	<a href="{% url 'games.views.category' category.id %}">
+		<div class="inner">
+			<h2>{{category.name}}</h2>
+			<div class="img-container">
+				<img src="http://rammb.cira.colostate.edu/dev/hillger/WSD_logo.gif" class="img-responsive img-circle" alt="{{category.name}} image">
+			</div>
+			<p>Category description here</p>
+		</div>
+	</a>
+</div>
+{% endfor %}
+{% endblock %}
