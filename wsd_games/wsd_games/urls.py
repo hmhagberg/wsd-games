@@ -9,12 +9,12 @@ urlpatterns = patterns('',
     url(r'^logout/$', 'django.contrib.auth.views.logout'),  # TODO: Logout confirmation template?
     url(r'^signup/$', 'games.views.signup'),
 
+    url(r'^games/categories[/]?$', 'games.views.categories_list'),  # FIXME: HACK [/]?
+    url(r'^games/categories/([a-z0-9\-]+)$', 'games.views.category'),
+
+    url(r'^games/developers[/]?$', 'games.views.developers_list'),
+    url(r'^games/developers/([a-z0-9\-]+)$', 'games.views.developer'),
+
     url(r'^games/$', 'games.views.games_list'),
-    url(r'^games/([a-z0-9\-])$', 'games.views.game'),
-
-    url(r'^games/categories$', 'games.views.categories_list'),
-    url(r'^games/categories/([a-z0-9\-])$', 'games.views.category'),
-
-    url(r'^games/developers$', 'games.views.developers_list'),
-    url(r'^games/developers/([a-z0-9\-])$', 'games.views.developer'),
+    url(r'^games/([a-z0-9\-]+)$', 'games.views.game'),
 )

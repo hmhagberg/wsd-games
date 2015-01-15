@@ -13,9 +13,15 @@
 			<img src="{{game.image_url}}" class="img-responsive img-circle" alt="{{game.name}} image">
 		</div>
 		<p>{{game.description}}</p>
+<<<<<<< HEAD
 		<p>{{game.url}}</p>
 		<p><a href="{% url 'games.views.developer' game.developer.slug %}">{{game.developer}}</a></p>
 		<p>{% for category in game.categories.all %}<a href="{% url 'games.views.category' category.slug %}">{{category}}</a> | {% endfor %}</p>
+=======
+		<p>{{game.name}}</p>
+		<p><a href="{% url 'games.views.developer' game.developer.id %}">{{game.developer}}</a></p>
+		<p>{% for category in game.categories.all %}<a href="{% url 'games.views.category' category.id %}">{{category}}</a> | {% endfor %}</p>
+>>>>>>> 48ff810a15a771b58d6063a57c8aa0d8efc1cb1d
 	</div>
 	<div class="modal fade" id="modal{{game.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
