@@ -13,8 +13,9 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Category',
             fields=[
-                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=255, unique=True)),
+                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
+                ('name', models.CharField(unique=True, max_length=255)),
+                ('slug', models.SlugField()),
             ],
             options={
                 'ordering': ['name'],
@@ -24,8 +25,9 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Developer',
             fields=[
-                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=255, unique=True)),
+                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
+                ('name', models.CharField(unique=True, max_length=255)),
+                ('slug', models.SlugField()),
                 ('email', models.EmailField(max_length=75)),
             ],
             options={
@@ -36,11 +38,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Game',
             fields=[
-                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=255, unique=True)),
+                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
+                ('name', models.CharField(unique=True, max_length=255)),
+                ('slug', models.SlugField()),
                 ('description', models.TextField()),
                 ('url', models.URLField()),
-                ('image_url', models.URLField(default='', blank=True)),
+                ('image_url', models.URLField(blank=True, default='')),
                 ('categories', models.ManyToManyField(related_name='category_games', to='games.Category')),
                 ('developer', models.ForeignKey(related_name='developers_games', to='games.Developer')),
             ],
@@ -52,7 +55,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Ownership',
             fields=[
-                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
                 ('highscore', models.PositiveIntegerField(default=0)),
                 ('rating', models.PositiveIntegerField(choices=[(1, 1), (2, 2), (3, 3), (4, 4), (5, 5)])),
                 ('game', models.ForeignKey(to='games.Game')),
@@ -64,8 +67,9 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Player',
             fields=[
-                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=255, unique=True)),
+                ('id', models.AutoField(primary_key=True, auto_created=True, verbose_name='ID', serialize=False)),
+                ('name', models.CharField(unique=True, max_length=255)),
+                ('slug', models.SlugField()),
                 ('email', models.EmailField(max_length=75)),
             ],
             options={
