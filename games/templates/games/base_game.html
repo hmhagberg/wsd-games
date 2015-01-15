@@ -3,3 +3,27 @@
 {% load staticfiles %}
 
 {% block header %}{{game.name}}{% endblock %}
+
+{% block content %}
+<script>
+    /* global $ */
+    $(document).ready(function() {
+        'use strict';
+        $(window).on('message', function(evt) {
+            var data = evt.originalEvent.data;
+            console.log(data);
+            if (data.messageType === "SCORE") {
+                console.log(data);
+            }
+            else if (data.messageType === "SAVE") {
+                console.log(data.gameState);
+            }
+
+            else if (data.messageType === "LOAD_REQUEST") {
+                console.log(data);
+            }
+        });
+    });
+</script>
+<iframe src="http://webcourse.cs.hut.fi/game.html"></iframe>
+{% endblock %}
