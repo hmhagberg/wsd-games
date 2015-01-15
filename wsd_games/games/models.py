@@ -1,8 +1,21 @@
 from django.db import models
+from django.template.defaultfilters import slugify
 
 
-class Player(models.Model):
+class SlugifyModel(models.Model):
     name = models.CharField(max_length=255, unique=True)
+    slug = models.SlugField()
+
+    class Meta:
+        abstract = True
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.slug = slugify(self.name)
+        super(SlugifyModel, self).save(*args, **kwargs)
+
+
+class Player(SlugifyModel):
     email = models.EmailField()
 
     class Meta:
@@ -12,8 +25,7 @@ class Player(models.Model):
         return self.name
 
 
-class Developer(models.Model):
-    name = models.CharField(max_length=255, unique=True)
+class Developer(SlugifyModel):
     email = models.EmailField()
 
     class Meta:
@@ -23,8 +35,7 @@ class Developer(models.Model):
         return self.name
 
 
-class Category(models.Model):
-    name = models.CharField(max_length=255, unique=True)
+class Category(SlugifyModel):
 
     class Meta:
         ordering = ["name"]
@@ -33,8 +44,7 @@ class Category(models.Model):
         return self.name
 
 
-class Game(models.Model):
-    name = models.CharField(max_length=255, unique=True)
+class Game(SlugifyModel):
     description = models.TextField()
     url = models.URLField()
     image_url = models.URLField(blank=True, default='')
@@ -43,10 +53,6 @@ class Game(models.Model):
 
     class Meta:
         ordering = ["name"]
-
-    @property
-    def slug(self):
-        return self.name.lower()  # TODO: Convert name to slug properly (special chars, whitespace etc)
 
     def __str__(self):
         return self.name

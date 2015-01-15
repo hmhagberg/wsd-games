@@ -13,7 +13,7 @@
 			<img src="{{game.image_url}}" class="img-responsive img-circle" alt="{{game.name}} image">
 		</div>
 		<p>{{game.description}}</p>
-		<p>{{game.url}}</p>
+		<p>{{game.name}}</p>
 		<p><a href="{% url 'games.views.developer' game.developer.id %}">{{game.developer}}</a></p>
 		<p>{% for category in game.categories.all %}<a href="{% url 'games.views.category' category.id %}">{{category}}</a> | {% endfor %}</p>
 	</div>

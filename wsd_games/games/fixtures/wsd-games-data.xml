@@ -3,63 +3,76 @@
 
     <object pk="1" model="games.player">
         <field type="CharField" name="name">Pekka Pelaaja</field>
+        <field type="SlugField" name="slug">pekka-pelaaja</field>
         <field type="EmailField" name="email">pekka@pelimies.fi</field>
     </object>
 
     <object pk="2" model="games.player">
         <field type="CharField" name="name">Simo Simppa</field>
+        <field type="SlugField" name="slug">simo-simppa</field>
         <field type="EmailField" name="email">simo@Simppa.fi</field>
     </object>
 
     <object pk="3" model="games.player">
         <field type="CharField" name="name">Jesse Jethro</field>
+        <field type="SlugField" name="slug">jesse-jethro</field>
         <field type="EmailField" name="email">Jesse@Jethro.fi</field>
     </object>
 
     <object pk="1" model="games.developer">
         <field type="CharField" name="name">Pelifirma Oy</field>
+        <field type="SlugField" name="slug">pelifirma-oy</field>
         <field type="EmailField" name="email">noreply@pelifirma.com</field>
     </object>
 
     <object pk="2" model="games.developer">
         <field type="CharField" name="name">Rovio Oy</field>
+        <field type="SlugField" name="slug">rovio-oy</field>
         <field type="EmailField" name="email">noreply@rovio.com</field>
     </object>
 
     <object pk="3" model="games.developer">
         <field type="CharField" name="name">Supercell Oy</field>
+        <field type="SlugField" name="slug">supercell-oy</field>
         <field type="EmailField" name="email">noreply@supercell.com</field>
     </object>
 
     <object pk="4" model="games.developer">
         <field type="CharField" name="name">Valve Oy</field>
+        <field type="SlugField" name="slug">valve-oy</field>
         <field type="EmailField" name="email">noreply@valve.com</field>
     </object>
 
     <object pk="4" model="games.developer">
         <field type="CharField" name="name">Rockstar Oy</field>
+        <field type="SlugField" name="slug">rockstar-oy</field>
         <field type="EmailField" name="email">noreply@rockstar.com</field>
     </object>
 
     <object pk="5" model="games.developer">
         <field type="CharField" name="name">Kings Oy</field>
+        <field type="SlugField" name="slug">kings-oy</field>
         <field type="EmailField" name="email">noreply@kings.com</field>
     </object>
 
     <object pk="1" model="games.category">
         <field type="CharField" name="name">Action</field>
+        <field type="SlugField" name="slug">action</field>
     </object>
 
     <object pk="2" model="games.category">
         <field type="CharField" name="name">Puzzle</field>
+        <field type="SlugField" name="slug">puzzle</field>
     </object>
 
     <object pk="3" model="games.category">
         <field type="CharField" name="name">Adventure</field>
+        <field type="SlugField" name="slug">adventure</field>
     </object>
 
     <object pk="4" model="games.category">
         <field type="CharField" name="name">Arcade</field>
+        <field type="SlugField" name="slug">arcade</field>
     </object>
 
     <object pk="1" model="games.game">
@@ -67,6 +80,7 @@
         <field type="TextField" name="description">Very funny worm game with 10 different levels.</field>
         <field type="URLField" name="url">www.url.com</field>
         <field type="URLField" name="image_url">http://www.allaboutworms.com/wp-content/uploads/2013/10/worm-cute-cartoon-flipped.jpg</field>
+        <field type="SlugField" name="slug">worm-game</field>
         <field to="games.developer" name="developer" rel="ManyToOneRel">2</field>
         <field to="games.category" name="categories" rel="ManyToManyRel">
             <object pk="1"></object>
@@ -78,6 +92,7 @@
         <field type="TextField" name="description">Super awesome game!!!</field>
         <field type="URLField" name="url">www.rovio.com</field>
         <field type="URLField" name="image_url">http://www.jbgnews.com/wp-content/uploads/2014/10/Angry-Birds-Maker-Rovio-Entertainment-Slashing-130-Jobs.jpg</field>
+        <field type="SlugField" name="slug">angry-birds</field>
         <field to="games.developer" name="developer" rel="ManyToOneRel">1</field>
         <field to="games.category" name="categories" rel="ManyToManyRel">
             <object pk="1"></object>
@@ -90,6 +105,7 @@
         <field type="TextField" name="description">Awesome game</field>
         <field type="URLField" name="url">www.crash.com</field>
         <field type="URLField" name="image_url">http://fc09.deviantart.net/fs43/f/2009/065/1/8/crash_bandicoot_by_leomitsu.jpg</field>
+        <field type="SlugField" name="slug">crash-bandicoot</field>
         <field to="games.developer" name="developer" rel="ManyToOneRel">3</field>
         <field to="games.category" name="categories" rel="ManyToManyRel">
             <object pk="2"></object>
@@ -103,6 +119,7 @@
         <field type="TextField" name="description">Very difficult game for kids</field>
         <field type="URLField" name="url">www.candycrush.com</field>
         <field type="URLField" name="image_url">http://candycrush-cheats.com/wp-content/uploads/2013/12/wheel1.png</field>
+        <field type="SlugField" name="slug">candy-crush</field>
         <field to="games.developer" name="developer" rel="ManyToOneRel">4</field>
         <field to="games.category" name="categories" rel="ManyToManyRel">
             <object pk="4"></object>
@@ -110,10 +127,11 @@
     </object>
 
     <object pk="5" model="games.game">
-        <field type="CharField" name="name">Spyro adventures</field>
+        <field type="CharField" name="name">Spyro Adventures</field>
         <field type="TextField" name="description">Go for an adventure with a crazy dragon</field>
         <field type="URLField" name="url">www.spyro.com</field>
         <field type="URLField" name="image_url">http://www.skylanders.com/content/dam/atvi/skylanders/base/explore-skylands/explore-ssa/spyro.png</field>
+        <field type="SlugField" name="slug">spyro-adventures</field>
         <field to="games.developer" name="developer" rel="ManyToOneRel">5</field>
         <field to="games.category" name="categories" rel="ManyToManyRel">
             <object pk="2"></object>
@@ -126,6 +144,7 @@
         <field type="TextField" name="description">Play the legendary Nintendo game online with your friends</field>
         <field type="URLField" name="url">www.mario.com</field>
         <field type="URLField" name="image_url">http://i1.ytimg.com/i/j99SVibF8DppNBZAdbBiBw/1.jpg</field>
+        <field type="SlugField" name="slug">super-mario</field>
         <field to="games.developer" name="developer" rel="ManyToOneRel">5</field>
         <field to="games.category" name="categories" rel="ManyToManyRel">
             <object pk="1"></object>
@@ -140,6 +159,7 @@
         <field type="TextField" name="description">Slash some fruits</field>
         <field type="URLField" name="url">www.ninja.com</field>
         <field type="URLField" name="image_url">http://3.bp.blogspot.com/-yA3Cchia2WA/UNg69Dcp2kI/AAAAAAAAANc/gWjQUnvzf-U/s1600/fruit-ninja1.png</field>
+        <field type="SlugField" name="slug">fruit-ninja</field>
         <field to="games.developer" name="developer" rel="ManyToOneRel">5</field>
         <field to="games.category" name="categories" rel="ManyToManyRel">
             <object pk="3"></object>
@@ -152,6 +172,7 @@
         <field type="TextField" name="description">Make your fantasy come true</field>
         <field type="URLField" name="url">www.final.com</field>
         <field type="URLField" name="image_url">http://cdn.segmentnext.com/wp-content/uploads/2014/11/Final-Fantasy-Explorers.png</field>
+        <field type="SlugField" name="slug">final-fantasy-xvi</field>
         <field to="games.developer" name="developer" rel="ManyToOneRel">3</field>
         <field to="games.category" name="categories" rel="ManyToManyRel">
             <object pk="4"></object>
@@ -163,6 +184,7 @@
         <field type="TextField" name="description">Play the most awesome game in the the world</field>
         <field type="URLField" name="url">www.cod.com</field>
         <field type="URLField" name="image_url">http://www.luxeimprints.com/wp-content/uploads/2013/10/COD-Ghost.jpg</field>
+        <field type="SlugField" name="slug">call-of-duty</field>
         <field to="games.developer" name="developer" rel="ManyToOneRel">1</field>
         <field to="games.category" name="categories" rel="ManyToManyRel">
             <object pk="4"></object>
@@ -175,6 +197,7 @@
         <field type="TextField" name="description">Race your car to victory</field>
         <field type="URLField" name="url">www.nfs.com</field>
         <field type="URLField" name="image_url">http://cdn.www.needforspeed.com/sites/default/files/imagecache/car_main/car/images/moviemustang3_10.jpg</field>
+        <field type="SlugField" name="slug">need-for-speed</field>
         <field to="games.developer" name="developer" rel="ManyToOneRel">2</field>
         <field to="games.category" name="categories" rel="ManyToManyRel">
             <object pk="1"></object>
@@ -186,6 +209,7 @@
         <field type="TextField" name="description">Shoot some terrorists</field>
         <field type="URLField" name="url">www.cs.com</field>
         <field type="URLField" name="image_url">http://hizli-torrent.com/dynamic/glry/images45.jpg</field>
+        <field type="SlugField" name="slug">counter-strike</field>
         <field to="games.developer" name="developer" rel="ManyToOneRel">2</field>
         <field to="games.category" name="categories" rel="ManyToManyRel">
             <object pk="3"></object>
@@ -198,6 +222,7 @@
         <field type="TextField" name="description">A game you must play</field>
         <field type="URLField" name="url">www.pokemon.com</field>
         <field type="URLField" name="image_url">http://assets22.pokemon.com/assets/cms2/img/pokedex/full/007.png</field>
+        <field type="SlugField" name="slug">pokemon</field>
         <field to="games.developer" name="developer" rel="ManyToOneRel">4</field>
         <field to="games.category" name="categories" rel="ManyToManyRel">
             <object pk="2"></object>
