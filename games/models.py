@@ -27,6 +27,8 @@ class Player(SlugifyModel):
 
 class Developer(SlugifyModel):
     email = models.EmailField()
+    image_url = models.URLField(blank=True, default='http://rammb.cira.colostate.edu/dev/hillger/WSD_logo.gif')
+    description = models.TextField(default='Developer description')
 
     class Meta:
         ordering = ["name"]
@@ -35,6 +37,8 @@ class Developer(SlugifyModel):
     	return self.name
 
 class Category(SlugifyModel):
+    image_url = models.URLField(blank=True, default='http://rammb.cira.colostate.edu/dev/hillger/WSD_logo.gif')
+    description = models.TextField(default='Category description')
 
     class Meta:
         ordering = ["name"]
@@ -43,9 +47,9 @@ class Category(SlugifyModel):
         return self.name
 
 class Game(SlugifyModel):
-    description = models.TextField()
+    description = models.TextField(default='Game description')
     url = models.URLField()
-    image_url = models.URLField(blank=True, default='')
+    image_url = models.URLField(blank=True, default='http://rammb.cira.colostate.edu/dev/hillger/WSD_logo.gif')
     developer = models.ForeignKey(Developer, related_name='developers_games')
     categories = models.ManyToManyField(Category, related_name='category_games')
 

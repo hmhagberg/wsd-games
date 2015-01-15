@@ -29,50 +29,59 @@
         <field type="CharField" name="name">Rovio Oy</field>
         <field type="SlugField" name="slug">rovio-oy</field>
         <field type="EmailField" name="email">noreply@rovio.com</field>
+        <field type="URLField" name="image_url">http://phandroid.s3.amazonaws.com/wp-content/uploads/2011/09/Rovio_Academy_logo-150x150.png</field>
     </object>
 
     <object pk="3" model="games.developer">
         <field type="CharField" name="name">Supercell Oy</field>
         <field type="SlugField" name="slug">supercell-oy</field>
         <field type="EmailField" name="email">noreply@supercell.com</field>
+        <field type="URLField" name="image_url">https://unityads.unity3d.com/assets/img/logo-supercell.png</field>
     </object>
 
     <object pk="4" model="games.developer">
         <field type="CharField" name="name">Valve Oy</field>
         <field type="SlugField" name="slug">valve-oy</field>
         <field type="EmailField" name="email">noreply@valve.com</field>
+        <field type="URLField" name="image_url">http://combineoverwiki.net/images/thumb/6/6a/Head_anim.gif/200px-Head_anim.gif</field>
     </object>
 
     <object pk="4" model="games.developer">
         <field type="CharField" name="name">Rockstar Oy</field>
         <field type="SlugField" name="slug">rockstar-oy</field>
         <field type="EmailField" name="email">noreply@rockstar.com</field>
+        <field type="URLField" name="image_url">http://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Rockstar_Games_logo.svg/2000px-Rockstar_Games_logo.svg.png</field>
     </object>
 
     <object pk="5" model="games.developer">
-        <field type="CharField" name="name">Kings Oy</field>
-        <field type="SlugField" name="slug">kings-oy</field>
-        <field type="EmailField" name="email">noreply@kings.com</field>
+        <field type="CharField" name="name">King Oy</field>
+        <field type="SlugField" name="slug">king-oy</field>
+        <field type="EmailField" name="email">noreply@king.com</field>
+        <field type="URLField" name="image_url">http://www.thedrum.com/uploads/drum_basic_article/105567/main_images/k2_0.png</field>
     </object>
 
     <object pk="1" model="games.category">
         <field type="CharField" name="name">Action</field>
         <field type="SlugField" name="slug">action</field>
+        <field type="URLField" name="image_url">http://www.gamekyo.com/Webmasters/Images/8169620091020_225701_7_big.jpg</field>
     </object>
 
     <object pk="2" model="games.category">
         <field type="CharField" name="name">Puzzle</field>
         <field type="SlugField" name="slug">puzzle</field>
+        <field type="URLField" name="image_url">http://www.psdgraphics.com/file/jigsaw-puzzle-piece.jpg</field>
     </object>
 
     <object pk="3" model="games.category">
         <field type="CharField" name="name">Adventure</field>
         <field type="SlugField" name="slug">adventure</field>
+        <field type="URLField" name="image_url">http://fc03.deviantart.net/fs71/f/2013/232/e/6/bilbo_baggins_by_otisframpton-d6iys22.jpg</field>
     </object>
 
     <object pk="4" model="games.category">
         <field type="CharField" name="name">Arcade</field>
         <field type="SlugField" name="slug">arcade</field>
+        <field type="URLField" name="image_url">http://arcadeheroes.com/wp-content/uploads/2011/12/331535_220752601333564_220740004668157_507099_1849497045_o.jpg</field>
     </object>
 
     <object pk="1" model="games.game">
