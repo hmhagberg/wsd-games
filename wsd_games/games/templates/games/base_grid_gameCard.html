@@ -2,7 +2,7 @@
 
 {% load staticfiles %}
 
-{% block header %}{{category.name}} Games{% endblock %}
+{% block header %}{{category.name}}{{developer.name}} Games{% endblock %}
 
 {% block cards %}
 {% for game in games %}
