@@ -53,7 +53,7 @@ def developers_list(request):
 
 def game(request, game_slug):
 	try:
-		game = Game.objects.get(id = game_slug)
+		game = Game.objects.get(slug = game_slug)
 		categories = Category.objects.all()
 	except Game.DoesNotExist:
 		raise Http404
@@ -62,7 +62,7 @@ def game(request, game_slug):
 
 def category(request, category_slug):
 	try:
-		category = Category.objects.get(id = category_slug)
+		category = Category.objects.get(slug = category_slug)
 		games = Game.objects.filter(categories = category_slug)
 		categories = Category.objects.all()
 	except Category.DoesNotExist:
@@ -72,7 +72,7 @@ def category(request, category_slug):
 
 def developer(request, developers_slug):
 	try:
-		developer = Developer.objects.get(id = developers_slug)
+		developer = Developer.objects.get(slug = developers_slug)
 		games = Game.objects.filter(developer = developers_slug)
 		categories = Category.objects.all()
 	except Developer.DoesNotExist:

@@ -14,8 +14,8 @@
 		</div>
 		<p>{{game.description}}</p>
 		<p>{{game.url}}</p>
-		<p><a href="{% url 'games.views.developer' game.developer.id %}">{{game.developer}}</a></p>
-		<p>{% for category in game.categories.all %}<a href="{% url 'games.views.category' category.id %}">{{category}}</a> | {% endfor %}</p>
+		<p><a href="{% url 'games.views.developer' game.developer.slug %}">{{game.developer}}</a></p>
+		<p>{% for category in game.categories.all %}<a href="{% url 'games.views.category' category.slug %}">{{category}}</a> | {% endfor %}</p>
 	</div>
 	<div class="modal fade" id="modal{{game.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
@@ -30,8 +30,8 @@
 					</div>
 					<p>{{game.description}}</p>
 					<p>{{game.url}}</p>
-					<p><a href="{% url 'games.views.developer' game.developer.id %}">{{game.developer}}</a></p>
-					<p>{% for category in game.categories.all %}<a href="{% url 'games.views.category' category.id %}">{{category}}</a> | {% endfor %}</p>
+					<p><a href="{% url 'games.views.developer' game.developer.slug %}">{{game.developer}}</a></p>
+					<p>{% for category in game.categories.all %}<a href="{% url 'games.views.category' category.slug %}">{{category}}</a> | {% endfor %}</p>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

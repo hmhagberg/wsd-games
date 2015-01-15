@@ -36,13 +36,13 @@
 							<ul class="dropdown-menu" role="menu">
 								<li><a href="{% url 'games.views.categories_list' %}">All</a></li>
 								{% for category in categories %}
-									<li><a href="{% url 'games.views.category' category.id %}">{{category.name}}</a></li>
+									<li><a href="{% url 'games.views.category' category.slug %}">{{category.name}}</a></li>
 								{% endfor %}
 							</ul>
 						</li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
-						<li data-toggle="modal" data-target="#signInModal"><a href="#">Sign In</a></li>
+						<li><a href="% url 'games.views.signup' %}">Sign In</a></li>
 					</ul>
 					<form class="navbar-form navbar-right" role="search">
 						<div class="form-group">
@@ -52,54 +52,6 @@
 					</form>
 				</div><!-- /.navbar-collapse -->
 			</div><!-- /.container-fluid -->
-			<div class="modal fade" id="signInModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							<h4 class="modal-title">Sign In</h4>
-						</div>
-						<div class="modal-body">
-							<form>
-								<input type="text" name="username" placeholder="Username">
-								<br><br>
-								<input type="password" name="password" placeholder="Password">
-								<br><br>
-								<input type="checkbox" name="remember" value="remember">Remember me
-							</form>
-							<br>
-							<a data-dismiss="modal" data-toggle="modal" data-target="#signUpModal">Create an account</a>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-							<button type="button" class="btn btn-primary">Sign In</button>
-						</div>
-					</div><!-- /.modal-content -->
-				</div><!-- /.modal-dialog -->
-			</div><!-- /.modal -->
-			<div class="modal fade" id="signUpModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							<h4 class="modal-title">Sign Up</h4>
-						</div>
-						<div class="modal-body">
-							<form>
-								<input type="text" name="username" placeholder="Username">
-								<br><br>
-								<input type="text" name="email" placeholder="Email">
-								<br><br>
-								<input type="password" name="password" placeholder="Password">
-							</form>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-							<button type="button" class="btn btn-primary">Sign Un</button>
-						</div>
-					</div><!-- /.modal-content -->
-				</div><!-- /.modal-dialog -->
-			</div><!-- /.modal -->
 		</nav>
 		<div id="content">
 			<h1>{% block header %}WSD-Games{% endblock %}</h1>
