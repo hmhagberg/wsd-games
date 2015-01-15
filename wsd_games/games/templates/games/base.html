@@ -29,7 +29,6 @@
 				<!-- Collect the nav links, forms, and other content for toggling -->
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav">
-						<li><a href="{% url 'games.views.home' %}">Home</a></li>
 						<li><a href="{% url 'games.views.developers_list' %}">Developers</a></li>
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Categories<span class="caret"></span></a>
@@ -42,7 +41,8 @@
 						</li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
-						<li><a href="% url 'games.views.signup' %}">Sign In</a></li>
+						<li><a href="{% url 'games.views.signup' %}">Sign In</a></li>
+						<li><a href="{% url 'django.contrib.auth.views.login' %}">Login</a></li>
 					</ul>
 					<form class="navbar-form navbar-right" role="search">
 						<div class="form-group">
