@@ -56,6 +56,25 @@ def developers_list(request):
 
 
 def game(request, game_slug):
+	try:
+		game = Game.objects.get(slug = game_slug)
+		categories = Category.objects.all()
+	except Game.DoesNotExist:
+		raise Http404
+	return render_to_response('games/base_game.html', {'game': game, 'categories': categories})
+
+
+def category(request, category_slug):
+	try:
+		category = Category.objects.get(slug = category_slug)
+		games = Game.objects.filter(categories = category_slug)
+		categories = Category.objects.all()
+	except Category.DoesNotExist:
+		raise Http404
+	return render_to_response('games/base_grid_gameCard.html', {'category': category, 'games': games, 'categories': categories})
+
+
+def developer(request, developers_slug):
     try:
         game = Game.objects.get(slug=game_slug)
         categories = Category.objects.all()
