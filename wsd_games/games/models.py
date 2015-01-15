@@ -44,6 +44,10 @@ class Game(models.Model):
     class Meta:
         ordering = ["name"]
 
+    @property
+    def slug(self):
+        return self.name.lower()  # TODO: Convert name to slug properly (special chars, whitespace etc)
+
     def __str__(self):
         return self.name
 
@@ -56,12 +60,12 @@ class Ownership(models.Model):
     rating = models.PositiveIntegerField(choices=RATING_OPTIONS)
 
     def __str__(self):
-        return player.name + " owns " + game.name
+        return self.player.name + " owns " + self.game.name
 
-    def set_new_score(new_score):
+    def set_new_score(self, new_score):
         """Returns True if the given score is a new highscore"""
-        if (new_score > highscore):
-            highscore = new_score
+        if new_score > self.highscore:
+            self.highscore = new_score
             self.save()
             return True
         else:
