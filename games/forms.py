@@ -2,6 +2,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.forms import CharField, EmailField
 
+from games.models import Player
+
 
 class SignupForm(UserCreationForm):
     first_name = CharField(max_length=50)
@@ -18,6 +20,9 @@ class SignupForm(UserCreationForm):
         user.first_name = self.cleaned_data["first_name"]
         user.last_name = self.cleaned_data["last_name"]
         user.email = self.cleaned_data["email"]
+        player = Player()
+        player.user_profile = user
         if commit:
             user.save()
+            player.save()
         return user

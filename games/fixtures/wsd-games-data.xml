@@ -1,64 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
 <django-objects version="1.0">
 
-    <object pk="1" model="games.player">
-        <field type="CharField" name="name">Pekka Pelaaja</field>
-        <field type="SlugField" name="slug">pekka-pelaaja</field>
+    <!-- USERS -->
+    <!-- Password for all users is 'test' -->
+
+    <object pk="1" model="auth.user">
+        <field type="CharField" name="username">pekkis</field>
+        <field type="CharField" name="first_name">Pekka</field>
+        <field type="CharField" name="last_name">Pelaaja</field>
         <field type="EmailField" name="email">pekka@pelimies.fi</field>
+        <field type="CharField" name="password">pbkdf2_sha256$12000$VkIGH9LQ8ovW$YXo0BUPHTI43CSaNZ7KqBaO8/AXc/L+19aYXyipoHxw=</field>
+    </object>
+
+    <object pk="2" model="auth.user">
+        <field type="CharField" name="username">s1mppa</field>
+        <field type="CharField" name="first_name">Simo</field>
+        <field type="CharField" name="last_name">Simppa</field>
+        <field type="EmailField" name="email">simo@simppa.fi</field>
+        <field type="CharField" name="password">pbkdf2_sha256$12000$VkIGH9LQ8ovW$YXo0BUPHTI43CSaNZ7KqBaO8/AXc/L+19aYXyipoHxw=</field>
+    </object>
+
+    <object pk="3" model="auth.user">
+        <field type="CharField" name="username">jessemies</field>
+        <field type="CharField" name="first_name">Jesse</field>
+        <field type="CharField" name="last_name">Jethro</field>
+        <field type="EmailField" name="email">jesse@jethro.fi</field>
+        <field type="CharField" name="password">pbkdf2_sha256$12000$VkIGH9LQ8ovW$YXo0BUPHTI43CSaNZ7KqBaO8/AXc/L+19aYXyipoHxw=</field>
+    </object>
+
+    <object pk="4" model="auth.user">
+        <field type="CharField" name="username">pelifirma</field>
+        <field type="CharField" name="first_name">Pelifirma</field>
+        <field type="CharField" name="last_name">Oy</field>
+        <field type="EmailField" name="email">noreply@pelifirma.fi</field>
+        <field type="CharField" name="password">pbkdf2_sha256$12000$VkIGH9LQ8ovW$YXo0BUPHTI43CSaNZ7KqBaO8/AXc/L+19aYXyipoHxw=</field>
+    </object>
+
+    <object pk="5" model="auth.user">
+        <field type="CharField" name="username">rovio</field>
+        <field type="CharField" name="first_name">Rovio</field>
+        <field type="CharField" name="last_name">Oy</field>
+        <field type="EmailField" name="email">noreply@rovio.fi</field>
+        <field type="CharField" name="password">pbkdf2_sha256$12000$VkIGH9LQ8ovW$YXo0BUPHTI43CSaNZ7KqBaO8/AXc/L+19aYXyipoHxw=</field>
+    </object>
+
+    <object pk="6" model="auth.user">
+        <field type="CharField" name="username">supercell</field>
+        <field type="CharField" name="first_name">Supercell</field>
+        <field type="CharField" name="last_name">Oy</field>
+        <field type="EmailField" name="email">noreply@supercell.fi</field>
+        <field type="CharField" name="password">pbkdf2_sha256$12000$VkIGH9LQ8ovW$YXo0BUPHTI43CSaNZ7KqBaO8/AXc/L+19aYXyipoHxw=</field>
+    </object>
+
+    <object pk="7" model="auth.user">
+        <field type="CharField" name="username">valve</field>
+        <field type="CharField" name="first_name">Valve</field>
+        <field type="CharField" name="last_name">Ltd.</field>
+        <field type="EmailField" name="email">noreply@valve.com</field>
+        <field type="CharField" name="password">pbkdf2_sha256$12000$VkIGH9LQ8ovW$YXo0BUPHTI43CSaNZ7KqBaO8/AXc/L+19aYXyipoHxw=</field>
+    </object>
+
+    <object pk="8" model="auth.user">
+        <field type="CharField" name="username">rockstar</field>
+        <field type="CharField" name="first_name">Rockstar</field>
+        <field type="CharField" name="last_name">Inc.</field>
+        <field type="EmailField" name="email">noreply@rockstar.com</field>
+        <field type="CharField" name="password">pbkdf2_sha256$12000$VkIGH9LQ8ovW$YXo0BUPHTI43CSaNZ7KqBaO8/AXc/L+19aYXyipoHxw=</field>
+    </object>
+
+    <object pk="9" model="auth.user">
+        <field type="CharField" name="username">king</field>
+        <field type="CharField" name="first_name">King</field>
+        <field type="CharField" name="last_name">Ltd.</field>
+        <field type="EmailField" name="email">king@kong.bong</field>
+        <field type="CharField" name="password">pbkdf2_sha256$12000$VkIGH9LQ8ovW$YXo0BUPHTI43CSaNZ7KqBaO8/AXc/L+19aYXyipoHxw=</field>
+    </object>
+
+    <!-- PLAYERS -->
+
+    <object pk="1" model="games.player">
+        <field type="SlugField" name="slug">pekkis</field>
+        <field to="auth.user" name="user" rel="OneToOneRel">1</field>
     </object>
 
     <object pk="2" model="games.player">
-        <field type="CharField" name="name">Simo Simppa</field>
-        <field type="SlugField" name="slug">simo-simppa</field>
-        <field type="EmailField" name="email">simo@Simppa.fi</field>
+        <field type="SlugField" name="slug">s1mppa</field>
+        <field to="auth.user" name="user" rel="OneToOneRel">2</field>
     </object>
 
     <object pk="3" model="games.player">
-        <field type="CharField" name="name">Jesse Jethro</field>
-        <field type="SlugField" name="slug">jesse-jethro</field>
-        <field type="EmailField" name="email">Jesse@Jethro.fi</field>
+        <field type="SlugField" name="slug">jessemies</field>
+        <field to="auth.user" name="user" rel="OneToOneRel">3</field>
     </object>
 
+    <!-- DEVELOPERS -->
+
     <object pk="1" model="games.developer">
-        <field type="CharField" name="name">Pelifirma Oy</field>
-        <field type="SlugField" name="slug">pelifirma-oy</field>
-        <field type="EmailField" name="email">noreply@pelifirma.com</field>
+        <field type="SlugField" name="slug">pelifirma</field>
+        <field to="auth.user" name="user" rel="OneToOneRel">4</field>
     </object>
 
     <object pk="2" model="games.developer">
-        <field type="CharField" name="name">Rovio Oy</field>
-        <field type="SlugField" name="slug">rovio-oy</field>
-        <field type="EmailField" name="email">noreply@rovio.com</field>
+        <field type="SlugField" name="slug">rovio</field>
+        <field to="auth.user" name="user" rel="OneToOneRel">5</field>
         <field type="URLField" name="image_url">http://phandroid.s3.amazonaws.com/wp-content/uploads/2011/09/Rovio_Academy_logo-150x150.png</field>
     </object>
 
     <object pk="3" model="games.developer">
-        <field type="CharField" name="name">Supercell Oy</field>
-        <field type="SlugField" name="slug">supercell-oy</field>
-        <field type="EmailField" name="email">noreply@supercell.com</field>
+        <field type="SlugField" name="slug">supercell</field>
+        <field to="auth.user" name="user" rel="OneToOneRel">6</field>
         <field type="URLField" name="image_url">https://unityads.unity3d.com/assets/img/logo-supercell.png</field>
     </object>
 
     <object pk="4" model="games.developer">
-        <field type="CharField" name="name">Valve Oy</field>
-        <field type="SlugField" name="slug">valve-oy</field>
-        <field type="EmailField" name="email">noreply@valve.com</field>
+        <field type="SlugField" name="slug">valve</field>
+        <field to="auth.user" name="user" rel="OneToOneRel">7</field>
         <field type="URLField" name="image_url">http://combineoverwiki.net/images/thumb/6/6a/Head_anim.gif/200px-Head_anim.gif</field>
     </object>
 
     <object pk="4" model="games.developer">
-        <field type="CharField" name="name">Rockstar Oy</field>
-        <field type="SlugField" name="slug">rockstar-oy</field>
-        <field type="EmailField" name="email">noreply@rockstar.com</field>
+        <field type="SlugField" name="slug">rockstar</field>
+        <field to="auth.user" name="user" rel="OneToOneRel">8</field>
         <field type="URLField" name="image_url">http://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Rockstar_Games_logo.svg/2000px-Rockstar_Games_logo.svg.png</field>
     </object>
 
     <object pk="5" model="games.developer">
-        <field type="CharField" name="name">King Oy</field>
-        <field type="SlugField" name="slug">king-oy</field>
-        <field type="EmailField" name="email">noreply@king.com</field>
+        <field type="SlugField" name="slug">king</field>
+        <field to="auth.user" name="user" rel="OneToOneRel">9</field>
         <field type="URLField" name="image_url">http://www.thedrum.com/uploads/drum_basic_article/105567/main_images/k2_0.png</field>
     </object>
+
+    <!-- CATEGORIES -->
 
     <object pk="1" model="games.category">
         <field type="CharField" name="name">Action</field>
@@ -83,6 +155,8 @@
         <field type="SlugField" name="slug">arcade</field>
         <field type="URLField" name="image_url">http://arcadeheroes.com/wp-content/uploads/2011/12/331535_220752601333564_220740004668157_507099_1849497045_o.jpg</field>
     </object>
+
+    <!-- GAMES -->
 
     <object pk="1" model="games.game">
         <field type="CharField" name="name">Worm Game</field>
