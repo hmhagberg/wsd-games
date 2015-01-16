@@ -63,7 +63,14 @@ def game(request, game_slug):
     try:
         game = Game.objects.get(slug = game_slug)
         categories = Category.objects.all()
-        context.update({'game': game, 'categories': categories})
+        ownership_status = "not_owned"
+        if request.user.is_authenticated():
+            if hasattr(request.user, "player") and request.user.player.owns_game(game):
+                ownership_status = "owned"
+            elif game.developer == request.user.developer:
+                ownership_status = "developer"
+
+        context.update({'game': game, 'categories': categories, 'ownership_status': ownership_status})
     except Game.DoesNotExist:
         raise Http404
     return render_to_response('games/base_game.html', context, context_instance = RequestContext(request))

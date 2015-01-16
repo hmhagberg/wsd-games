@@ -24,6 +24,14 @@
             }
         });
     });
+
 </script>
-<iframe src="http://webcourse.cs.hut.fi/game.html"></iframe>
+
+    {% if ownership_status == "owned" %}
+        <iframe src="http://webcourse.cs.hut.fi/game.html"></iframe>
+    {% elif ownership_status == "developer"  %}
+        <h1>YOU DEVELOPED THIS GAME</h1>
+    {% else %}
+        <h1>YOU DON'T OWN THIS GAME</h1>
+    {% endif %}
 {% endblock %}

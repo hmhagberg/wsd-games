@@ -48,6 +48,9 @@ class Player(AbstractProfileModel):
     Player profile
     """
 
+    def owns_game(self, game):
+        return game in self.ownerships.all()
+
 
 class Developer(AbstractProfileModel):
     """
