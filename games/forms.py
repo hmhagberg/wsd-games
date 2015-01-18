@@ -20,11 +20,9 @@ class SignupForm(UserCreationForm):
         user.first_name = self.cleaned_data["first_name"]
         user.last_name = self.cleaned_data["last_name"]
         user.email = self.cleaned_data["email"]
-        player = Player()
-        player.user_profile = user
-        if commit:
-            user.save()
-            player.save()
+        user.save()
+        player = Player(user=user)
+        player.save()
         return user
 
 
