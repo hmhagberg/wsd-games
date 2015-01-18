@@ -49,7 +49,11 @@ class Player(AbstractProfileModel):
     """
 
     def owns_game(self, game):
-        return game in self.ownerships.all()
+        try:
+            self.ownerships.all().get(game=game)
+            return True
+        except Ownership.DoesNotExist:
+            return False
 
 
 class Developer(AbstractProfileModel):

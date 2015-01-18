@@ -312,4 +312,34 @@
         </field>
     </object>
 
+    <!-- OWNERSHIPS -->
+
+    <object pk="1" model="games.ownership">
+        <field to="games.game" name="game" rel="ManyToOneRel">1</field>
+        <field to="games.player" name="player" rel="ManyToOneRel">1</field>
+        <field type="PositiveIntegerField" name="highscore">100</field>
+        <field type="PositiveIntegerField" name="rating">3</field>
+    </object>
+
+    <object pk="2" model="games.ownership">
+        <field to="games.game" name="game" rel="ManyToOneRel">2</field>
+        <field to="games.player" name="player" rel="ManyToOneRel">1</field>
+        <field type="PositiveIntegerField" name="highscore">300</field>
+        <field type="PositiveIntegerField" name="rating">4</field>
+    </object>
+
+    <object pk="3" model="games.ownership">
+        <field to="games.game" name="game" rel="ManyToOneRel">1</field>
+        <field to="games.player" name="player" rel="ManyToOneRel">2</field>
+        <field type="PositiveIntegerField" name="highscore">147</field>
+        <field type="PositiveIntegerField" name="rating">2</field>
+    </object>
+
+    <object pk="4" model="games.ownership">
+        <field to="games.game" name="game" rel="ManyToOneRel">3</field>
+        <field to="games.player" name="player" rel="ManyToOneRel">2</field>
+        <field type="PositiveIntegerField" name="highscore">10</field>
+        <field type="PositiveIntegerField" name="rating">1</field>
+    </object>
+
 </django-objects>

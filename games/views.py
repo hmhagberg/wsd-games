@@ -65,8 +65,9 @@ def game(request, game_slug):
         categories = Category.objects.all()
         ownership_status = "not_owned"
         if request.user.is_authenticated():
-            if hasattr(request.user, "player") and request.user.player.owns_game(game):
-                ownership_status = "owned"
+            if hasattr(request.user, "player"):
+                if request.user.player.owns_game(game):
+                    ownership_status = "owned"
             elif game.developer == request.user.developer:
                 ownership_status = "developer"
 
