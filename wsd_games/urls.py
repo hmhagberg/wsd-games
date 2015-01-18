@@ -11,7 +11,8 @@ urlpatterns = patterns('',
     url(r'^logout/$', 'django.contrib.auth.views.logout'),  # TODO: Logout confirmation template?
     url(r'^signup/$', 'games.views.signup'),
 
-    url(r'^payment/$', PaymentView.as_view(), name="payment"),
+    # FIXME: Currently /payment/successcancelerror and its variants are accepted
+    url(r'^payment/(success)?(cancel)?(error)?$', PaymentView.as_view(), name="payment"),
 
     url(r'^games/categories[/]?$', 'games.views.categories_list'),  # FIXME: HACK [/]?
     url(r'^games/categories/([a-z0-9\-]+)$', 'games.views.category'),

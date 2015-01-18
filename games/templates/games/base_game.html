@@ -33,6 +33,8 @@
         <h1>YOU DEVELOPED THIS GAME</h1>
     {% else %}
         <h1>YOU DON'T OWN THIS GAME</h1>
+
+        <!-- NOTE: Make sure only players are allowed to buy games -->
         {% if user.is_authenticated %}
             <form action="{% url 'payment' %}" method="POST">
                 {% csrf_token %}

@@ -98,11 +98,32 @@ def developer(request, developers_slug):
 
 
 class PaymentView(View):
-    http_method_names = ["post"]
 
-    SUCCESS_URL = "http://localhost:8000/payment/success"
-    CANCEL_URL = "http://localhost:8000/payment/cancel"
-    ERROR_URL = "http://localhost:8000/payment/error"
+    DOMAIN = "http://localhost:8000/"
+    SUCCESS_URL = DOMAIN + "payment/success"
+    CANCEL_URL = DOMAIN + "payment/cancel"
+    ERROR_URL = DOMAIN + "payment/error"
+
+    def get(self, request, payment_success, payment_cancel, *args, **kwargs):
+        pid = request.GET["pid"]
+        ref = request.GET["ref"]
+        request_checksum = request.GET["checksum"]
+        ownership = get_object_or_404(Ownership, payment_pid=pid)
+        context = {"player": ownership.player, "game": ownership.game}
+
+        if payment_success is not None:
+            checksumstr = "pid=%s&ref=%s&token=%s" % (pid, ref, settings.SID_KEY)
+            checksum = hashlib.md5(checksumstr.encode("ascii")).hexdigest()
+            if checksum == request_checksum:
+                ownership.payment_completed = True
+                ownership.payment_ref = ref
+                ownership.save()
+                return render_to_response("games/payment/payment_success.html", context)
+        elif payment_cancel is not None:
+            ownership.delete()
+            return render_to_response("games/payment/payment_cancel.html", context)
+
+        return render_to_response("games/payment/payment_error.html")
 
     def post(self, request, *args, **kwargs):
         game = get_object_or_404(Game, id=request.POST["game_id"])
@@ -124,5 +145,16 @@ class PaymentView(View):
         form = PaymentForm()
         form.set_values(values)
 
-        return render_to_response("games/payment.html", {"game": game, "form": form}, context_instance=RequestContext(
-            request))
+        # Check for old payments that haven't been completed properly (either via /payment/success/ or payment/cancel/)
+        try:
+            old_ownership = request.user.player.ownerships.all().get(game=game)
+            if old_ownership.payment_completed:
+                return render_to_response("games/payment/payment_error.html")
+            old_ownership.delete()
+        except Ownership.DoesNotExist:
+            pass
+
+        ownership = Ownership(game=game, player=request.user.player, payment_pid=pid)
+        ownership.save()
+        return render_to_response("games/payment/payment.html", {"game": game, "form": form},
+                                  context_instance=RequestContext(request))

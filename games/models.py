@@ -50,8 +50,8 @@ class Player(AbstractProfileModel):
 
     def owns_game(self, game):
         try:
-            self.ownerships.all().get(game=game)
-            return True
+            ownership = self.ownerships.all().get(game=game)
+            return ownership.payment_completed
         except Ownership.DoesNotExist:
             return False
 
@@ -95,10 +95,13 @@ class Ownership(models.Model):
     game = models.ForeignKey(Game)
     player = models.ForeignKey(Player, related_name='ownerships')
     highscore = models.PositiveIntegerField(default=0)
-    rating = models.PositiveIntegerField(choices=RATING_OPTIONS)
+    rating = models.PositiveIntegerField(null=True, choices=RATING_OPTIONS)
 
-    pid = models.CharField(max_length=32, unique=True)
-    game_bought = models.DateTimeField(auto_now_add=True)
+    # Payment information
+    payment_timestamp = models.DateTimeField(auto_now_add=True)
+    payment_completed = models.BooleanField(default=False)
+    payment_pid = models.CharField(max_length=32, unique=True)
+    payment_ref = models.CharField(max_length=32, blank=True)
 
     def __str__(self):
         return self.player.name + " owns " + self.game.name
