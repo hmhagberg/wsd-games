@@ -95,9 +95,11 @@ class Ownership(models.Model):
     player = models.ForeignKey(Player, related_name='ownerships')
     highscore = models.PositiveIntegerField(default=0)
     rating = models.PositiveIntegerField(choices=RATING_OPTIONS)
+    saved_score = models.PositiveIntegerField(default=0)
+    saved_data = models.TextField(default='[]')
 
     def __str__(self):
-        return self.player.name + " owns " + self.game.name
+        return self.player.user.username + " owns " + self.game.name
 
     def set_new_score(self, new_score):
         """Returns True if the given score is a new highscore"""
@@ -108,4 +110,7 @@ class Ownership(models.Model):
         else:
             return False
 
-
+    def save_game(self, score, data):
+        self.saved_score = score
+        self.saved_data = data
+        self.save()

@@ -64,14 +64,23 @@ def game(request, game_slug):
         game = Game.objects.get(slug = game_slug)
         categories = Category.objects.all()
         ownership_status = "not_owned"
+        ownership = None
         if request.user.is_authenticated():
             if hasattr(request.user, "player"):
                 if request.user.player.owns_game(game):
                     ownership_status = "owned"
+                    ownership = request.user.player.ownerships.get(player=request.user.player, game=game)
             elif game.developer == request.user.developer:
                 ownership_status = "developer"
+        context.update({'game': game, 'categories': categories, 'ownership_status': ownership_status, 'ownership': ownership})
 
-        context.update({'game': game, 'categories': categories, 'ownership_status': ownership_status})
+        # Handle game messages
+        if request.method == 'POST':
+            if request.POST['messageType'] == "SCORE":
+                ownership.set_new_score(int(request.POST['score']))
+            elif request.POST['messageType'] == "SAVE":
+                ownership.save_game(int(request.POST["gameState[score]"]), ','.join(request.POST.getlist("gameState[playerItems][]")))
+                
     except Game.DoesNotExist:
         raise Http404
     return render_to_response('games/base_game.html', context, context_instance = RequestContext(request))

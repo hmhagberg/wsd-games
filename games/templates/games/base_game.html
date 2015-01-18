@@ -7,28 +7,44 @@
 {% block content %}
 <script>
     /* global $ */
+    // Handle messages between the game site and the game in the iframe
     $(document).ready(function() {
         'use strict';
         $(window).on('message', function(evt) {
             var data = evt.originalEvent.data;
-            console.log(data);
-            if (data.messageType === "SCORE") {
-                console.log(data);
+            if (data.messageType === "LOAD_REQUEST") {
+                var game_data = "{{ownership.saved_data}}";
+                var child = document.getElementById("game").contentWindow;
+                var msg = {"messageType": "LOAD","gameState": {"score": {{ownership.saved_score}}, "playerItems": game_data.split(",")}};
+                child.postMessage(msg, "*");
+            }
+            else if (data.messageType === "SCORE") {
+                if (!isNaN(data.score)){
+                    $.ajax({
+                        'type': 'POST',
+                        'url': '{% url 'games.views.game' game.slug %}',
+                        'headers': { "X-CSRFToken": '{{ csrf_token }}' },
+                        'data': data
+                    });
+                }
             }
             else if (data.messageType === "SAVE") {
-                console.log(data.gameState);
+                if (!isNaN(data.gameState.score)) {
+                    $.ajax({
+                        'type': 'POST',
+                        'url': '{% url 'games.views.game' game.slug %}',
+                        'headers': { "X-CSRFToken": '{{ csrf_token }}' },
+                        'data': data
+                    });
+                }
             }
 
-            else if (data.messageType === "LOAD_REQUEST") {
-                console.log(data);
-            }
         });
     });
 
 </script>
-
     {% if ownership_status == "owned" %}
-        <iframe src="http://webcourse.cs.hut.fi/game.html"></iframe>
+        <iframe id="game" src="http://webcourse.cs.hut.fi/game.html"></iframe>
     {% elif ownership_status == "developer"  %}
         <h1>YOU DEVELOPED THIS GAME</h1>
     {% else %}
