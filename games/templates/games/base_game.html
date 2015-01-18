@@ -33,5 +33,12 @@
         <h1>YOU DEVELOPED THIS GAME</h1>
     {% else %}
         <h1>YOU DON'T OWN THIS GAME</h1>
+        {% if user.is_authenticated %}
+            <form action="{% url 'payment' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="game_id" value="{{ game.id }}">
+                <input type="submit" value="Buy game">
+            </form>
+        {% endif %}
     {% endif %}
 {% endblock %}

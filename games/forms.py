@@ -1,14 +1,14 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.forms import CharField, EmailField
+from django import forms
 
 from games.models import Player
 
 
 class SignupForm(UserCreationForm):
-    first_name = CharField(max_length=50)
-    last_name = CharField(max_length=50)
-    email = EmailField(max_length=75)
+    first_name = forms.CharField(max_length=50)
+    last_name = forms.CharField(max_length=50)
+    email = forms.EmailField(max_length=75)
 
     class Meta:
         model = User
@@ -26,3 +26,17 @@ class SignupForm(UserCreationForm):
             user.save()
             player.save()
         return user
+
+
+class PaymentForm(forms.Form):
+    pid = forms.CharField(widget=forms.HiddenInput)
+    sid = forms.CharField(widget=forms.HiddenInput)
+    success_url = forms.URLField(widget=forms.HiddenInput)
+    cancel_url = forms.URLField(widget=forms.HiddenInput)
+    error_url = forms.URLField(widget=forms.HiddenInput)
+    checksum = forms.CharField(widget=forms.HiddenInput)
+    amount = forms.DecimalField(widget=forms.HiddenInput)
+
+    def set_values(self, values):
+        for key, value in values.items():
+            self.fields[key].initial = value

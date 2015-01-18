@@ -81,6 +81,7 @@ class Game(AbstractSlugModel):
     image_url = models.URLField(blank=True, default='http://rammb.cira.colostate.edu/dev/hillger/WSD_logo.gif')
     developer = models.ForeignKey(Developer, related_name='developers_games')
     categories = models.ManyToManyField(Category, related_name='category_games')
+    price = models.DecimalField(max_digits=6, decimal_places=2)
 
     class Meta:
         ordering = ["name"]
@@ -95,6 +96,9 @@ class Ownership(models.Model):
     player = models.ForeignKey(Player, related_name='ownerships')
     highscore = models.PositiveIntegerField(default=0)
     rating = models.PositiveIntegerField(choices=RATING_OPTIONS)
+
+    pid = models.CharField(max_length=32, unique=True)
+    game_bought = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.player.name + " owns " + self.game.name
