@@ -5,7 +5,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login
-from django.views.generic import View
+from django.views.generic import View, FormView
 from django.template import RequestContext
 
 from games.models import *
@@ -25,21 +25,17 @@ def home(request):
     return render_to_response('games/base_grid_gameCard.html', context, context_instance=RequestContext(request))
 
 
-def signup(request):
-    """
-    Register a new user and log him in if registration was succesful.
-    """
-    if request.method == 'POST':
-        form = SignupForm(request.POST)  # SignupForm handles fields and saving the model
-        if form.is_valid():
-            form.save()
-            new_user = authenticate(username=request.POST["username"], password=request.POST["password1"])
-            if new_user is not None:
-                login(request, new_user)
-            return HttpResponseRedirect('..')  # TODO: Redirect user to confirmation page
-    else:
-        form = SignupForm()
-    return render(request, "games/signup.html", {'form': form, })
+class SignupView(FormView):
+    template_name = "games/signup.html"
+    form_class = SignupForm
+    success_url = ".."  # TODO: Redirect user to confirmation page
+
+    def form_valid(self, form):
+        form.save()
+        new_user = authenticate(username=form.cleaned_data["username"], password=form.cleaned_data["password1"])
+        if new_user is not None:
+            login(self.request, new_user)
+        return super(SignupView, self).form_valid(form)
 
 
 def games_list(request):
