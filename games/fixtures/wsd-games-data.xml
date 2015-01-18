@@ -164,6 +164,7 @@
         <field type="URLField" name="url">www.url.com</field>
         <field type="URLField" name="image_url">http://www.allaboutworms.com/wp-content/uploads/2013/10/worm-cute-cartoon-flipped.jpg</field>
         <field type="SlugField" name="slug">worm-game</field>
+        <field type="DecimalField" name="price">5.00</field>
         <field to="games.developer" name="developer" rel="ManyToOneRel">2</field>
         <field to="games.category" name="categories" rel="ManyToManyRel">
             <object pk="1"></object>
@@ -176,6 +177,7 @@
         <field type="URLField" name="url">www.rovio.com</field>
         <field type="URLField" name="image_url">http://www.jbgnews.com/wp-content/uploads/2014/10/Angry-Birds-Maker-Rovio-Entertainment-Slashing-130-Jobs.jpg</field>
         <field type="SlugField" name="slug">angry-birds</field>
+        <field type="DecimalField" name="price">2.99</field>
         <field to="games.developer" name="developer" rel="ManyToOneRel">1</field>
         <field to="games.category" name="categories" rel="ManyToManyRel">
             <object pk="1"></object>
@@ -189,6 +191,7 @@
         <field type="URLField" name="url">www.crash.com</field>
         <field type="URLField" name="image_url">http://fc09.deviantart.net/fs43/f/2009/065/1/8/crash_bandicoot_by_leomitsu.jpg</field>
         <field type="SlugField" name="slug">crash-bandicoot</field>
+        <field type="DecimalField" name="price">10.00</field>
         <field to="games.developer" name="developer" rel="ManyToOneRel">3</field>
         <field to="games.category" name="categories" rel="ManyToManyRel">
             <object pk="2"></object>
@@ -203,6 +206,7 @@
         <field type="URLField" name="url">www.candycrush.com</field>
         <field type="URLField" name="image_url">http://candycrush-cheats.com/wp-content/uploads/2013/12/wheel1.png</field>
         <field type="SlugField" name="slug">candy-crush</field>
+        <field type="DecimalField" name="price">0.95</field>
         <field to="games.developer" name="developer" rel="ManyToOneRel">4</field>
         <field to="games.category" name="categories" rel="ManyToManyRel">
             <object pk="4"></object>
@@ -215,6 +219,7 @@
         <field type="URLField" name="url">www.spyro.com</field>
         <field type="URLField" name="image_url">http://www.skylanders.com/content/dam/atvi/skylanders/base/explore-skylands/explore-ssa/spyro.png</field>
         <field type="SlugField" name="slug">spyro-adventures</field>
+        <field type="DecimalField" name="price">25.00</field>
         <field to="games.developer" name="developer" rel="ManyToOneRel">5</field>
         <field to="games.category" name="categories" rel="ManyToManyRel">
             <object pk="2"></object>
@@ -228,6 +233,7 @@
         <field type="URLField" name="url">www.mario.com</field>
         <field type="URLField" name="image_url">http://i1.ytimg.com/i/j99SVibF8DppNBZAdbBiBw/1.jpg</field>
         <field type="SlugField" name="slug">super-mario</field>
+        <field type="DecimalField" name="price">15.99</field>
         <field to="games.developer" name="developer" rel="ManyToOneRel">5</field>
         <field to="games.category" name="categories" rel="ManyToManyRel">
             <object pk="1"></object>
@@ -243,6 +249,7 @@
         <field type="URLField" name="url">www.ninja.com</field>
         <field type="URLField" name="image_url">http://3.bp.blogspot.com/-yA3Cchia2WA/UNg69Dcp2kI/AAAAAAAAANc/gWjQUnvzf-U/s1600/fruit-ninja1.png</field>
         <field type="SlugField" name="slug">fruit-ninja</field>
+        <field type="DecimalField" name="price">3.00</field>
         <field to="games.developer" name="developer" rel="ManyToOneRel">5</field>
         <field to="games.category" name="categories" rel="ManyToManyRel">
             <object pk="3"></object>
@@ -256,6 +263,7 @@
         <field type="URLField" name="url">www.final.com</field>
         <field type="URLField" name="image_url">http://cdn.segmentnext.com/wp-content/uploads/2014/11/Final-Fantasy-Explorers.png</field>
         <field type="SlugField" name="slug">final-fantasy-xvi</field>
+        <field type="DecimalField" name="price">12.50</field>
         <field to="games.developer" name="developer" rel="ManyToOneRel">3</field>
         <field to="games.category" name="categories" rel="ManyToManyRel">
             <object pk="4"></object>
@@ -268,6 +276,7 @@
         <field type="URLField" name="url">www.cod.com</field>
         <field type="URLField" name="image_url">http://www.luxeimprints.com/wp-content/uploads/2013/10/COD-Ghost.jpg</field>
         <field type="SlugField" name="slug">call-of-duty</field>
+        <field type="DecimalField" name="price">9.99</field>
         <field to="games.developer" name="developer" rel="ManyToOneRel">1</field>
         <field to="games.category" name="categories" rel="ManyToManyRel">
             <object pk="4"></object>
@@ -281,6 +290,7 @@
         <field type="URLField" name="url">www.nfs.com</field>
         <field type="URLField" name="image_url">http://cdn.www.needforspeed.com/sites/default/files/imagecache/car_main/car/images/moviemustang3_10.jpg</field>
         <field type="SlugField" name="slug">need-for-speed</field>
+        <field type="DecimalField" name="price">8.10</field>
         <field to="games.developer" name="developer" rel="ManyToOneRel">2</field>
         <field to="games.category" name="categories" rel="ManyToManyRel">
             <object pk="1"></object>
@@ -293,6 +303,7 @@
         <field type="URLField" name="url">www.cs.com</field>
         <field type="URLField" name="image_url">http://hizli-torrent.com/dynamic/glry/images45.jpg</field>
         <field type="SlugField" name="slug">counter-strike</field>
+        <field type="DecimalField" name="price">0.99</field>
         <field to="games.developer" name="developer" rel="ManyToOneRel">2</field>
         <field to="games.category" name="categories" rel="ManyToManyRel">
             <object pk="3"></object>
@@ -306,6 +317,7 @@
         <field type="URLField" name="url">www.pokemon.com</field>
         <field type="URLField" name="image_url">http://assets22.pokemon.com/assets/cms2/img/pokedex/full/007.png</field>
         <field type="SlugField" name="slug">pokemon</field>
+        <field type="DecimalField" name="price">11.70</field>
         <field to="games.developer" name="developer" rel="ManyToOneRel">4</field>
         <field to="games.category" name="categories" rel="ManyToManyRel">
             <object pk="2"></object>
@@ -319,6 +331,11 @@
         <field to="games.player" name="player" rel="ManyToOneRel">4</field>
         <field type="PositiveIntegerField" name="highscore">100</field>
         <field type="PositiveIntegerField" name="rating">3</field>
+
+        <field type="DateTimeField" name="payment_timestamp">2013-03-16T17:41:28+00:00</field>
+        <field type="BooleanField" name="payment_completed">True</field>
+        <field type="CharField" name="payment_pid">43e0bebb763b49a09fb95413872d791b</field>
+        <field type="CharField" name="payment_ref">43e0bebb763b49a09fb95413872d791b</field>
     </object>
 
     <object pk="2" model="games.ownership">
@@ -326,6 +343,11 @@
         <field to="games.player" name="player" rel="ManyToOneRel">1</field>
         <field type="PositiveIntegerField" name="highscore">300</field>
         <field type="PositiveIntegerField" name="rating">4</field>
+
+        <field type="DateTimeField" name="payment_timestamp">2015-01-11T01:41:28+02:00</field>
+        <field type="BooleanField" name="payment_completed">True</field>
+        <field type="CharField" name="payment_pid">63dc7c0ec25248c892ea30130b7a814b</field>
+        <field type="CharField" name="payment_ref">63dc7c0ec25248c892ea30130b7a814b</field>
     </object>
 
     <object pk="3" model="games.ownership">
@@ -333,6 +355,11 @@
         <field to="games.player" name="player" rel="ManyToOneRel">2</field>
         <field type="PositiveIntegerField" name="highscore">147</field>
         <field type="PositiveIntegerField" name="rating">2</field>
+
+        <field type="DateTimeField" name="payment_timestamp">2014-03-16T20:16:30+02:00</field>
+        <field type="BooleanField" name="payment_completed">True</field>
+        <field type="CharField" name="payment_pid">a77eb9f1076e4e41812c22655fbe512b</field>
+        <field type="CharField" name="payment_ref">a77eb9f1076e4e41812c22655fbe512b</field>
     </object>
 
     <object pk="4" model="games.ownership">
@@ -340,6 +367,11 @@
         <field to="games.player" name="player" rel="ManyToOneRel">2</field>
         <field type="PositiveIntegerField" name="highscore">10</field>
         <field type="PositiveIntegerField" name="rating">1</field>
+
+        <field type="DateTimeField" name="payment_timestamp">2014-06-02T14:02:11+01:00</field>
+        <field type="BooleanField" name="payment_completed">True</field>
+        <field type="CharField" name="payment_pid">58c9d96684184ef39a6ce24f72283903</field>
+        <field type="CharField" name="payment_ref">58c9d96684184ef39a6ce24f72283903</field>
     </object>
 
 </django-objects>

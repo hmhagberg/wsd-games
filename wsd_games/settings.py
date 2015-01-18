@@ -19,6 +19,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'si66cc5d0bpf6#kzte6f$*z@()(m@hcery*_n$ie=h(8y*6vr*'
 
+# SID and secret key for payment service, keep these secret!
+SID = "WsdGamesCo"
+SID_KEY = "5dd2d7e5adfb3cfb061e4f134d6c1821"
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 

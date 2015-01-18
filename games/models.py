@@ -50,8 +50,8 @@ class Player(AbstractProfileModel):
 
     def owns_game(self, game):
         try:
-            self.ownerships.all().get(game=game)
-            return True
+            ownership = self.ownerships.all().get(game=game)
+            return ownership.payment_completed
         except Ownership.DoesNotExist:
             return False
 
@@ -81,6 +81,7 @@ class Game(AbstractSlugModel):
     image_url = models.URLField(blank=True, default='http://rammb.cira.colostate.edu/dev/hillger/WSD_logo.gif')
     developer = models.ForeignKey(Developer, related_name='developers_games')
     categories = models.ManyToManyField(Category, related_name='category_games')
+    price = models.DecimalField(max_digits=6, decimal_places=2)
 
     class Meta:
         ordering = ["name"]
@@ -94,9 +95,15 @@ class Ownership(models.Model):
     game = models.ForeignKey(Game)
     player = models.ForeignKey(Player, related_name='ownerships')
     highscore = models.PositiveIntegerField(default=0)
-    rating = models.PositiveIntegerField(choices=RATING_OPTIONS)
     saved_score = models.PositiveIntegerField(default=0)
     saved_data = models.TextField(default='[]')
+    rating = models.PositiveIntegerField(null=True, choices=RATING_OPTIONS)
+
+    # Payment information
+    payment_timestamp = models.DateTimeField(auto_now_add=True)
+    payment_completed = models.BooleanField(default=False)
+    payment_pid = models.CharField(max_length=32, unique=True)
+    payment_ref = models.CharField(max_length=32, blank=True)
 
     def __str__(self):
         return self.player.user.username + " owns " + self.game.name
