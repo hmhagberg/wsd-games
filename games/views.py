@@ -73,7 +73,8 @@ def game(request, game_slug):
                 ownership = request.user.player.ownerships.get(player=request.user.player, game=game)
         elif game.developer == request.user.developer:
             ownership_status = "developer"
-    context.update({'game': game, 'categories': categories, "user": request.user, 'ownership_status': ownership_status, 'ownership': ownership})
+    context.update({'game': game, 'categories': categories, 'ownership_status': ownership_status, 'ownership':
+        ownership})
 
     # Handle game messages
     if request.method == 'POST':
