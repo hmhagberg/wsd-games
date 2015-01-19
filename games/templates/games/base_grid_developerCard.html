@@ -9,7 +9,7 @@
 <div class="col-xs-12 col-sm-6 col-md-3 ">
 	<a href="{% url 'games.views.developer' developer.slug %}">
 		<div class="inner">
-			<h2>{{developer.name}}</h2>
+			<h2>{{developer.user.first_name}}</h2>
 			<div class="img-container">
 				<img src="{{developer.image_url}}" class="img-responsive img-circle" alt="{{developer.name}} image">
 			</div>

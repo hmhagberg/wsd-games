@@ -328,7 +328,7 @@
 
     <object pk="1" model="games.ownership">
         <field to="games.game" name="game" rel="ManyToOneRel">2</field>
-        <field to="games.player" name="player" rel="ManyToOneRel">4</field>
+        <field to="games.player" name="player" rel="ManyToOneRel">3</field>
         <field type="PositiveIntegerField" name="highscore">100</field>
         <field type="PositiveIntegerField" name="rating">3</field>
 
