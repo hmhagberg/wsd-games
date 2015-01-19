@@ -19,7 +19,7 @@ def home(request):
     try:
         games = Game.objects.all()
         categories = Category.objects.all()
-        context.update({'games': games, 'categories': categories})
+        context.update({'games': games, 'categories': categories, 'category': '', 'developer': ''})
     except Game.DoesNotExist:
         raise Http404
     return render_to_response('games/base_grid_gameCard.html', context, context_instance=RequestContext(request))
