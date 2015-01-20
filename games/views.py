@@ -26,7 +26,7 @@ def home(request):
 
 
 class SignupView(FormView):
-    template_name = "games/signup.html"
+    template_name = "games/auth/signup.html"
     form_class = SignupForm
     success_url = ".."  # TODO: Redirect user to confirmation page
 

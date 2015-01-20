@@ -7,8 +7,8 @@ urlpatterns = patterns('',
     url(r'^$', 'games.views.home', name='home'),
 
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'games/login.html'}),
-    url(r'^logout/$', 'django.contrib.auth.views.logout'),  # TODO: Logout confirmation template?
+    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'games/auth/login.html'}),
+    url(r'^logout/$', 'django.contrib.auth.views.logout', {'template_name': 'games/auth/logout.html'}),
     url(r'^signup/$', SignupView.as_view(), name="signup"),
 
     # FIXME: Currently /payment/successcancelerror and its variants are accepted
