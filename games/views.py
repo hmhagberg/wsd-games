@@ -19,14 +19,14 @@ def home(request):
     try:
         games = Game.objects.all()
         categories = Category.objects.all()
-        context.update({'games': games, 'categories': categories})
+        context.update({'games': games, 'categories': categories, 'category': '', 'developer': ''})
     except Game.DoesNotExist:
         raise Http404
     return render_to_response('games/base_grid_gameCard.html', context, context_instance=RequestContext(request))
 
 
 class SignupView(FormView):
-    template_name = "games/signup.html"
+    template_name = "games/auth/signup.html"
     form_class = SignupForm
     success_url = ".."  # TODO: Redirect user to confirmation page
 
@@ -73,7 +73,8 @@ def game(request, game_slug):
                 ownership = request.user.player.ownerships.get(player=request.user.player, game=game)
         elif game.developer == request.user.developer:
             ownership_status = "developer"
-    context.update({'game': game, 'categories': categories, "user": request.user, 'ownership_status': ownership_status, 'ownership': ownership})
+    context.update({'game': game, 'categories': categories, 'ownership_status': ownership_status, 'ownership':
+        ownership})
 
     # Handle game messages
     if request.method == 'POST':

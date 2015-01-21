@@ -38,13 +38,18 @@
                     });
                 }
             }
-
+        });
+        $( "#message" ).click(function() {
+            var child = document.getElementById("game").contentWindow;
+            var msg = {"messageType": "MESSAGE","message": "TEST MESSAGE"};
+            child.postMessage(msg, "*");
         });
     });
 
 </script>
     {% if ownership_status == "owned" %}
         <iframe id="game" src="http://webcourse.cs.hut.fi/game.html"></iframe>
+        <button id="message">Send message</button>
     {% elif ownership_status == "developer"  %}
         <h1>YOU DEVELOPED THIS GAME</h1>
     {% else %}

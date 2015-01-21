@@ -57,3 +57,10 @@ h1 {
 #pagination-nav {
 	text-align: center;
 }
+
+#game {
+	display: block;
+	margin: auto;
+	height: 600px;
+	width: 600px;
+}
