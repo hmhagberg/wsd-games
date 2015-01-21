@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from social.backends.google import GooglePlusAuth
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -22,6 +23,9 @@ SECRET_KEY = 'si66cc5d0bpf6#kzte6f$*z@()(m@hcery*_n$ie=h(8y*6vr*'
 # SID and secret key for payment service, keep these secret!
 SID = "WsdGamesCo"
 SID_KEY = "5dd2d7e5adfb3cfb061e4f134d6c1821"
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '531631825342-3k60ub72cmccvhtb4cm45nn2hml268g3.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'R_0V6PZaKT4MVI2lCiZpbt42'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -40,6 +44,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'social.apps.django_app.default',
     'games',
 )
 
@@ -51,6 +56,11 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+)
+
+AUTHENTICATION_BACKENDS = (
+    'social.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
 )
 
 ROOT_URLCONF = 'wsd_games.urls'
@@ -88,7 +98,10 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.media",
     "django.core.context_processors.static",
     "django.core.context_processors.tz",
-    "django.contrib.messages.context_processors.messages")
+    "django.contrib.messages.context_processors.messages",
+    'social.apps.django_app.context_processors.backends',
+    'social.apps.django_app.context_processors.login_redirect',
+)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/

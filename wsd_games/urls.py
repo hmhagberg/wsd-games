@@ -7,9 +7,11 @@ urlpatterns = patterns('',
     url(r'^$', 'games.views.home', name='home'),
 
     url(r'^admin/', include(admin.site.urls)),
+    url('', include('social.apps.django_app.urls', namespace='social')),
     url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'games/auth/login.html'}, name='login'),
     url(r'^logout/$', 'django.contrib.auth.views.logout', {'template_name': 'games/auth/logout.html'}, name='logout'),
     url(r'^signup/$', SignupView.as_view(), name="signup"),
+
 
     # FIXME: Currently /payment/successcancelerror and its variants are accepted
     url(r'^payment/(success)?(cancel)?(error)?$', PaymentView.as_view(), name="payment"),
