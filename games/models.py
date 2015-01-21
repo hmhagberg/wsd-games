@@ -83,16 +83,20 @@ class Game(AbstractSlugModel):
     categories = models.ManyToManyField(Category, related_name='category_games')
     price = models.DecimalField(max_digits=6, decimal_places=2)
 
+
     class Meta:
         ordering = ["name"]
 
     def __str__(self):
         return self.name
+    
+    def get_highscores(self, limit=10):
+        return self.ownerships.all()[:limit]
 
 
 class Ownership(models.Model):
     RATING_OPTIONS = ((1, 1), (2, 2), (3, 3), (4, 4), (5, 5),)
-    game = models.ForeignKey(Game)
+    game = models.ForeignKey(Game, related_name="ownerships")
     player = models.ForeignKey(Player, related_name='ownerships')
     highscore = models.PositiveIntegerField(default=0)
     saved_score = models.PositiveIntegerField(default=0)
@@ -104,6 +108,9 @@ class Ownership(models.Model):
     payment_completed = models.BooleanField(default=False)
     payment_pid = models.CharField(max_length=32, unique=True)
     payment_ref = models.CharField(max_length=32, blank=True)
+
+    class Meta:
+        ordering = ["-highscore"]
 
     def __str__(self):
         return self.player.user.username + " owns " + self.game.name
