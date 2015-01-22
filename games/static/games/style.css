@@ -63,4 +63,22 @@ h1 {
 	margin: auto;
 	height: 600px;
 	width: 600px;
+	margin-bottom: 10px;
+}
+
+#highscore-container {
+	text-align: center;
+}
+
+#highscore-container h3 {
+	color: #B32C2C;
+}
+
+#highscores {
+	display: inline-block;
+	color: #B32C2C;
+}
+
+#highscores li {
+	text-align: left;
 }

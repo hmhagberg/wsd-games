@@ -49,7 +49,15 @@
 </script>
     {% if ownership_status == "owned" %}
         <iframe id="game" src="http://webcourse.cs.hut.fi/game.html"></iframe>
-        <button id="message">Send message</button>
+        <button id="message" class="hidden">Send message</button>
+        <div id="highscore-container">
+            <h3>Highscores</h3>
+            <ol id="highscores">
+                {% for highscore in game.get_highscores %}
+                    <li>{{highscore.player.user.username}} {{highscore.highscore}}</li>
+                {% endfor %}
+            </ol>
+        </div>
     {% elif ownership_status == "developer"  %}
         <h1>YOU DEVELOPED THIS GAME</h1>
     {% else %}
