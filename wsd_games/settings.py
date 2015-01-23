@@ -92,6 +92,7 @@ ROOT_URLCONF = 'wsd_games.urls'
 
 WSGI_APPLICATION = 'wsd_games.wsgi.application'
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases

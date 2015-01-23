@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
@@ -62,6 +64,17 @@ class Developer(AbstractProfileModel):
     """
     image_url = models.URLField(blank=True, default='http://rammb.cira.colostate.edu/dev/hillger/WSD_logo.gif')
     description = models.TextField(default='Developer description')
+
+
+class SignupActivation(models.Model):
+    key = models.CharField(unique=True, default=uuid.uuid4().hex, max_length=32)
+    user = models.OneToOneField(User)  # TODO: Does removing this obj also remove user?
+    time_sent = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def has_expired(self):
+        # TODO: Add meaningful expiration check
+        return False
 
 
 class Category(AbstractSlugModel):

@@ -11,7 +11,8 @@ urlpatterns = patterns('',
     url(r'^login/username/([a-z0-9\-_]+)$', 'games.views.social_select_username', name='social_select_username'),
     url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'games/auth/login.html'}, name='login'),
     url(r'^logout/$', 'django.contrib.auth.views.logout', {'template_name': 'games/auth/logout.html'}, name='logout'),
-    url(r'^signup/$', SignupView.as_view(), name="signup"),
+    url(r'^signup/$', SignupView.as_view(), name='signup'),
+    url(r'^signup/activate/([a-z0-9]+)$', 'games.views.signup_activation', name='signup_activation'),
 
 
     # FIXME: Currently /payment/successcancelerror and its variants are accepted
