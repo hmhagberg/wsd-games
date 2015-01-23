@@ -1,11 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title>Select username</title>
-</head>
-<body>
-    <h2>Select username:</h2>
+{% extends "games/base.html" %}
+
+{% load staticfiles %}
+
+{% block header %}Select username{% endblock %}
+
+{% block content %}
 
     {% if form.errors %}
         <p>{{ form.errors }}</p>
@@ -18,5 +17,5 @@
         </table>
         <input type="submit" value="OK" />
     </form>
-</body>
-</html>
+
+{% endblock %}
