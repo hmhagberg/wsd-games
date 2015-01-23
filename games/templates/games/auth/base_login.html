@@ -16,21 +16,11 @@
         {% csrf_token %}
         <table>
             {{ form.as_table }}
-
-            <!-- Testing form formatting
-            <tr>
-                <td>{{ form.username.label_tag }}</td>
-                <td>{{ form.username }}</td>
-            </tr>
-            <tr>
-                <td>{{ form.password.label_tag }}</td>
-                <td>{{ form.password }}</td>
-            </tr>
-            -->
         </table>
         <br>
         <input id="submit" type="submit" value="Login" />
         <input type="hidden" name="next" value="{{ next }}" />
+        <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}">Login with Google</a>
     </form>
 </div>
 {% endblock %}

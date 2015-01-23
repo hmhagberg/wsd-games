@@ -62,7 +62,7 @@ def social_select_username(request, backend):
     Username selection view for social auth
     """
     form = UsernameForm()
-    return render_to_response("games/auth/select_username.html", {"form": form, "backend": backend},
+    return render_to_response("games/auth/base_selectUsername.html", {"form": form, "backend": backend},
                               context_instance=RequestContext(request))
 
 
