@@ -9,7 +9,7 @@ from django.views.generic import View, FormView
 from django.template import RequestContext
 
 from games.models import *
-from games.forms import SignupForm, PaymentForm
+from games.forms import SignupForm, PaymentForm, UsernameForm
 import wsd_games.settings
 
 context = {}
@@ -36,6 +36,15 @@ class SignupView(FormView):
         if new_user is not None:
             login(self.request, new_user)
         return super(SignupView, self).form_valid(form)
+
+
+def social_select_username(request, backend):
+    """
+    Username selection view for social auth
+    """
+    form = UsernameForm()
+    return render_to_response("games/auth/select_username.html", {"form": form, "backend": backend},
+                              context_instance=RequestContext(request))
 
 
 def games_list(request):

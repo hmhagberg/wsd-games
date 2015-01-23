@@ -4,3 +4,4 @@ dj-static==0.0.6
 gunicorn==19.1.1
 psycopg2==2.5.4
 static3==0.5.1
+python-social-auth==0.2.1
