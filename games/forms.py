@@ -44,4 +44,4 @@ class PaymentForm(forms.Form):
 class UsernameForm(forms.Form):
     username_validator = RegexValidator(regex=r"^[a-zA-Z0-9@+-_.]{1,30}$",
                                         message="Username must contain 1-30 alphanumeric, _, @, +, . or - characters.")
-    username_from_user = forms.CharField(max_length=30)
+    username_from_user = forms.CharField(max_length=30, label="Username")
