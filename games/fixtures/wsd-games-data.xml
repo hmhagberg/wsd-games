@@ -161,7 +161,7 @@
     <object pk="1" model="games.game">
         <field type="CharField" name="name">Worm Game</field>
         <field type="TextField" name="description">Very funny worm game with 10 different levels.</field>
-        <field type="URLField" name="url">www.url.com</field>
+        <field type="URLField" name="url">http://www.ragoz4.arkku.net/</field>
         <field type="URLField" name="image_url">http://www.allaboutworms.com/wp-content/uploads/2013/10/worm-cute-cartoon-flipped.jpg</field>
         <field type="SlugField" name="slug">worm-game</field>
         <field type="DecimalField" name="price">5.00</field>
@@ -174,7 +174,7 @@
     <object pk="2" model="games.game">
         <field type="CharField" name="name">Angry Birds</field>
         <field type="TextField" name="description">Super awesome game!!!</field>
-        <field type="URLField" name="url">www.rovio.com</field>
+        <field type="URLField" name="url">http://webcourse.cs.hut.fi/game.html</field>
         <field type="URLField" name="image_url">http://www.jbgnews.com/wp-content/uploads/2014/10/Angry-Birds-Maker-Rovio-Entertainment-Slashing-130-Jobs.jpg</field>
         <field type="SlugField" name="slug">angry-birds</field>
         <field type="DecimalField" name="price">2.99</field>
@@ -188,7 +188,7 @@
     <object pk="3" model="games.game">
         <field type="CharField" name="name">Crash Bandicoot</field>
         <field type="TextField" name="description">Awesome game</field>
-        <field type="URLField" name="url">www.crash.com</field>
+        <field type="URLField" name="url">http://webcourse.cs.hut.fi/game.html</field>
         <field type="URLField" name="image_url">http://fc09.deviantart.net/fs43/f/2009/065/1/8/crash_bandicoot_by_leomitsu.jpg</field>
         <field type="SlugField" name="slug">crash-bandicoot</field>
         <field type="DecimalField" name="price">10.00</field>
@@ -203,7 +203,7 @@
     <object pk="4" model="games.game">
         <field type="CharField" name="name">Candy Crush</field>
         <field type="TextField" name="description">Very difficult game for kids</field>
-        <field type="URLField" name="url">www.candycrush.com</field>
+        <field type="URLField" name="url">http://webcourse.cs.hut.fi/game.html</field>
         <field type="URLField" name="image_url">http://candycrush-cheats.com/wp-content/uploads/2013/12/wheel1.png</field>
         <field type="SlugField" name="slug">candy-crush</field>
         <field type="DecimalField" name="price">0.95</field>
@@ -216,7 +216,7 @@
     <object pk="5" model="games.game">
         <field type="CharField" name="name">Spyro Adventures</field>
         <field type="TextField" name="description">Go for an adventure with a crazy dragon</field>
-        <field type="URLField" name="url">www.spyro.com</field>
+        <field type="URLField" name="url">http://webcourse.cs.hut.fi/game.html</field>
         <field type="URLField" name="image_url">http://www.skylanders.com/content/dam/atvi/skylanders/base/explore-skylands/explore-ssa/spyro.png</field>
         <field type="SlugField" name="slug">spyro-adventures</field>
         <field type="DecimalField" name="price">25.00</field>
@@ -230,7 +230,7 @@
     <object pk="6" model="games.game">
         <field type="CharField" name="name">Super Mario</field>
         <field type="TextField" name="description">Play the legendary Nintendo game online with your friends</field>
-        <field type="URLField" name="url">www.mario.com</field>
+        <field type="URLField" name="url">http://webcourse.cs.hut.fi/game.html</field>
         <field type="URLField" name="image_url">http://i1.ytimg.com/i/j99SVibF8DppNBZAdbBiBw/1.jpg</field>
         <field type="SlugField" name="slug">super-mario</field>
         <field type="DecimalField" name="price">15.99</field>
@@ -246,7 +246,7 @@
     <object pk="7" model="games.game">
         <field type="CharField" name="name">Fruit Ninja</field>
         <field type="TextField" name="description">Slash some fruits</field>
-        <field type="URLField" name="url">www.ninja.com</field>
+        <field type="URLField" name="url">http://webcourse.cs.hut.fi/game.html</field>
         <field type="URLField" name="image_url">http://3.bp.blogspot.com/-yA3Cchia2WA/UNg69Dcp2kI/AAAAAAAAANc/gWjQUnvzf-U/s1600/fruit-ninja1.png</field>
         <field type="SlugField" name="slug">fruit-ninja</field>
         <field type="DecimalField" name="price">3.00</field>
@@ -260,7 +260,7 @@
     <object pk="8" model="games.game">
         <field type="CharField" name="name">Final Fantasy XVI</field>
         <field type="TextField" name="description">Make your fantasy come true</field>
-        <field type="URLField" name="url">www.final.com</field>
+        <field type="URLField" name="url">http://webcourse.cs.hut.fi/game.html</field>
         <field type="URLField" name="image_url">http://cdn.segmentnext.com/wp-content/uploads/2014/11/Final-Fantasy-Explorers.png</field>
         <field type="SlugField" name="slug">final-fantasy-xvi</field>
         <field type="DecimalField" name="price">12.50</field>
@@ -273,7 +273,7 @@
     <object pk="9" model="games.game">
         <field type="CharField" name="name">Call of Duty</field>
         <field type="TextField" name="description">Play the most awesome game in the the world</field>
-        <field type="URLField" name="url">www.cod.com</field>
+        <field type="URLField" name="url">http://webcourse.cs.hut.fi/game.html</field>
         <field type="URLField" name="image_url">http://www.luxeimprints.com/wp-content/uploads/2013/10/COD-Ghost.jpg</field>
         <field type="SlugField" name="slug">call-of-duty</field>
         <field type="DecimalField" name="price">9.99</field>
@@ -287,7 +287,7 @@
     <object pk="10" model="games.game">
         <field type="CharField" name="name">Need for Speed</field>
         <field type="TextField" name="description">Race your car to victory</field>
-        <field type="URLField" name="url">www.nfs.com</field>
+        <field type="URLField" name="url">http://webcourse.cs.hut.fi/game.html</field>
         <field type="URLField" name="image_url">http://cdn.www.needforspeed.com/sites/default/files/imagecache/car_main/car/images/moviemustang3_10.jpg</field>
         <field type="SlugField" name="slug">need-for-speed</field>
         <field type="DecimalField" name="price">8.10</field>
@@ -300,7 +300,7 @@
     <object pk="11" model="games.game">
         <field type="CharField" name="name">Counter Strike</field>
         <field type="TextField" name="description">Shoot some terrorists</field>
-        <field type="URLField" name="url">www.cs.com</field>
+        <field type="URLField" name="url">http://webcourse.cs.hut.fi/game.html</field>
         <field type="URLField" name="image_url">http://hizli-torrent.com/dynamic/glry/images45.jpg</field>
         <field type="SlugField" name="slug">counter-strike</field>
         <field type="DecimalField" name="price">0.99</field>
@@ -314,7 +314,7 @@
     <object pk="12" model="games.game">
         <field type="CharField" name="name">Pokemon</field>
         <field type="TextField" name="description">A game you must play</field>
-        <field type="URLField" name="url">www.pokemon.com</field>
+        <field type="URLField" name="url">http://webcourse.cs.hut.fi/game.html</field>
         <field type="URLField" name="image_url">http://assets22.pokemon.com/assets/cms2/img/pokedex/full/007.png</field>
         <field type="SlugField" name="slug">pokemon</field>
         <field type="DecimalField" name="price">11.70</field>

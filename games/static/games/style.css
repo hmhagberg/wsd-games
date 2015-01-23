@@ -29,6 +29,7 @@ h1 {
 	background: -o-linear-gradient(#B32C2C, #000000); /* For Opera 11.1 to 12.0 */
 	background: -moz-linear-gradient(#B32C2C, #000000); /* For Firefox 3.6 to 15 */
 	background: linear-gradient(#B32C2C, #000000); /* Standard syntax */
+	color: white;
 }
 
 .inner:hover {
@@ -52,20 +53,23 @@ h1 {
 	background: -o-linear-gradient(#B32C2C, #000000); /* For Opera 11.1 to 12.0 */
 	background: -moz-linear-gradient(#B32C2C, #000000); /* For Firefox 3.6 to 15 */
 	background: linear-gradient(#B32C2C, #000000); /* Standard syntax */
+	color: white;
 }
 
 #pagination-nav {
 	text-align: center;
 }
 
+/*Game*/
 #game {
 	display: block;
 	margin: auto;
-	height: 600px;
-	width: 600px;
+	height: 658px;
+	width: 604px;
 	margin-bottom: 10px;
 }
 
+/*Game highscores*/
 #highscore-container {
 	text-align: center;
 }
@@ -77,8 +81,41 @@ h1 {
 #highscores {
 	display: inline-block;
 	color: #B32C2C;
+	padding-left: 25px;
 }
 
 #highscores li {
 	text-align: left;
+}
+
+#form_container {
+	text-align: center;
+}
+
+#form {
+	display: inline-block;
+	padding: 30px;
+	border-radius: 10px;
+	border: 5px solid black;
+	background: -webkit-linear-gradient(#B32C2C, #000000); /* For Safari 5.1 to 6.0 */
+	background: -o-linear-gradient(#B32C2C, #000000); /* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(#B32C2C, #000000); /* For Firefox 3.6 to 15 */
+	background: linear-gradient(#B32C2C, #000000); /* Standard syntax */
+	color: white;
+}
+
+#form input {
+	color: black;
+}
+
+#submit {
+	float: right;
+}
+
+.modal-footer form {
+	display: inline-block;
+}
+
+.card_link:hover{
+	text-decoration: none;
 }

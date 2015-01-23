@@ -2,12 +2,14 @@
 
 {% load staticfiles %}
 
+{% block title %}WSD-Games - Developers{% endblock %}
+
 {% block header %}Developers{% endblock %}
 
 {% block cards %}
 {% for developer in developers %}
 <div class="col-xs-12 col-sm-6 col-md-3 ">
-	<a href="{% url 'games.views.developer' developer.slug %}">
+	<a class="card_link" href="{% url 'games.views.developer' developer.slug %}">
 		<div class="inner">
 			<h2>{{developer.user.first_name}}</h2>
 			<div class="img-container">
