@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Select username</title>
+</head>
+<body>
+    <h2>Select username:</h2>
+
+    {% if form.errors %}
+        <p>{{ form.errors }}</p>
+    {% endif %}
+
+    <form action="{% url 'social:complete' backend %}" method="POST">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <input type="submit" value="OK" />
+    </form>
+</body>
+</html>

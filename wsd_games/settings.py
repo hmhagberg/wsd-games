@@ -27,6 +27,29 @@ SID_KEY = "5dd2d7e5adfb3cfb061e4f134d6c1821"
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '531631825342-3k60ub72cmccvhtb4cm45nn2hml268g3.apps.googleusercontent.com'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'R_0V6PZaKT4MVI2lCiZpbt42'
 
+SOCIAL_AUTH_PIPELINE = (
+        'social.pipeline.social_auth.social_details',
+        'social.pipeline.social_auth.social_uid',
+        'social.pipeline.social_auth.auth_allowed',
+        'social.pipeline.social_auth.social_user',
+        'social.pipeline.user.get_username',
+
+        # Send a validation email to the user to verify its email address.
+        # Disabled by default.
+        # 'social.pipeline.mail.mail_validation',
+
+        # Associates the current social details with another user account with
+        # a similar email address. Disabled by default.
+        # 'social.pipeline.social_auth.associate_by_email',
+
+        'games.auth_pipeline.ask_username',
+        'social.pipeline.user.create_user',
+        'games.auth_pipeline.save_player_profile',
+        'social.pipeline.social_auth.associate_user',
+        'social.pipeline.social_auth.load_extra_data',
+        'social.pipeline.user.user_details'
+)
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
