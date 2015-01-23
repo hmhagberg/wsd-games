@@ -10,9 +10,11 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-from social.backends.google import GooglePlusAuth
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
+import json
+with open(os.path.dirname(__file__) + "/../client_secrets.json", "r") as jsonf:
+    client_secrets = json.load(jsonf)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
@@ -24,8 +26,8 @@ SECRET_KEY = 'si66cc5d0bpf6#kzte6f$*z@()(m@hcery*_n$ie=h(8y*6vr*'
 SID = "WsdGamesCo"
 SID_KEY = "5dd2d7e5adfb3cfb061e4f134d6c1821"
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '531631825342-3k60ub72cmccvhtb4cm45nn2hml268g3.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'R_0V6PZaKT4MVI2lCiZpbt42'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = client_secrets["web"]["client_id"]
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = client_secrets["web"]["client_secret"]
 
 SOCIAL_AUTH_PIPELINE = (
         'social.pipeline.social_auth.social_details',
