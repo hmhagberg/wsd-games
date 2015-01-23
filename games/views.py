@@ -9,7 +9,7 @@ from django.views.generic import View, FormView
 from django.template import RequestContext
 
 from games.models import *
-from games.forms import SignupForm, PaymentForm
+from games.forms import SignupForm, PaymentForm, UsernameForm
 import wsd_games.settings
 
 context = {}
@@ -56,6 +56,15 @@ def my_games(request):
     except Game.DoesNotExist:
         raise Http404
     return render_to_response('games/base_grid_gameCard.html', context, context_instance=RequestContext(request))
+
+def social_select_username(request, backend):
+    """
+    Username selection view for social auth
+    """
+    form = UsernameForm()
+    return render_to_response("games/auth/select_username.html", {"form": form, "backend": backend},
+                              context_instance=RequestContext(request))
+
 
 def games_list(request):
     return home(request)

@@ -1,5 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.core.validators import RegexValidator
 from django import forms
 
 from games.models import Player
@@ -38,3 +39,9 @@ class PaymentForm(forms.Form):
     def set_values(self, values):
         for key, value in values.items():
             self.fields[key].initial = value
+
+
+class UsernameForm(forms.Form):
+    username_validator = RegexValidator(regex=r"^[a-zA-Z0-9@+-_.]{1,30}$",
+                                        message="Username must contain 1-30 alphanumeric, _, @, +, . or - characters.")
+    username_from_user = forms.CharField(max_length=30, label="Username")

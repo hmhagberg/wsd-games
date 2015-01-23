@@ -7,6 +7,10 @@ urlpatterns = patterns('',
     url(r'^$', 'games.views.home', name='home'),
 
     url(r'^admin/', include(admin.site.urls)),
+
+    url('', include('social.apps.django_app.urls', namespace='social')),
+    url(r'^login/username/([a-z0-9\-_]+)$', 'games.views.social_select_username', name='social_select_username'),
+
     url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'games/auth/base_login.html'}, name='login'),
     url(r'^logout/$', 'games.views.logout_view', name='logout'),
     url(r'^signup/$', SignupView.as_view(), name="signup"),
