@@ -1,7 +1,7 @@
 import uuid
 import hashlib
 
-from django.contrib.auth import logout
+from django.contrib.auth import login, logout
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect, render_to_response
 from django.http import Http404
@@ -9,7 +9,7 @@ from django.views.generic import View, FormView
 from django.template import RequestContext
 
 from games.models import *
-from games.forms import SignupForm, PaymentForm, UsernameForm
+from games.forms import SignupForm, PaymentForm, UsernameForm, LoginForm
 import wsd_games.settings
 
 context = {}
@@ -25,9 +25,28 @@ def home(request):
     return render_to_response('games/base_grid_gameCard.html', context, context_instance=RequestContext(request))
 
 
+class LoginView(FormView):
+    template_name = "games/auth/base_login.html"
+    form_class = LoginForm
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            return redirect("home")
+        return super(LoginView, self).get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        login(self.request, form.get_user())
+        return redirect("home")
+
+
 class SignupView(FormView):
     template_name = "games/auth/base_signup.html"
     form_class = SignupForm
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            return redirect("home")
+        return super(SignupView, self).get(request, *args, **kwargs)
 
     def form_valid(self, form):
         user = form.save()
@@ -167,9 +186,11 @@ class PaymentView(View):
     ERROR_URL = DOMAIN + "payment/error"
 
     def get(self, request, payment_success, payment_cancel, *args, **kwargs):
-        pid = request.GET["pid"]
-        ref = request.GET["ref"]
-        request_checksum = request.GET["checksum"]
+        pid = request.GET.get("pid")
+        ref = request.GET.get("ref")
+        request_checksum = request.GET.get("checksum")
+        if not (pid and ref and request_checksum):
+            raise Http404
         ownership = get_object_or_404(Ownership, payment_pid=pid)
         context = {"player": ownership.player, "game": ownership.game}
 

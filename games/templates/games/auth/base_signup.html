@@ -7,14 +7,14 @@
 {% block header %}Signup{% endblock %}
 
 {% block content %}
-<div id="form_container">
-    <form id="form" method="post">
-        {% csrf_token %}
-        <table>
-            {{ form.as_table }}
-        </table>
-        <br>
-        <input id="submit" type="submit" value="Sign up">
-    </form>
-</div>
+    <div id="form_container">
+        <form id="form" method="POST">
+            {% csrf_token %}
+            <table>
+                {{ form.as_table }}
+            </table>
+            <br>
+            <input id="submit" type="submit" value="Sign up">
+        </form>
+    </div>
 {% endblock %}
