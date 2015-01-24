@@ -2,6 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
 from games.views import PaymentView, SignupView
+from games.forms import LoginForm
 
 urlpatterns = patterns('',
     url(r'^$', 'games.views.home', name='home'),
@@ -11,7 +12,9 @@ urlpatterns = patterns('',
     url('', include('social.apps.django_app.urls', namespace='social')),
     url(r'^login/username/([a-z0-9\-_]+)$', 'games.views.social_select_username', name='social_select_username'),
 
-    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'games/auth/base_login.html'}, name='login'),
+    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'games/auth/base_login.html',
+                                                         'authentication_form': LoginForm},
+        name='login'),
     url(r'^logout/$', 'games.views.logout_view', name='logout'),
     url(r'^signup/$', SignupView.as_view(), name="signup"),
     url(r'^signup/activate/([a-z0-9]+)$', 'games.views.signup_activation', name='signup_activation'),

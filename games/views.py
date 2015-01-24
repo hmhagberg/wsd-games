@@ -1,5 +1,7 @@
+import uuid
 import hashlib
 
+from django.contrib.auth import logout
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect, render_to_response
 from django.http import Http404
@@ -63,7 +65,7 @@ def signup_activation(request, activation_key):
 
 def logout_view(request):
     logout(request)
-    return redirect('..')
+    return redirect("home")
 
 
 def profiles(request, profile_slug):

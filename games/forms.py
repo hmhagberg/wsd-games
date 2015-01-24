@@ -1,9 +1,15 @@
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from django import forms
 
-from games.models import Player, SignupActivation
+from games.models import Player
+
+
+class LoginForm(AuthenticationForm):
+    def confirm_login_allowed(self, user):
+        if not user.is_active:
+            raise forms.ValidationError("You must activate your account before logging in.", code="not_activated")
 
 
 class SignupForm(UserCreationForm):
