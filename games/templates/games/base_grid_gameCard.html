@@ -2,7 +2,9 @@
 
 {% load staticfiles %}
 
-{% block header %}{{category.name}}{{developer.user.first_name}} Games{% endblock %}
+{% block title %}WSD-Games - Games{% endblock %}
+
+{% block header %}{{category.name}}{{developer.user.first_name}}{{title}} Games{% endblock %}
 
 {% block cards %}
 {% for game in games %}
@@ -33,7 +35,17 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					<a href="{% url 'games.views.game' game.slug %}"><button type="button" class="btn btn-primary">Buy Game</button></a>
+					{% if game in user.player.games %}
+						<a href="{% url 'games.views.game' game.slug %}"><button type="button" class="btn btn-primary">Play Game</button></a>
+					{% else %}
+					        {% if user.is_authenticated %}
+            					<form action="{% url 'payment' %}" method="POST">
+                					{% csrf_token %}
+               	 					<input type="hidden" name="game_id" value="{{ game.id }}">
+               	 					<button type="button submit" class="btn btn-primary">Buy Game</button>
+            					</form>
+        					{% endif %}
+					{% endif %}
 				</div>
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal-dialog -->

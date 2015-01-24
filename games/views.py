@@ -17,14 +17,14 @@ def home(request):
     try:
         games = Game.objects.all()
         categories = Category.objects.all()
-        context.update({'games': games, 'categories': categories, 'category': '', 'developer': ''})
+        context.update({'games': games, 'categories': categories, 'category': '', 'developer': '', 'title': ''})
     except Game.DoesNotExist:
         raise Http404
     return render_to_response('games/base_grid_gameCard.html', context, context_instance=RequestContext(request))
 
 
 class SignupView(FormView):
-    template_name = "games/auth/signup.html"
+    template_name = "games/auth/base_signup.html"
     form_class = SignupForm
 
     def form_valid(self, form):
@@ -61,12 +61,35 @@ def signup_activation(request, activation_key):
     return render_to_response("games/auth/activate.html")
 
 
+def logout_view(request):
+    logout(request)
+    return redirect('..')
+
+
+def profiles(request, profile_slug):
+    profile = get_object_or_404(Player, slug=profile_slug)
+    categories = Category.objects.all()
+    context.update({'profile': profile, 'categories': categories})
+
+    return render_to_response('games/base_profile.html', context, context_instance=RequestContext(request))
+
+
+def my_games(request):
+    try:
+        games = request.user.player.games()
+        categories = Category.objects.all()
+        context.update({'games': games, 'categories': categories, 'category': '', 'developer': '', 'title': 'My'})
+    except Game.DoesNotExist:
+        raise Http404
+    return render_to_response('games/base_grid_gameCard.html', context, context_instance=RequestContext(request))
+
+
 def social_select_username(request, backend):
     """
     Username selection view for social auth
     """
     form = UsernameForm()
-    return render_to_response("games/auth/select_username.html", {"form": form, "backend": backend},
+    return render_to_response("games/auth/base_selectUsername.html", {"form": form, "backend": backend},
                               context_instance=RequestContext(request))
 
 
@@ -121,7 +144,7 @@ def category(request, category_slug):
     category = get_object_or_404(Category, slug=category_slug)
     games = category.category_games.all()
     categories = Category.objects.all()
-    context.update({'category': category, 'games': games, 'categories': categories, 'developer': ''})
+    context.update({'category': category, 'games': games, 'categories': categories, 'developer': '', 'title': ''})
 
     return render_to_response('games/base_grid_gameCard.html', context, context_instance=RequestContext(request))
 
@@ -130,7 +153,7 @@ def developer(request, developers_slug):
     developer = get_object_or_404(Developer, slug=developers_slug)
     games = developer.developers_games.all()
     categories = Category.objects.all()
-    context.update({'developer': developer, 'games': games, 'categories': categories, 'category': ''})
+    context.update({'developer': developer, 'games': games, 'categories': categories, 'category': '', 'title': ''})
     return render_to_response('games/base_grid_gameCard.html', context, context_instance=RequestContext(request))
 
 

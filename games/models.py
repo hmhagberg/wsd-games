@@ -57,6 +57,13 @@ class Player(AbstractProfileModel):
         except Ownership.DoesNotExist:
             return False
 
+    def games(self):
+        games = []
+        for i in self.ownerships.all():
+            if i.payment_completed:
+                games.append(i.game)
+        return games
+
 
 class Developer(AbstractProfileModel):
     """
@@ -104,7 +111,11 @@ class Game(AbstractSlugModel):
         return self.name
     
     def get_highscores(self, limit=10):
-        return self.ownerships.all()[:limit]
+        highscores = []
+        for i in self.ownerships.all():
+            if i.payment_completed:
+                highscores.append(i)
+        return highscores[:limit]
 
 
 class Ownership(models.Model):
