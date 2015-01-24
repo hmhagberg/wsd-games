@@ -26,12 +26,10 @@ def home(request):
 class SignupView(FormView):
     template_name = "games/auth/signup.html"
     form_class = SignupForm
-    success_url = ".."  # TODO: Redirect user to confirmation page
 
     def form_valid(self, form):
         user = form.save()
         SignupView.send_activation_mail(user)
-        #return super(SignupView, self).form_valid(form)
         return render_to_response("games/auth/activate_pending.html", {"username": user.username})
 
     @staticmethod
