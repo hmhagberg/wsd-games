@@ -4,7 +4,7 @@
 
 {% block title %}WSD-Games - Games{% endblock %}
 
-{% block header %}{{category.name}}{{developer.user.first_name}}{{title}} Games{% endblock %}
+{% block header %}{{category.name}}{{developer.name}}{{title}} Games{% endblock %}
 
 {% block cards %}
 {% for game in games %}
@@ -12,10 +12,10 @@
 	<div class="inner" data-toggle="modal" data-target="#modal{{game.id}}">
 		<h2>{{game.name}}</h2>
 		<div class="img-container">
-			<img src="{{game.image_url}}" class="img-responsive img-circle" alt="{{game.developer.user.first_name}} image">
+			<img src="{{game.image_url}}" class="img-responsive img-circle" alt="{{game.developer.name}} image">
 		</div>
 		<p>{{game.description}}</p>
-		<p>Developer: <a href="{% url 'games.views.developer' game.developer.slug %}">{{game.developer.user.first_name}}</a></p>
+		<p>Developer: <a href="{% url 'games.views.developer' game.developer.slug %}">{{game.developer.name}}</a></p>
 		<p>Categories: {% for category in game.categories.all %}<a href="{% url 'games.views.category' category.slug %}">{{category}}</a> | {% endfor %}</p>
 	</div>
 	<div class="modal fade" id="modal{{game.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -27,10 +27,10 @@
 				</div>
 				<div class="modal-body">
 					<div class="img-container">
-						<img src="{{game.image_url}}" class="img-responsive img-circle" alt="{{game.developer.user.first_name}} image">
+						<img src="{{game.image_url}}" class="img-responsive img-circle" alt="{{game.developer.name}} image">
 					</div>
 					<p>{{game.description}}</p>
-					<p>Developer: <a href="{% url 'games.views.developer' game.developer.slug %}">{{game.developer.user.first_name}}</a></p>
+					<p>Developer: <a href="{% url 'games.views.developer' game.developer.slug %}">{{game.developer.name}}</a></p>
 					<p>Categories: {% for category in game.categories.all %}<a href="{% url 'games.views.category' category.slug %}">{{category}}</a> | {% endfor %}</p>
 				</div>
 				<div class="modal-footer">

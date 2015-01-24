@@ -30,48 +30,36 @@
 
     <object pk="4" model="auth.user">
         <field type="CharField" name="username">pelifirma</field>
-        <field type="CharField" name="first_name">Pelifirma</field>
-        <field type="CharField" name="last_name">Oy</field>
         <field type="EmailField" name="email">noreply@pelifirma.fi</field>
         <field type="CharField" name="password">pbkdf2_sha256$12000$VkIGH9LQ8ovW$YXo0BUPHTI43CSaNZ7KqBaO8/AXc/L+19aYXyipoHxw=</field>
     </object>
 
     <object pk="5" model="auth.user">
         <field type="CharField" name="username">rovio</field>
-        <field type="CharField" name="first_name">Rovio</field>
-        <field type="CharField" name="last_name">Oy</field>
         <field type="EmailField" name="email">noreply@rovio.fi</field>
         <field type="CharField" name="password">pbkdf2_sha256$12000$VkIGH9LQ8ovW$YXo0BUPHTI43CSaNZ7KqBaO8/AXc/L+19aYXyipoHxw=</field>
     </object>
 
     <object pk="6" model="auth.user">
         <field type="CharField" name="username">supercell</field>
-        <field type="CharField" name="first_name">Supercell</field>
-        <field type="CharField" name="last_name">Oy</field>
         <field type="EmailField" name="email">noreply@supercell.fi</field>
         <field type="CharField" name="password">pbkdf2_sha256$12000$VkIGH9LQ8ovW$YXo0BUPHTI43CSaNZ7KqBaO8/AXc/L+19aYXyipoHxw=</field>
     </object>
 
     <object pk="7" model="auth.user">
         <field type="CharField" name="username">valve</field>
-        <field type="CharField" name="first_name">Valve</field>
-        <field type="CharField" name="last_name">Ltd.</field>
         <field type="EmailField" name="email">noreply@valve.com</field>
         <field type="CharField" name="password">pbkdf2_sha256$12000$VkIGH9LQ8ovW$YXo0BUPHTI43CSaNZ7KqBaO8/AXc/L+19aYXyipoHxw=</field>
     </object>
 
     <object pk="8" model="auth.user">
         <field type="CharField" name="username">rockstar</field>
-        <field type="CharField" name="first_name">Rockstar</field>
-        <field type="CharField" name="last_name">Inc.</field>
         <field type="EmailField" name="email">noreply@rockstar.com</field>
         <field type="CharField" name="password">pbkdf2_sha256$12000$VkIGH9LQ8ovW$YXo0BUPHTI43CSaNZ7KqBaO8/AXc/L+19aYXyipoHxw=</field>
     </object>
 
     <object pk="9" model="auth.user">
         <field type="CharField" name="username">king</field>
-        <field type="CharField" name="first_name">King</field>
-        <field type="CharField" name="last_name">Ltd.</field>
         <field type="EmailField" name="email">king@kong.bong</field>
         <field type="CharField" name="password">pbkdf2_sha256$12000$VkIGH9LQ8ovW$YXo0BUPHTI43CSaNZ7KqBaO8/AXc/L+19aYXyipoHxw=</field>
     </object>
@@ -97,35 +85,41 @@
 
     <object pk="1" model="games.developer">
         <field type="SlugField" name="slug">pelifirma</field>
+        <field type="CharField" name="name">Pelifirma</field>
         <field to="auth.user" name="user" rel="OneToOneRel">4</field>
     </object>
 
     <object pk="2" model="games.developer">
         <field type="SlugField" name="slug">rovio</field>
+        <field type="CharField" name="name">Rovio</field>
         <field to="auth.user" name="user" rel="OneToOneRel">5</field>
         <field type="URLField" name="image_url">http://phandroid.s3.amazonaws.com/wp-content/uploads/2011/09/Rovio_Academy_logo-150x150.png</field>
     </object>
 
     <object pk="3" model="games.developer">
         <field type="SlugField" name="slug">supercell</field>
+        <field type="CharField" name="name">SuperCell</field>
         <field to="auth.user" name="user" rel="OneToOneRel">6</field>
         <field type="URLField" name="image_url">https://unityads.unity3d.com/assets/img/logo-supercell.png</field>
     </object>
 
     <object pk="4" model="games.developer">
         <field type="SlugField" name="slug">valve</field>
+        <field type="CharField" name="name">Valve</field>
         <field to="auth.user" name="user" rel="OneToOneRel">7</field>
         <field type="URLField" name="image_url">http://combineoverwiki.net/images/thumb/6/6a/Head_anim.gif/200px-Head_anim.gif</field>
     </object>
 
     <object pk="4" model="games.developer">
         <field type="SlugField" name="slug">rockstar</field>
+        <field type="CharField" name="name">Rockstar</field>
         <field to="auth.user" name="user" rel="OneToOneRel">8</field>
         <field type="URLField" name="image_url">http://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Rockstar_Games_logo.svg/2000px-Rockstar_Games_logo.svg.png</field>
     </object>
 
     <object pk="5" model="games.developer">
         <field type="SlugField" name="slug">king</field>
+        <field type="CharField" name="name">King</field>
         <field to="auth.user" name="user" rel="OneToOneRel">9</field>
         <field type="URLField" name="image_url">http://www.thedrum.com/uploads/drum_basic_article/105567/main_images/k2_0.png</field>
     </object>

@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from django import forms
 
-from games.models import Player
+from games.models import Player, Developer
 
 
 class LoginForm(AuthenticationForm):
@@ -12,14 +12,14 @@ class LoginForm(AuthenticationForm):
             raise forms.ValidationError("You must activate your account before logging in.", code="not_activated")
 
 
-class SignupForm(UserCreationForm):
-    first_name = forms.CharField(required=True, max_length=50)
-    last_name = forms.CharField(required=True, max_length=50)
-    email = forms.EmailField(required=True, max_length=75)
+class PlayerSignupForm(UserCreationForm):
+    first_name = forms.CharField(max_length=50)
+    last_name = forms.CharField(max_length=50)
+    email = forms.EmailField(max_length=75)
 
     class Meta:
         model = User
-        fields = ("username", "first_name", "last_name", "email")
+        fields = ("username", "first_name", "last_name", "email", "password1", "password2")
 
     def clean_email(self):
         email = self.cleaned_data["email"]
@@ -39,6 +39,39 @@ class SignupForm(UserCreationForm):
         user.save()
         player = Player(user=user)
         player.save()
+        return user
+
+
+class DeveloperSignupForm(UserCreationForm):
+    name = forms.CharField(max_length=50)
+    email = forms.EmailField(max_length=75)
+    image_url = forms.URLField(required=False, label="Image URL")
+    description = forms.CharField(required=False)
+
+    class Meta:
+        model = User
+        fields = ("username", "name", "email", "image_url", "description")
+
+    def clean_email(self):
+        email = self.cleaned_data["email"]
+        try:
+            User.objects.get(email=email)
+        except User.DoesNotExist:
+            return email
+        raise forms.ValidationError("Email is already in use")
+
+    def save(self, commit=True):
+        user = super(UserCreationForm, self).save(commit=False)
+        user.set_password(self.cleaned_data["password1"])
+        user.email = self.cleaned_data["email"]
+        user.is_active = False
+        user.save()
+
+        developer = Developer(user=user)
+        developer.name = self.cleaned_data["name"]
+        developer.image_url = self.cleaned_data["image_url"]
+        developer.description = self.cleaned_data["description"]
+        developer.save()
         return user
 
 

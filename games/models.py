@@ -18,37 +18,31 @@ class AbstractSlugModel(models.Model):
 
     class Meta:
         abstract = True
+        ordering = ["name"]
 
     def save(self, *args, **kwargs):
         if not self.id:
             self.slug = slugify(self.name)
         super(AbstractSlugModel, self).save(*args, **kwargs)
 
+    def __str__(self):
+        return self.name
 
-class AbstractProfileModel(models.Model):
-    """
-    Abstract base model for models that need to be linked to Django auth's User model
-    """
 
+class Player(models.Model):
+    """
+    Player profile
+    """
     user = models.OneToOneField(User)
     slug = models.SlugField()
-
-    class Meta:
-        abstract = True
 
     def save(self, *args, **kwargs):
         if not self.id:
             self.slug = slugify(self.user.username)
-        super(AbstractProfileModel, self).save(*args, **kwargs)
+        super(Player, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.user.username
-
-
-class Player(AbstractProfileModel):
-    """
-    Player profile
-    """
 
     def owns_game(self, game):
         try:
@@ -65,10 +59,11 @@ class Player(AbstractProfileModel):
         return games
 
 
-class Developer(AbstractProfileModel):
+class Developer(AbstractSlugModel):
     """
     Developer profile
     """
+    user = models.OneToOneField(User)
     image_url = models.URLField(blank=True, default='http://rammb.cira.colostate.edu/dev/hillger/WSD_logo.gif')
     description = models.TextField(default='Developer description')
 
@@ -88,12 +83,6 @@ class Category(AbstractSlugModel):
     image_url = models.URLField(blank=True, default='http://rammb.cira.colostate.edu/dev/hillger/WSD_logo.gif')
     description = models.TextField(default='Category description')
 
-    class Meta:
-        ordering = ["name"]
-
-    def __str__(self):
-        return self.name
-
 
 class Game(AbstractSlugModel):
     description = models.TextField(default='Game description')
@@ -102,13 +91,6 @@ class Game(AbstractSlugModel):
     developer = models.ForeignKey(Developer, related_name='developers_games')
     categories = models.ManyToManyField(Category, related_name='category_games')
     price = models.DecimalField(max_digits=6, decimal_places=2)
-
-
-    class Meta:
-        ordering = ["name"]
-
-    def __str__(self):
-        return self.name
     
     def get_highscores(self, limit=10):
         highscores = []
