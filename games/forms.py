@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.core.validators import RegexValidator
+from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import ugettext_lazy as _
 from django import forms
 
@@ -10,7 +9,7 @@ from games.models import Player, Developer
 class LoginForm(AuthenticationForm):
     def confirm_login_allowed(self, user):
         if not user.is_active:
-            raise forms.ValidationError("You must activate your account before logging in.", code="not_activated")
+            raise forms.ValidationError(_("You must activate your account before logging in."), code="not_activated")
 
 
 class WsdGamesUserCreationForm(forms.ModelForm):
@@ -125,3 +124,4 @@ class UsernameForm(forms.Form):
                                           error_messages={
                                               "invalid": _("This value may contain only letters, numbers and "
                                                            "@/./+/-/_ characters.")})
+
