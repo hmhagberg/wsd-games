@@ -95,7 +95,7 @@
 						<img src="{{game.image_url}}" class="img-responsive img-circle" alt="{{game.developer.name}} image">
 					</div>
 					<p>{{game.description}}</p>
-					<p>Developer: <a href="{% url 'games.views.developer' game.developer.slug %}">{{game.developer.name}}</a></p>
+					<p class="developer">Developer: <a href="{% url 'games.views.developer' game.developer.slug %}">{{game.developer.name}}</a></p>
 					<p>Categories: {% for category in game.categories.all %}<a href="{% url 'games.views.category' category.slug %}">{{category}}</a> | {% endfor %}</p>
                     <p class="price">Price: {{game.price}}</p>
 				</div>
