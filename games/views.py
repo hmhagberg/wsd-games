@@ -1,6 +1,7 @@
 import uuid
 import hashlib
 
+from django.conf import settings
 from django.contrib.auth import login, logout
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect, render_to_response, render
@@ -10,7 +11,6 @@ from django.template import RequestContext
 
 from games.models import *
 from games.forms import *
-import wsd_games.settings
 
 context = {}
 
@@ -238,7 +238,6 @@ class PaymentView(View):
                   "checksum": checksum}
 
         form = PaymentForm(initial=values)
-        # form.set_values(values)
 
         # Check for old payments that haven't been completed properly (either via /payment/success/ or payment/cancel/)
         try:

@@ -1,10 +1,9 @@
 import uuid
 
+from django.conf import settings
 from django.db import models
 from django.template.defaultfilters import slugify
-from django.contrib.auth.models import User
-
-from wsd_games import settings
+from django.contrib.auth.models import AbstractUser
 
 
 class AbstractSlugModel(models.Model):
@@ -29,11 +28,36 @@ class AbstractSlugModel(models.Model):
         return self.name
 
 
+class WsdGamesUser(AbstractUser):
+
+    def __getattr__(self, item):
+        if item == "player" or item == "developer" or item.endswith("_cache"):  # Prevents infinite recursion
+            raise AttributeError("%r object has no attribute %r" % (
+                type(self).__name__, item))
+        elif hasattr(self, "player"):
+            get_from = self.player
+        else:
+            get_from = self.developer
+
+        attr = getattr(get_from, item)
+        if attr is None:
+            raise AttributeError("%r object has no attribute %r" % (
+                type(self).__name__, item))
+        else:
+            return attr
+
+    def is_player(self):
+        return hasattr(self, "player")
+
+    def is_developer(self):
+        return hasattr(self, "developer")
+
+
 class Player(models.Model):
     """
     Player profile
     """
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL)
     slug = models.SlugField()
 
     def save(self, *args, **kwargs):
@@ -63,14 +87,14 @@ class Developer(AbstractSlugModel):
     """
     Developer profile
     """
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL)
     image_url = models.URLField(blank=True, default='http://rammb.cira.colostate.edu/dev/hillger/WSD_logo.gif')
     description = models.TextField(default='Developer description')
 
 
 class SignupActivation(models.Model):
     key = models.CharField(unique=True, default=uuid.uuid4().hex, max_length=32)
-    user = models.OneToOneField(User)  # TODO: Does removing this obj also remove user?
+    user = models.OneToOneField(settings.AUTH_USER_MODEL)  # TODO: Does removing this obj also remove user?
     time_sent = models.DateTimeField(auto_now_add=True)
 
     @property
