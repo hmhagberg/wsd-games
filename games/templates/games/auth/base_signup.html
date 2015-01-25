@@ -15,6 +15,11 @@
             </table>
             <br>
             <input id="submit" type="submit" value="Sign up">
+
+            {% if not dev_signup %}
+                Click <a href="{% url 'signup' 'dev' %}">here</a> if you want to create a developer account.
+            {% endif %}
+
         </form>
     </div>
 {% endblock %}

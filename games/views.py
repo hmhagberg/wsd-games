@@ -1,16 +1,16 @@
 import uuid
 import hashlib
 
+from django.conf import settings
 from django.contrib.auth import login, logout
 from django.core.mail import send_mail
-from django.shortcuts import get_object_or_404, redirect, render_to_response
+from django.shortcuts import get_object_or_404, redirect, render_to_response, render
 from django.http import Http404
 from django.views.generic import View, FormView
 from django.template import RequestContext
 
 from games.models import *
-from games.forms import SignupForm, PaymentForm, UsernameForm, LoginForm
-import wsd_games.settings
+from games.forms import *
 
 context = {}
 
@@ -39,19 +39,31 @@ class LoginView(FormView):
         return redirect("home")
 
 
-class SignupView(FormView):
-    template_name = "games/auth/base_signup.html"
-    form_class = SignupForm
+class SignupView(View):
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, dev_signup, *args, **kwargs):
         if request.user.is_authenticated():
             return redirect("home")
-        return super(SignupView, self).get(request, *args, **kwargs)
 
-    def form_valid(self, form):
-        user = form.save()
-        SignupView.send_activation_mail(user)
-        return render_to_response("games/auth/activate_pending.html", {"username": user.username})
+        if dev_signup is None:
+            form = PlayerSignupForm()
+        else:
+            form = DeveloperSignupForm()
+
+        return render(request, "games/auth/base_signup.html", {"form": form, "dev_signup": dev_signup})
+
+    def post(self, request, dev_signup, *args, **kwargs):
+        if dev_signup is None:
+            form = PlayerSignupForm(request.POST)
+        else:
+            form = DeveloperSignupForm(request.POST)
+
+        if form.is_valid():
+            user = form.save()
+            SignupView.send_activation_mail(user)
+            return render(request, "games/auth/activate_pending.html", {"username": user.username})
+        else:
+            return render(request, "games/auth/base_signup.html", {"form": form, "dev_signup": dev_signup})
 
     @staticmethod
     def send_activation_mail(user):
@@ -225,8 +237,7 @@ class PaymentView(View):
                   "amount": amount,
                   "checksum": checksum}
 
-        form = PaymentForm()
-        form.set_values(values)
+        form = PaymentForm(initial=values)
 
         # Check for old payments that haven't been completed properly (either via /payment/success/ or payment/cancel/)
         try:
