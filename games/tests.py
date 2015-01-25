@@ -5,7 +5,7 @@ import unittest
 
 
 class TestBasicClient(unittest.TestCase):
-    fixtures = ['wsd-games-data.xml']
+    FIXTURES = ['wsd-games-data'] # Doesn't work!!
 
     def setUp(self):
         self.client = Client()
@@ -18,20 +18,24 @@ class TestBasicClient(unittest.TestCase):
                         " --- "+str(expected_code)+" expected")
 
     def set_testUser(self):
-        self.user = User.objects.create_user('johnny', 'lennon@thebeatles.com', 'johnpassword')
+        self.test_user_name = 'johnny'
+        self.test_user_password = 'johnpassword'
+        self.test_user_email = 'lennon@thebeatles.com'
+        self.user = User.objects.create_user(self.test_user_name, self.test_user_email, self.test_user_email)
+
+    def login_test_user(self):
+        self.client.login(username=self.test_user_name, password=self.test_user_password)
+
+    def logout_test_user(self):
+        self.client.logout()
 
     def test_homepage(self):
-        print(self.client.login(username='johnny', password='johnpassword'))
         self.assert_url('', 200)
         self.assert_url('/', 200)
 
     def test_games(self):
         self.assert_url('/games/', 200)
-        #self.assert_url('/games/worm-game', 200)
-        response = self.client.get('/games/worm-game', follow=True)
-        print(response.status_code)
-
-
+        self.assert_url('/games/', 200)
         self.assert_url('/games/developers/', 200)
         self.assert_url('/games/categories/', 200)
 
