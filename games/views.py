@@ -1,15 +1,15 @@
 import uuid
 import hashlib
 
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect, Http404
-from django.shortcuts import render_to_response
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import login, logout
+from django.core.mail import send_mail
+from django.shortcuts import get_object_or_404, redirect, render_to_response
+from django.http import Http404
 from django.views.generic import View, FormView
 from django.template import RequestContext
 
 from games.models import *
-from games.forms import SignupForm, PaymentForm
+from games.forms import SignupForm, PaymentForm, UsernameForm, LoginForm
 import wsd_games.settings
 
 context = {}
@@ -19,23 +19,99 @@ def home(request):
     try:
         games = Game.objects.all()
         categories = Category.objects.all()
-        context.update({'games': games, 'categories': categories, 'category': '', 'developer': ''})
+        context.update({'games': games, 'categories': categories, 'category': '', 'developer': '', 'title': ''})
     except Game.DoesNotExist:
         raise Http404
     return render_to_response('games/base_grid_gameCard.html', context, context_instance=RequestContext(request))
 
 
-class SignupView(FormView):
-    template_name = "games/auth/signup.html"
-    form_class = SignupForm
-    success_url = ".."  # TODO: Redirect user to confirmation page
+class LoginView(FormView):
+    template_name = "games/auth/base_login.html"
+    form_class = LoginForm
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            return redirect("home")
+        return super(LoginView, self).get(request, *args, **kwargs)
 
     def form_valid(self, form):
-        form.save()
-        new_user = authenticate(username=form.cleaned_data["username"], password=form.cleaned_data["password1"])
-        if new_user is not None:
-            login(self.request, new_user)
-        return super(SignupView, self).form_valid(form)
+        login(self.request, form.get_user())
+        return redirect("home")
+
+
+class SignupView(FormView):
+    template_name = "games/auth/base_signup.html"
+    form_class = SignupForm
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            return redirect("home")
+        return super(SignupView, self).get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        user = form.save()
+        SignupView.send_activation_mail(user)
+        return render_to_response("games/auth/activate_pending.html", {"username": user.username})
+
+    @staticmethod
+    def send_activation_mail(user):
+        activation = SignupActivation(user=user)
+        activation.save()
+        # TODO: Write better message, possibly in separate file?
+        message = "Thank you for signing up, {username}\n" \
+                  "To activate your account click the following link: http://localhost:8000/signup/activate/{key}\n" \
+                  "The link expires in {expires_in} hours".format(username=user.username, key=activation.key,
+                                                                  expires_in=24)
+        send_mail("WSD Games Account Activation", message, "noreply@wsd-games.fi", [user.email])
+
+
+def signup_activation(request, activation_key):
+    if request.user.is_authenticated():
+        return redirect("home")
+
+    # TODO: Is it better to return 404 or redirect to home?
+    confirmation = get_object_or_404(SignupActivation, key=activation_key)
+    if confirmation.has_expired:
+        confirmation.delete()
+        return render_to_response("games/auth/activate_expired.html")
+
+    user = confirmation.user
+    user.is_active = True
+    user.save()
+    confirmation.delete()
+    return render_to_response("games/auth/activate.html")
+
+
+def logout_view(request):
+    logout(request)
+    return redirect("home")
+
+
+def profiles(request, profile_slug):
+    profile = get_object_or_404(Player, slug=profile_slug)
+    categories = Category.objects.all()
+    context.update({'profile': profile, 'categories': categories})
+
+    return render_to_response('games/base_profile.html', context, context_instance=RequestContext(request))
+
+
+def my_games(request):
+    try:
+        games = request.user.player.games()
+        categories = Category.objects.all()
+        context.update({'games': games, 'categories': categories, 'category': '', 'developer': '', 'title': 'My'})
+    except Game.DoesNotExist:
+        raise Http404
+    return render_to_response('games/base_grid_gameCard.html', context, context_instance=RequestContext(request))
+
+
+def social_select_username(request, backend):
+    """
+    Username selection view for social auth
+    """
+    form = UsernameForm()
+    return render_to_response("games/auth/base_selectUsername.html", {"form": form, "backend": backend},
+                              context_instance=RequestContext(request))
 
 
 def games_list(request):
@@ -89,7 +165,7 @@ def category(request, category_slug):
     category = get_object_or_404(Category, slug=category_slug)
     games = category.category_games.all()
     categories = Category.objects.all()
-    context.update({'category': category, 'games': games, 'categories': categories, 'developer': ''})
+    context.update({'category': category, 'games': games, 'categories': categories, 'developer': '', 'title': ''})
 
     return render_to_response('games/base_grid_gameCard.html', context, context_instance=RequestContext(request))
 
@@ -98,7 +174,7 @@ def developer(request, developers_slug):
     developer = get_object_or_404(Developer, slug=developers_slug)
     games = developer.developers_games.all()
     categories = Category.objects.all()
-    context.update({'developer': developer, 'games': games, 'categories': categories, 'category': ''})
+    context.update({'developer': developer, 'games': games, 'categories': categories, 'category': '', 'title': ''})
     return render_to_response('games/base_grid_gameCard.html', context, context_instance=RequestContext(request))
 
 
@@ -110,9 +186,11 @@ class PaymentView(View):
     ERROR_URL = DOMAIN + "payment/error"
 
     def get(self, request, payment_success, payment_cancel, *args, **kwargs):
-        pid = request.GET["pid"]
-        ref = request.GET["ref"]
-        request_checksum = request.GET["checksum"]
+        pid = request.GET.get("pid")
+        ref = request.GET.get("ref")
+        request_checksum = request.GET.get("checksum")
+        if not (pid and ref and request_checksum):
+            raise Http404
         ownership = get_object_or_404(Ownership, payment_pid=pid)
         context = {"player": ownership.player, "game": ownership.game}
 

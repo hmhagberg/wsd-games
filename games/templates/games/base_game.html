@@ -2,6 +2,8 @@
 
 {% load staticfiles %}
 
+{% block title %}WSD-Games - {{game.name}}{% endblock %}
+
 {% block header %}{{game.name}}{% endblock %}
 
 {% block content %}
@@ -48,8 +50,8 @@
 
 </script>
     {% if ownership_status == "owned" %}
-        <iframe id="game" src="http://webcourse.cs.hut.fi/game.html"></iframe>
-        <button id="message">Send message</button>
+        <iframe id="game" src="{{game.url}}"></iframe>
+        <button id="message" class="hidden">Send message</button>
     {% elif ownership_status == "developer"  %}
         <h1>YOU DEVELOPED THIS GAME</h1>
     {% else %}
@@ -57,11 +59,21 @@
 
         <!-- NOTE: Make sure only players are allowed to buy games -->
         {% if user.is_authenticated %}
-            <form action="{% url 'payment' %}" method="POST">
-                {% csrf_token %}
-                <input type="hidden" name="game_id" value="{{ game.id }}">
-                <input type="submit" value="Buy game">
-            </form>
+            <div id="form_container">
+                <form action="{% url 'payment' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="game_id" value="{{ game.id }}">
+                    <input type="submit" value="Buy game">
+                </form>
+            </div>
         {% endif %}
     {% endif %}
+    <div id="highscore-container">
+        <h3>Highscores</h3>
+        <ol id="highscores">
+            {% for highscore in game.get_highscores %}
+                <li>{{highscore.player.user.username}} {{highscore.highscore}}</li>
+            {% endfor %}
+        </ol>
+    </div>
 {% endblock %}

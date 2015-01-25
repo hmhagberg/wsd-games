@@ -1,0 +1,27 @@
+{% extends "games/base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}WSD-Games - Login{% endblock %}
+
+{% block header %}Login{% endblock %}
+
+{% block content %}
+    
+    {% if form.errors %}
+        <p>Your username and password didn't match. Please try again.</p>
+    {% endif %}
+    
+    <div id="form_container">
+        <form id="form" method="POST">
+            {% csrf_token %}
+            <table>
+                {{ form.as_table }}
+            </table>
+            <br>
+            <input id="submit" type="submit" value="Login" />
+            <input type="hidden" name="next" value="{{ next }}" />
+            <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}">Login with Google</a>
+        </form>
+    </div>
+{% endblock %}
