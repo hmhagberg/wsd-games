@@ -6,6 +6,70 @@
 
 {% block header %}{{category.name}}{{developer.user.first_name}}{{title}} Games{% endblock %}
 
+{% block sort %}
+<select id="sort">
+    <option>Name</option>
+    <option>Price</option>
+    <option>Developer</option>
+</select>
+<script>
+    $( "#sort" ).change(function() {
+        var sort = "";
+        var compare = "";
+        var count = 0;
+        var count2 = 0;
+        $( "#sort option:selected" ).each(function() {
+            sort = $(this).text();
+        });
+            if (sort === "Name") {
+                for (var i = 0; i < $("#grid").children().length; i++) {
+                    compare = "";
+                    $("#grid").children().each(function() {
+                        if ($(this).find("h2").html() > compare && count >= i) {
+                            compare = $(this).find("h2").html();
+                            count2 = count;
+                        }
+                        count++;
+                    });
+                    $("#grid > div:nth-child(" + (count2 + 1).toString() + ")").prependTo("#grid");
+                    count = 0;
+                    count2 = 0;
+                }
+            }
+            else if (sort === "Price") {
+                for (var i = 0; i < $("#grid").children().length; i++) {
+                    compare = "";
+                    $("#grid").children().each(function() {
+                        if (parseFloat($(this).find(".price").html().substring(7)) > compare && count >= i) {
+                            compare = parseFloat($(this).find(".price").html().substring(7));
+                            count2 = count;
+                        }
+                        count++;
+                    });
+                    $("#grid > div:nth-child(" + (count2 + 1).toString() + ")").prependTo("#grid");
+                    count = 0;
+                    count2 = 0;
+                }
+            }
+            else if (sort === "Developer") {
+                for (var i = 0; i < $("#grid").children().length; i++) {
+                    compare = "";
+                    $("#grid").children().each(function() {
+                        if ($(this).find(".developer").html() > compare && count >= i) {
+                            compare = $(this).find(".developer").html();
+                            count2 = count;
+                        }
+                        count++;
+                    });
+                    $("#grid > div:nth-child(" + (count2 + 1).toString() + ")").prependTo("#grid");
+                    count = 0;
+                    count2 = 0;
+                }
+            }
+    });
+</script>
+{% endblock %}
+
 {% block cards %}
 {% for game in games %}
 <div class="col-xs-12 col-sm-6 col-md-3 ">
@@ -17,6 +81,7 @@
 		<p>{{game.description}}</p>
 		<p>Developer: <a href="{% url 'games.views.developer' game.developer.slug %}">{{game.developer.user.first_name}}</a></p>
 		<p>Categories: {% for category in game.categories.all %}<a href="{% url 'games.views.category' category.slug %}">{{category}}</a> | {% endfor %}</p>
+        <p class="price">Price: {{game.price}}</p>
 	</div>
 	<div class="modal fade" id="modal{{game.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
@@ -30,8 +95,9 @@
 						<img src="{{game.image_url}}" class="img-responsive img-circle" alt="{{game.developer.user.first_name}} image">
 					</div>
 					<p>{{game.description}}</p>
-					<p>Developer: <a href="{% url 'games.views.developer' game.developer.slug %}">{{game.developer.user.first_name}}</a></p>
+					<p class="developer">Developer: <a href="{% url 'games.views.developer' game.developer.slug %}">{{game.developer.user.first_name}}</a></p>
 					<p>Categories: {% for category in game.categories.all %}<a href="{% url 'games.views.category' category.slug %}">{{category}}</a> | {% endfor %}</p>
+
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

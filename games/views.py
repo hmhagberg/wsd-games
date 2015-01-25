@@ -120,7 +120,7 @@ def games_list(request):
 
 def categories_list(request):
     try:
-        categories = Category.objects.all()
+        categories = Category.objects.all().order_by('name')
         context.update({'categories': categories})
     except Category.DoesNotExist:
         raise Http404
@@ -129,7 +129,7 @@ def categories_list(request):
 
 def developers_list(request):
     try:
-        developers = Developer.objects.all()
+        developers = Developer.objects.all().order_by('slug')
         categories = Category.objects.all()
         context.update({'developers': developers, 'categories': categories})
     except Developer.DoesNotExist:

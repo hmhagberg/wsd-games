@@ -55,17 +55,13 @@
 							<li><a href="{% url 'login' %}">Login</a></li>
 						{% endif %}
 					</ul>
-					<form class="navbar-form navbar-right" role="search">
-						<div class="form-group">
-							<input type="text" class="form-control" placeholder="Search">
-						</div>
-						<button type="submit" class="btn btn-inverse">Submit</button>
-					</form>
 				</div><!-- /.navbar-collapse -->
 			</div><!-- /.container-fluid -->
 		</nav>
 		<div id="content">
 			<h1>{% block header %}WSD-Games{% endblock %}</h1>
+			{% block search %}{% endblock %}
+			{% block sort %}{% endblock %}
 			{% block content %} {% endblock %}
 		</div>
 	</body>

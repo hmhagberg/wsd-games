@@ -119,3 +119,11 @@ h1 {
 .card_link:hover{
 	text-decoration: none;
 }
+
+#searchForm {
+	display: inline-block;
+	margin-left: 50px;
+}
+
+#sort {
+}
