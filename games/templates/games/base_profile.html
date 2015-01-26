@@ -7,5 +7,18 @@
 {% block header %}{{profile.user.username}}{% endblock %}
 
 {% block content %}
-
+{% if profile.user.username == user.username %}
+<div id="form_container">
+    <div id="form">
+        <div class="img-container">
+            <img src="http://www.comicbookmovie.com/images/uploads/nerd.jpg" class="img-responsive img-circle" alt=" profile image">
+        </div>
+        <p>Hello, I'm Matti and I like to play Call of Duty with my friends.</p>
+        <p>Name: {{profile.user.first_name}} {{profile.user.last_name}}</p>
+        <p>Email: {{profile.user.email}}</p>
+        <a href="#"><button>Profile</button></a>
+        <a href="#"><button>Settings</button></a>
+    </div>
+</div>
+{% endif %}
 {% endblock %}
