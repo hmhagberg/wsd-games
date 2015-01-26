@@ -4,7 +4,7 @@
 # remove old database:
 rm db.sqlite3
 # remove old migrations:
-rm -rf games/migrations/*
+rm games/migrations/*initial.py
 # make and do migrations:
 python3 manage.py makemigrations
 python3 manage.py migrate
