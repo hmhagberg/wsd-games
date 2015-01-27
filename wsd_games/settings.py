@@ -99,16 +99,12 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
-"""DATABASES = {
+DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
-}"""
-
-import dj_database_url
-DATABASES = {}
-DATABASES['default'] = dj_database_url.config()
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
