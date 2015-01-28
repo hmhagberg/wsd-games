@@ -4,6 +4,7 @@ from django.conf import settings
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import AbstractUser
+from django.core.urlresolvers import reverse
 
 
 class AbstractSlugModel(models.Model):
@@ -68,6 +69,9 @@ class Player(models.Model):
     def __str__(self):
         return self.user.username
 
+    def get_absolute_url(self):
+        return reverse("games.views.profiles", args=[self.slug])
+
     def owns_game(self, game):
         try:
             ownership = self.ownerships.all().get(game=game)
@@ -91,6 +95,9 @@ class Developer(AbstractSlugModel):
     image_url = models.URLField(blank=True, default='http://rammb.cira.colostate.edu/dev/hillger/WSD_logo.gif')
     description = models.TextField(default='Developer description')
 
+    def get_absolute_url(self):
+        return reverse("games.views.developer", args=[self.slug])
+
 
 class SignupActivation(models.Model):
     key = models.CharField(unique=True, default=uuid.uuid4().hex, max_length=32)
@@ -107,6 +114,9 @@ class Category(AbstractSlugModel):
     image_url = models.URLField(blank=True, default='http://rammb.cira.colostate.edu/dev/hillger/WSD_logo.gif')
     description = models.TextField(default='Category description')
 
+    def get_absolute_url(self):
+        return reverse("games.views.category", args=[self.slug])
+
 
 class Game(AbstractSlugModel):
     description = models.TextField(default='Game description')
@@ -115,7 +125,10 @@ class Game(AbstractSlugModel):
     developer = models.ForeignKey(Developer, related_name='developers_games')
     categories = models.ManyToManyField(Category, related_name='category_games')
     price = models.DecimalField(max_digits=6, decimal_places=2)
-    
+
+    def get_absolute_url(self):
+        return reverse("games.views.game", args=[self.slug])
+
     def get_highscores(self, limit=10):
         highscores = []
         for i in self.ownerships.all():
