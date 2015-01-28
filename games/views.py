@@ -192,11 +192,6 @@ def developer(request, developers_slug):
 
 class PaymentView(View):
 
-    DOMAIN = "http://localhost:8000/"
-    SUCCESS_URL = DOMAIN + "payment/success"
-    CANCEL_URL = DOMAIN + "payment/cancel"
-    ERROR_URL = DOMAIN + "payment/error"
-
     def get(self, request, payment_success, payment_cancel, *args, **kwargs):
         pid = request.GET.get("pid")
         ref = request.GET.get("ref")
@@ -231,9 +226,9 @@ class PaymentView(View):
 
         values = {"pid": pid,
                   "sid": sid,
-                  "success_url": PaymentView.SUCCESS_URL,
-                  "cancel_url": PaymentView.CANCEL_URL,
-                  "error_url": PaymentView.ERROR_URL,
+                  "success_url": settings.PAYMENT_SUCCESS_URL,
+                  "cancel_url": settings.PAYMENT_CANCEL_URL,
+                  "error_url": settings.PAYMENT_ERROR_URL,
                   "amount": amount,
                   "checksum": checksum}
 
