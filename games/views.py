@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib.auth import login, logout
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect, render_to_response, render
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.views.generic import View, FormView
 from django.template import RequestContext
 
@@ -247,3 +247,31 @@ class PaymentView(View):
         ownership.save()
         return render_to_response("games/payment/payment.html", {"game": game, "form": form},
                                   context_instance=RequestContext(request))
+
+
+def api_profiles(request, api_version, player_slug):
+    if api_version == "1":
+        return HttpResponse(player_slug)
+    else:
+        raise Http404
+
+
+def api_games(request, api_version, game_slug):
+    if api_version == "1":
+        return HttpResponse(game_slug)
+    else:
+        raise Http404
+
+
+def api_categories(request, api_version, category_slug):
+    if api_version == "1":
+        return HttpResponse(category_slug)
+    else:
+        raise Http404
+
+
+def api_developers(request, api_version, dev_slug):
+    if api_version == "1":
+        return HttpResponse(dev_slug)
+    else:
+        raise Http404

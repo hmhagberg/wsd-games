@@ -1,7 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
-from games.forms import DeveloperSignupForm
 from games.views import PaymentView, SignupView, LoginView
 
 urlpatterns = patterns('',
@@ -31,4 +30,9 @@ urlpatterns = patterns('',
     url(r'^games/([a-z0-9\-]+)$', 'games.views.game'),
 
     url(r'^games/my_games[/]?$', 'games.views.my_games'),
+
+    url(r'^api/v(\d+)/profiles/([a-z0-9\-]*)$', 'games.views.api_profiles'),
+    url(r'^api/v(\d+)/games/([a-z0-9\-]*)$', 'games.views.api_games'),
+    url(r'^api/v(\d+)/games/categories/([a-z0-9\-]*)$', 'games.views.api_categories'),
+    url(r'^api/v(\d+)/games/developers/([a-z0-9\-]*)$', 'games.views.api_developers'),
 )
