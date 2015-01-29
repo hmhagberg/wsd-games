@@ -21,15 +21,43 @@ def _serialize_player(player_obj, include_confidential=False):
 
 
 def _serialize_game(game_obj, include_confidential=False):
-    pass
+    serialized = {"name": game_obj.name,
+                  "slug": game_obj.slug,
+                  "description": game_obj.description,
+                  "image_url": game_obj.image_url,
+                  "developer": game_obj.developer.name,
+                  "categories": [c.name for c in game_obj.categories.all()],
+                  "price": str(game_obj.price),  # Default JSON encoder doesn't support Decimal
+                  "highscores": [{"username": o.player.user.username, "score": o.highscore} for o in
+                                 game_obj.ownerships.all()],
+                  }
+    if include_confidential:
+        serialized.update({"url": game_obj.url,
+                           "sales": len(game_obj.ownerships.all()),
+                           })
+    return serialized
 
 
 def _serialize_category(category_obj, include_confidential=False):
-    pass
+    serialized = {"name": category_obj.name,
+                  "slug": category_obj.slug,
+                  "image_url": category_obj.image_url,
+                  "description": category_obj.description,
+                  "games": [g.name for g in category_obj.games.all()],
+                  }
+
+    return serialized
 
 
 def _serialize_developer(developer_obj, include_confidential=False):
-    pass
+    serialized = {"name": developer_obj.name,
+                  "slug": developer_obj.slug,
+                  "image_url": developer_obj.image_url,
+                  "description": developer_obj.description,
+                  "games": [g.name for g in developer_obj.games.all()],
+                  }
+
+    return serialized
 
 
 model_info = {
@@ -37,7 +65,7 @@ model_info = {
     "games": (Game, _serialize_game, "slug"),
     "categories": (Category, _serialize_category, "slug"),
     "developers": (Developer, _serialize_developer, "slug"),
-}
+    }
 
 
 def get_data(model_name, format, id, api_token):

@@ -128,8 +128,8 @@ class Game(AbstractSlugModel):
     description = models.TextField(default='Game description')
     url = models.URLField()
     image_url = models.URLField(blank=True, default='http://rammb.cira.colostate.edu/dev/hillger/WSD_logo.gif')
-    developer = models.ForeignKey(Developer, related_name='developers_games')
-    categories = models.ManyToManyField(Category, related_name='category_games')
+    developer = models.ForeignKey(Developer, related_name='games')
+    categories = models.ManyToManyField(Category, related_name='games')
     price = models.DecimalField(max_digits=6, decimal_places=2)
 
     def get_absolute_url(self):
