@@ -23,7 +23,10 @@ class AbstractSlugModel(models.Model):
     def save(self, *args, **kwargs):
         if not self.id:
             self.slug = slugify(self.name)
-        super(AbstractSlugModel, self).save(*args, **kwargs)
+        return super(AbstractSlugModel, self).save(*args, **kwargs)
+
+    def natural_key(self):
+        return self.name,
 
     def __str__(self):
         return self.name
@@ -46,6 +49,9 @@ class WsdGamesUser(AbstractUser):
                 type(self).__name__, item))
         else:
             return attr
+
+    def natural_key(self):
+        return self.username,
 
     def is_player(self):
         return hasattr(self, "player")

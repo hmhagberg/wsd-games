@@ -17,8 +17,7 @@ urlpatterns = patterns('',
 
     url(r'^profiles/([a-z0-9\-]+)$', 'games.views.profiles'),
 
-    # FIXME: Currently /payment/successcancelerror and its variants are accepted
-    url(r'^payment/(success)?(cancel)?(error)?$', PaymentView.as_view(), name="payment"),
+    url(r'^payment/(success|cancel|error)?$', PaymentView.as_view(), name="payment"),
 
     url(r'^games/categories[/]?$', 'games.views.categories_list'),  # FIXME: HACK [/]?
     url(r'^games/categories/([a-z0-9\-]+)$', 'games.views.category'),
