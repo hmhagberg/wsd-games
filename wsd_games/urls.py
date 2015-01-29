@@ -30,8 +30,8 @@ urlpatterns = patterns('',
 
     url(r'^games/my_games[/]?$', 'games.views.my_games'),
 
-    url(r'^api/v(\d+)/profiles/([a-z0-9\-]*)$', 'games.views.api_profiles'),
-    url(r'^api/v(\d+)/games/([a-z0-9\-]*)$', 'games.views.api_games'),
-    url(r'^api/v(\d+)/games/categories/([a-z0-9\-]*)$', 'games.views.api_categories'),
-    url(r'^api/v(\d+)/games/developers/([a-z0-9\-]*)$', 'games.views.api_developers'),
+    url(r'^api/v(?P<api_version>\d+)/(?P<model>profiles|games|categories|developers).(?P<format>json)$',
+        'games.views.api_objects'),
+    url(r'^api/v(?P<api_version>\d+)/(?P<model>profiles|games|categories|developers)/(?P<id>[a-z0-9\-]+).(?P<format>json)$',
+        'games.views.api_objects')
 )

@@ -4,7 +4,6 @@ import contextlib
 
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.serializers import json
 from django.contrib.auth import login, logout
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect, render_to_response, render
@@ -12,6 +11,7 @@ from django.http import Http404, HttpResponse, JsonResponse
 from django.views.generic import View, FormView
 from django.template import RequestContext
 
+from games import api
 from games.models import *
 from games.forms import *
 
@@ -252,52 +252,10 @@ class PaymentView(View):
                                   context_instance=RequestContext(request))
 
 
-class FlatJsonSerializer(json.Serializer):
-    def get_dump_object(self, obj):
-        return self._current
-
-
-@contextlib.contextmanager
-def api_get_by_slug(model, slug):
-    try:
-        obj = model.objects.all()
-        yield obj
-    except model.DoesNotExist:
-        JsonResponse({"error": "{} matching query not found".format(model.__name__)})
-
-
-def api_profiles(request, api_version, player_slug):
-    data = {}
+def api_objects(request, api_version, model, format, id=""):
     if api_version == "1":
-        with api_get_by_slug(Player, player_slug) as player:
-            s = FlatJsonSerializer()
-            data = s.serialize(player, use_natural_foreign_keys=True, indent=2)
-            return HttpResponse(data)
-    else:
-        raise Http404
-
-
-def api_games(request, api_version, game_slug):
-    data = {}
-    if api_version == "1":
-        with api_get_by_slug(Player, game_slug) as player:
-            data["game"] = {"username": player.user.username,
-                            "games": [game.name for game in player.games()],
-                            }
-            return JsonResponse(data)
-    else:
-        raise Http404
-
-
-def api_categories(request, api_version, category_slug):
-    if api_version == "1":
-        return HttpResponse(category_slug)
-    else:
-        raise Http404
-
-
-def api_developers(request, api_version, dev_slug):
-    if api_version == "1":
-        return HttpResponse(dev_slug)
+        api_token = request.GET.get("api_token")
+        response = api.get_data(model, format, id, api_token)
+        return HttpResponse(response, content_type=api.content_types[format])
     else:
         raise Http404
