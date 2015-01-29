@@ -106,7 +106,7 @@ class Developer(AbstractSlugModel):
 
 
 class SignupActivation(models.Model):
-    key = models.CharField(unique=True, default=uuid.uuid4().hex, max_length=32)
+    key = models.CharField(unique=True, default=lambda: uuid.uuid4().hex, max_length=32)
     user = models.OneToOneField(settings.AUTH_USER_MODEL)  # TODO: Does removing this obj also remove user?
     time_sent = models.DateTimeField(auto_now_add=True)
 
