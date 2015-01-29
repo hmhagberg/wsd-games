@@ -26,7 +26,7 @@ class AbstractSlugModel(models.Model):
         return super(AbstractSlugModel, self).save(*args, **kwargs)
 
     def natural_key(self):
-        return self.name,
+        return self.name
 
     def __str__(self):
         return self.name
@@ -51,7 +51,7 @@ class WsdGamesUser(AbstractUser):
             return attr
 
     def natural_key(self):
-        return self.username,
+        return self.username
 
     def is_player(self):
         return hasattr(self, "player")
