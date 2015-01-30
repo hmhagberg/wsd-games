@@ -209,8 +209,6 @@ class PaymentView(View):
                 ownership.payment_ref = ref
                 ownership.save()
                 return render_to_response("games/payment/payment_success.html", context, context_instance=RequestContext(request))
-        elif payment_cancel is not None:
-                return render_to_response("games/payment/payment_success.html", context, context_instance=RequestContext(request))
         elif payment_status == "cancel":
             ownership.delete()
             return render_to_response("games/payment/payment_cancel.html", context, context_instance=RequestContext(request))
