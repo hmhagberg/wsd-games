@@ -213,12 +213,12 @@ class PaymentView(View):
                 ownership.payment_completed = True
                 ownership.payment_ref = ref
                 ownership.save()
-                return render_to_response("games/payment/payment_success.html", context)
+                return render_to_response("games/payment/payment_success.html", context, context_instance=RequestContext(request))
         elif payment_cancel is not None:
             ownership.delete()
-            return render_to_response("games/payment/payment_cancel.html", context)
+            return render_to_response("games/payment/payment_cancel.html", context, context_instance=RequestContext(request))
 
-        return render_to_response("games/payment/payment_error.html")
+        return render_to_response("games/payment/payment_error.html", context_instance=RequestContext(request))
 
     def post(self, request, *args, **kwargs):
         game = get_object_or_404(Game, id=request.POST["game_id"])

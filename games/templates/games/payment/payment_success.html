@@ -1,12 +1,17 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title>Payment successful</title>
-</head>
-<body>
-    <h2>Congratulations {{ player.user.username }}!</h2>
-    <h3>{{ game.name }} has been added to your account and is ready to be played!</h3>
-    <a href="{% url 'games.views.game' game.slug %}"><button type="button" class="btn btn-primary">Play</button></a>
-</body>
-</html>
+{% extends "games/base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}WSD-Games - Purchase Error{% endblock %}
+
+{% block header %}Purchase Completed{% endblock %}
+
+{% block content %}
+<div id="form_container">
+	<div id="form">
+	    <h2>Congratulations {{ player.user.username }}!</h2>
+	    <h3>{{ game.name }} has been added to your account and is ready to be played!</h3>
+	    <a href="{% url 'games.views.game' game.slug %}"><button type="button" class="btn btn-primary">Play Game</button></a>
+	</div>
+</div>
+{% endblock %}
