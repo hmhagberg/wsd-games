@@ -192,12 +192,7 @@ def developer(request, developers_slug):
 
 class PaymentView(View):
 
-    DOMAIN = "http://localhost:8000/"
-    SUCCESS_URL = DOMAIN + "payment/success"
-    CANCEL_URL = DOMAIN + "payment/cancel"
-    ERROR_URL = DOMAIN + "payment/error"
-
-    def get(self, request, payment_success, payment_cancel, *args, **kwargs):
+    def get(self, request, payment_status, *args, **kwargs):
         pid = request.GET.get("pid")
         ref = request.GET.get("ref")
         request_checksum = request.GET.get("checksum")
@@ -206,7 +201,7 @@ class PaymentView(View):
         ownership = get_object_or_404(Ownership, payment_pid=pid)
         context = {"player": ownership.player, "game": ownership.game}
 
-        if payment_success is not None:
+        if payment_status == "success":
             checksumstr = "pid=%s&ref=%s&token=%s" % (pid, ref, settings.SID_KEY)
             checksum = hashlib.md5(checksumstr.encode("ascii")).hexdigest()
             if checksum == request_checksum:
@@ -215,6 +210,8 @@ class PaymentView(View):
                 ownership.save()
                 return render_to_response("games/payment/payment_success.html", context, context_instance=RequestContext(request))
         elif payment_cancel is not None:
+                return render_to_response("games/payment/payment_success.html", context, context_instance=RequestContext(request))
+        elif payment_status == "cancel":
             ownership.delete()
             return render_to_response("games/payment/payment_cancel.html", context, context_instance=RequestContext(request))
 
@@ -231,9 +228,9 @@ class PaymentView(View):
 
         values = {"pid": pid,
                   "sid": sid,
-                  "success_url": PaymentView.SUCCESS_URL,
-                  "cancel_url": PaymentView.CANCEL_URL,
-                  "error_url": PaymentView.ERROR_URL,
+                  "success_url": settings.PAYMENT_SUCCESS_URL,
+                  "cancel_url": settings.PAYMENT_CANCEL_URL,
+                  "error_url": settings.PAYMENT_ERROR_URL,
                   "amount": amount,
                   "checksum": checksum}
 

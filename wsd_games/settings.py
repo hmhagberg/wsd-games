@@ -136,14 +136,20 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 STATIC_URL = '/static/'
 
-# TODO: Change these to appropriate values after authentication is implemented
-LOGIN_URL = '/login/'
-LOGOUT_URL = '/logout/'
-LOGIN_REDIRECT_URL = '/'
+DOMAIN = "http://localhost:8000"
 
 if "DYNO" in os.environ:
     #DEBUG = False
+    DOMAIN = "http://wsd-games.herokuapp.com"
     ALLOWED_HOSTS = ['*']    
     STATIC_ROOT = 'staticfiles'
     import dj_database_url
-    DATABASES['default'] =  dj_database_url.config()
+    DATABASES['default'] = dj_database_url.config()
+
+LOGIN_URL = "/login/"
+LOGOUT_URL = "/logout/"
+LOGIN_REDIRECT_URL = "/"
+
+PAYMENT_SUCCESS_URL = DOMAIN + "/payment/success"
+PAYMENT_CANCEL_URL = DOMAIN + "/payment/cancel"
+PAYMENT_ERROR_URL = DOMAIN + "/payment/error"
