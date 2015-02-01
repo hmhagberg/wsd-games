@@ -1,13 +1,13 @@
 import uuid
 import hashlib
-import contextlib
+import json
 
 from django.conf import settings
 from django.contrib.auth import login, logout
 from django.contrib.auth.models import AnonymousUser
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect, render_to_response, render
-from django.http import Http404, HttpResponse, JsonResponse
+from django.http import Http404, HttpResponse
 from django.views.generic import View, FormView
 from django.template import RequestContext
 
@@ -254,12 +254,36 @@ class PaymentView(View):
 
 def api_objects(request, api_version, collection, response_format, object_id=""):
     if api_version == "1":
+        content_type, dump_content = api.response_formats[response_format]
         api_token = request.GET.get("api_token")
+
+        try:
+            offset = request.GET.get("offset") or 0
+            limit = request.GET.get("limit") or 10
+            offset = int(offset)
+            limit = int(limit)
+        except ValueError:
+            response = dump_content({"detail": "Invalid value for offset and/or limit, should be integer"})
+            return HttpResponse(response, content_type, status=400)
+
         try:
             user = WsdGamesUser.objects.get(api_token=api_token)
         except WsdGamesUser.DoesNotExist:
             user = AnonymousUser()
-        response = api.get_data(collection, response_format, object_id, user)
-        return HttpResponse(response, content_type=api.content_types[response_format])
+
+        model, serializer, check_owner, id_field_name = api.model_info[collection]
+        if object_id == "":
+            objs = model.objects.all()[offset:offset+limit]
+            data = []
+            for obj in objs:
+                data.append(serializer(obj))
+        else:
+            obj = get_object_or_404(model, **{id_field_name: object_id})
+            include_confidential = check_owner(obj, user)
+            data = serializer(obj, include_confidential)
+
+        response = dump_content(data)
+
+        return HttpResponse(response, content_type=content_type)
     else:
         raise Http404

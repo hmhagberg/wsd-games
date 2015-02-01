@@ -4,8 +4,9 @@ from django.shortcuts import get_object_or_404
 
 from games.models import *
 
-content_types = {
-    "json": "application/json",
+response_formats = {
+           # MIME type              Function to dump dict to proper format
+    "json": ("application/json",    lambda x: json.dumps(x, indent=2)),
 }
 
 # NOTE: Serializers must be here before serializers-dict
@@ -93,7 +94,7 @@ model_info = {     # Model      Serializer func         Ownership check func    
     "games":        (Game,      _serialize_game,        _check_owner_game,      "slug"),
     "categories":   (Category,  _serialize_category,    _check_owner_category,  "slug"),
     "developers":   (Developer, _serialize_developer,   _check_owner_developer, "slug"),
-    }
+}
 
 
 def get_data(model_name, response_format, object_id, user):

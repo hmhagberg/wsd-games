@@ -53,7 +53,8 @@ class WsdGamesUser(AbstractUser):
         return hasattr(self, "developer")
 
     def generate_new_token(self):
-        h = hmac.new(settings.API_SECRET, str(datetime.datetime.now())+self.username, "sha1")
+        msg = str(datetime.datetime.now())+self.username
+        h = hmac.new(settings.API_SECRET, msg.encode("ascii"), "sha1")
         return h.hexdigest()
 
 

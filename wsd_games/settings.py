@@ -27,7 +27,7 @@ SID = "WsdGamesCo"
 SID_KEY = "5dd2d7e5adfb3cfb061e4f134d6c1821"
 
 # HMAC key for generating API tokens
-API_SECRET = "4B93C6C44D61C877FF58C7A5728C7"
+API_SECRET = b"4B93C6C44D61C877FF58C7A5728C7"
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = client_secrets["web"]["client_id"]
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = client_secrets["web"]["client_secret"]
