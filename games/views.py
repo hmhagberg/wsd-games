@@ -3,8 +3,8 @@ import hashlib
 import contextlib
 
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import login, logout
+from django.contrib.auth.models import AnonymousUser
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect, render_to_response, render
 from django.http import Http404, HttpResponse, JsonResponse
@@ -178,7 +178,7 @@ def game(request, game_slug):
 
 def category(request, category_slug):
     category = get_object_or_404(Category, slug=category_slug)
-    games = category.category_games.all()
+    games = category.games.all()
     categories = Category.objects.all()
     context.update({'category': category, 'games': games, 'categories': categories, 'developer': '', 'title': ''})
 
@@ -187,7 +187,7 @@ def category(request, category_slug):
 
 def developer(request, developers_slug):
     developer = get_object_or_404(Developer, slug=developers_slug)
-    games = developer.developers_games.all()
+    games = developer.games.all()
     categories = Category.objects.all()
     context.update({'developer': developer, 'games': games, 'categories': categories, 'category': '', 'title': ''})
     return render_to_response('games/base_grid_gameCard.html', context, context_instance=RequestContext(request))
@@ -252,10 +252,14 @@ class PaymentView(View):
                                   context_instance=RequestContext(request))
 
 
-def api_objects(request, api_version, model, format, id=""):
+def api_objects(request, api_version, collection, response_format, object_id=""):
     if api_version == "1":
         api_token = request.GET.get("api_token")
-        response = api.get_data(model, format, id, api_token)
-        return HttpResponse(response, content_type=api.content_types[format])
+        try:
+            user = WsdGamesUser.objects.get(api_token=api_token)
+        except WsdGamesUser.DoesNotExist:
+            user = AnonymousUser()
+        response = api.get_data(collection, response_format, object_id, user)
+        return HttpResponse(response, content_type=api.content_types[response_format])
     else:
         raise Http404

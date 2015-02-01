@@ -16,7 +16,10 @@ def _serialize_player(player_obj, include_confidential=False):
                   "slug": player_obj.slug,
                   }
     if include_confidential:
-        serialized.update({"games": [game.name for game in player_obj.games()], })
+        serialized.update({"games": [{"name": o.game.name,
+                                      "highscore": o.highscore, }
+                                     for o in player_obj.ownerships.all()],
+                           })
     return serialized
 
 
@@ -29,11 +32,11 @@ def _serialize_game(game_obj, include_confidential=False):
                   "categories": [c.name for c in game_obj.categories.all()],
                   "price": str(game_obj.price),  # Default JSON encoder doesn't support Decimal
                   "highscores": [{"username": o.player.user.username, "score": o.highscore} for o in
-                                 game_obj.ownerships.all()],
+                                 game_obj.get_highscores() if o.highscore],  # Include only non-zero highscores
                   }
     if include_confidential:
         serialized.update({"url": game_obj.url,
-                           "sales": len(game_obj.ownerships.all()),
+                           "sold": game_obj.get_number_sold(),
                            })
     return serialized
 
@@ -54,39 +57,62 @@ def _serialize_developer(developer_obj, include_confidential=False):
                   "slug": developer_obj.slug,
                   "image_url": developer_obj.image_url,
                   "description": developer_obj.description,
-                  "games": [g.name for g in developer_obj.games.all()],
                   }
+
+    if include_confidential:
+        serialized.update({"games": [{"name": g.name,
+                                      "sold": g.get_number_sold(), }
+                                     for g in developer_obj.games.all()]
+                           })
+    else:
+        serialized.update({"games": [{"name": g.name, }
+                                     for g in developer_obj.games.all()]
+                           })
 
     return serialized
 
 
-model_info = {
-    "profiles": (Player, _serialize_player, "slug"),
-    "games": (Game, _serialize_game, "slug"),
-    "categories": (Category, _serialize_category, "slug"),
-    "developers": (Developer, _serialize_developer, "slug"),
+def _check_owner_player(player_obj, user):
+    return player_obj.user == user
+
+
+def _check_owner_game(game_obj, user):
+    return game_obj.developer.user == user
+
+
+def _check_owner_category(category_obj, user):
+    return True
+
+
+def _check_owner_developer(developer_obj, user):
+    return developer_obj.user == user
+
+
+model_info = {     # Model      Serializer func         Ownership check func    Object id field name
+    "profiles":     (Player,    _serialize_player,      _check_owner_player,    "slug"),
+    "games":        (Game,      _serialize_game,        _check_owner_game,      "slug"),
+    "categories":   (Category,  _serialize_category,    _check_owner_category,  "slug"),
+    "developers":   (Developer, _serialize_developer,   _check_owner_developer, "slug"),
     }
 
 
-def get_data(model_name, format, id, api_token):
+def get_data(model_name, response_format, object_id, user):
     data = None
-    model, serializer, id_field_name = model_info[model_name]
-    if id == "":
+    serialized = ""
+    model, serializer, check_owner, id_field_name = model_info[model_name]
+    if object_id == "":
         objs = model.objects.all()
         data = []
         for obj in objs:
             data.append(serializer(obj))
     else:
-        obj = get_object_or_404(model, **{id_field_name: id})
-        # TODO: Implement ownership check based on api_token
-        data = serializer(obj, include_confidential=True)
+        obj = get_object_or_404(model, **{id_field_name: object_id})
+        include_confidential = check_owner(obj, user)
+        data = serializer(obj, include_confidential)
 
-    if format == "json":
+    # Add other format handlers here
+    if response_format == "json":
         serialized = json.dumps(data, indent=2)
-    else:
-        serialized = ""
 
     return serialized
-
-
 
