@@ -1,11 +1,16 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title>Payment error</title>
-</head>
-<body>
-    <h2>Oops! Something went wrong when handling payment. Try again!</h2>
-    <h5>Don't worry, your monies are safe (at least for the time being...)</h5>
-</body>
-</html>
+{% extends "games/base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}WSD-Games - Purchase Error{% endblock %}
+
+{% block header %}Purchase Error{% endblock %}
+
+{% block content %}
+<div id="form_container">
+    <div id="form">
+    	<h2>Oops! Something went wrong while handling your payment. Please, try again!</h2>
+    	<p>Don't worry, your money is safe (at least for the time being...)</p>
+    </div>
+</div>
+{% endblock %}

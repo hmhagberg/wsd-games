@@ -1,25 +1,32 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-    <h2>Your purchase</h2>
-    <table>
-        <tr>
-            <td>Game:</td>
-            <td>{{ game.name }}</td>
-        </tr>
-        <tr>
-            <td>Price:</td>
-            <td>{{ game.price }}</td>
-        </tr>
-    </table>
-    <form action="http://payments.webcourse.niksula.hut.fi/pay/" method="POST">
-        {% csrf_token %}
-        {{ form }}
-        <input type="submit" value="Continue to payment service">
-    </form>
-</body>
-</html>
+{% extends "games/base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}WSD-Games - Purchase{% endblock %}
+
+{% block header %}Your purchase{% endblock %}
+
+{% block content %}
+<div id="form_container">
+    <div id="form">
+        <div class="img-container">
+            <img src="{{game.image_url}}" class="img-responsive img-circle" alt="{{game.developer.name}} image">
+        </div>
+        <table>
+            <tr>
+                <td><h2>Game: </h2></td>
+                <td><h2>{{ game.name }}</h2></td>
+            </tr>
+            <tr>
+                <td><h2>Price:</h2></td>
+                <td><h2>{{ game.price }}€</h2></td>
+            </tr>
+        </table>
+        <form action="http://payments.webcourse.niksula.hut.fi/pay/" method="POST">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" value="Continue to payment service">
+        </form>
+    </div>
+</div>
+{% endblock %}

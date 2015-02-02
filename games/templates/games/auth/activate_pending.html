@@ -2,9 +2,12 @@
 
 {% load staticfiles %}
 
-{% block header %}Almost there, {{ username }}!{% endblock %}
-
 {% block content %}
-    <h2>An activation email has been sent to the address you gave.</h2>
-    <h2>To complete the signup process click the activation link in the email.</h2>
+<div id="form_container">
+	<div id="form">
+		<h2>An activation email has been sent to the address you gave.</h2>
+    	<h2>To complete the signup process click the activation link in the email.</h2>
+	</div>
+</div>
+
 {% endblock %}

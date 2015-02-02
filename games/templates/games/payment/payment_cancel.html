@@ -1,10 +1,15 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title>Payment canceled</title>
-</head>
-<body>
-    <h2>Dear {{ player.user.username }}, we're sorry that you didn't want to buy {{ game.name }} after all.</h2>
-</body>
-</html>
+{% extends "games/base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}WSD-Games - Cancel purchase{% endblock %}
+
+{% block header %}Your purchase has been cancelled{% endblock %}
+
+{% block content %}
+<div id="form_container">
+    <div id="form">
+    	<h2>Dear {{ player.user.username }}, we're sorry that you didn't want to buy {{ game.name }} after all.</h2>
+    </div>
+</div>
+{% endblock %}
