@@ -36,7 +36,7 @@ class AbstractSlugModel(models.Model):
 
 class WsdGamesUser(AbstractUser):
 
-    api_token = models.CharField(max_length=20, unique=True)
+    api_token = models.CharField(max_length=40, unique=True)
 
     def save(self, *args, **kwargs):
         if not self.id:  # Set token only if this is first time object is saved()
