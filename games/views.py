@@ -1,14 +1,17 @@
 import uuid
 import hashlib
+import json
 
 from django.conf import settings
 from django.contrib.auth import login, logout
+from django.contrib.auth.models import AnonymousUser
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect, render_to_response, render
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.views.generic import View, FormView
 from django.template import RequestContext
 
+from games import api
 from games.models import *
 from games.forms import *
 
@@ -175,7 +178,7 @@ def game(request, game_slug):
 
 def category(request, category_slug):
     category = get_object_or_404(Category, slug=category_slug)
-    games = category.category_games.all()
+    games = category.games.all()
     categories = Category.objects.all()
     context.update({'category': category, 'games': games, 'categories': categories, 'developer': '', 'title': ''})
 
@@ -184,7 +187,7 @@ def category(request, category_slug):
 
 def developer(request, developers_slug):
     developer = get_object_or_404(Developer, slug=developers_slug)
-    games = developer.developers_games.all()
+    games = developer.games.all()
     categories = Category.objects.all()
     context.update({'developer': developer, 'games': games, 'categories': categories, 'category': '', 'title': ''})
     return render_to_response('games/base_grid_gameCard.html', context, context_instance=RequestContext(request))
@@ -247,3 +250,40 @@ class PaymentView(View):
         ownership.save()
         return render_to_response("games/payment/payment.html", {"game": game, "form": form},
                                   context_instance=RequestContext(request))
+
+
+def api_objects(request, api_version, collection, response_format, object_id=""):
+    if api_version == "1":
+        content_type, dump_content = api.response_formats[response_format]
+        api_token = request.GET.get("api_token")
+
+        try:
+            offset = request.GET.get("offset") or 0
+            limit = request.GET.get("limit") or 10
+            offset = int(offset)
+            limit = int(limit)
+        except ValueError:
+            response = dump_content({"detail": "Invalid value for offset and/or limit, should be integer"})
+            return HttpResponse(response, content_type, status=400)
+
+        try:
+            user = WsdGamesUser.objects.get(api_token=api_token)
+        except WsdGamesUser.DoesNotExist:
+            user = AnonymousUser()
+
+        model, serializer, check_owner, id_field_name = api.model_info[collection]
+        if object_id == "":
+            objs = model.objects.all()[offset:offset+limit]
+            data = []
+            for obj in objs:
+                data.append(serializer(obj))
+        else:
+            obj = get_object_or_404(model, **{id_field_name: object_id})
+            include_confidential = check_owner(obj, user)
+            data = serializer(obj, include_confidential)
+
+        response = dump_content(data)
+
+        return HttpResponse(response, content_type=content_type)
+    else:
+        raise Http404

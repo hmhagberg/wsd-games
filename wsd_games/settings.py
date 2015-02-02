@@ -26,6 +26,9 @@ SECRET_KEY = 'si66cc5d0bpf6#kzte6f$*z@()(m@hcery*_n$ie=h(8y*6vr*'
 SID = "WsdGamesCo"
 SID_KEY = "5dd2d7e5adfb3cfb061e4f134d6c1821"
 
+# HMAC key for generating API tokens
+API_SECRET = b"4B93C6C44D61C877FF58C7A5728C7"
+
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = client_secrets["web"]["client_id"]
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = client_secrets["web"]["client_secret"]
 
@@ -153,3 +156,5 @@ LOGIN_REDIRECT_URL = "/"
 PAYMENT_SUCCESS_URL = DOMAIN + "/payment/success"
 PAYMENT_CANCEL_URL = DOMAIN + "/payment/cancel"
 PAYMENT_ERROR_URL = DOMAIN + "/payment/error"
+
+ACTIVATION_EXPIRATION_HOURS = 72

@@ -1,4 +1,6 @@
 import uuid
+import hmac
+import datetime
 
 from django.conf import settings
 from django.db import models
@@ -26,7 +28,7 @@ class AbstractSlugModel(models.Model):
         return super(AbstractSlugModel, self).save(*args, **kwargs)
 
     def natural_key(self):
-        return self.name,
+        return self.name
 
     def __str__(self):
         return self.name
@@ -34,30 +36,27 @@ class AbstractSlugModel(models.Model):
 
 class WsdGamesUser(AbstractUser):
 
-    def __getattr__(self, item):
-        if item == "player" or item == "developer" or item.endswith("_cache"):  # Prevents infinite recursion
-            raise AttributeError("%r object has no attribute %r" % (
-                type(self).__name__, item))
-        elif hasattr(self, "player"):
-            get_from = self.player
-        else:
-            get_from = self.developer
+    api_token = models.CharField(max_length=20, unique=True)
 
-        attr = getattr(get_from, item)
-        if attr is None:
-            raise AttributeError("%r object has no attribute %r" % (
-                type(self).__name__, item))
-        else:
-            return attr
+    def save(self, *args, **kwargs):
+        if not self.id:  # Set token only if this is first time object is saved()
+            self.api_token = self.generate_new_token()
+        return super(WsdGamesUser, self).save(*args, **kwargs)
 
     def natural_key(self):
-        return self.username,
+        return self.username
 
     def is_player(self):
         return hasattr(self, "player")
 
     def is_developer(self):
         return hasattr(self, "developer")
+
+    def generate_new_token(self):
+        msg = str(datetime.datetime.now())+self.username
+        h = hmac.new(settings.API_SECRET, msg.encode("ascii"), "sha1")
+        return h.hexdigest()
+
 
 
 class Player(models.Model):
@@ -106,14 +105,19 @@ class Developer(AbstractSlugModel):
 
 
 class SignupActivation(models.Model):
-    key = models.CharField(unique=True, default=lambda: uuid.uuid4().hex, max_length=32)
-    user = models.OneToOneField(settings.AUTH_USER_MODEL)  # TODO: Does removing this obj also remove user?
+    key = models.CharField(unique=True, max_length=32)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL)
     time_sent = models.DateTimeField(auto_now_add=True)
 
-    @property
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.key = uuid.uuid4().hex()
+        super(SignupActivation, self).save(*args, **kwargs)
+
     def has_expired(self):
-        # TODO: Add meaningful expiration check
-        return False
+        diff = datetime.datetime.now() - self.time_sent
+        diff_hours = diff.total_seconds() / 3600
+        return diff_hours < settings.ACTIVATION_EXPIRATION_HOURS
 
 
 class Category(AbstractSlugModel):
@@ -128,8 +132,8 @@ class Game(AbstractSlugModel):
     description = models.TextField(default='Game description')
     url = models.URLField()
     image_url = models.URLField(blank=True, default='http://rammb.cira.colostate.edu/dev/hillger/WSD_logo.gif')
-    developer = models.ForeignKey(Developer, related_name='developers_games')
-    categories = models.ManyToManyField(Category, related_name='category_games')
+    developer = models.ForeignKey(Developer, related_name='games')
+    categories = models.ManyToManyField(Category, related_name='games')
     price = models.DecimalField(max_digits=6, decimal_places=2)
 
     def get_absolute_url(self):
@@ -140,7 +144,12 @@ class Game(AbstractSlugModel):
         for i in self.ownerships.all():
             if i.payment_completed:
                 highscores.append(i)
-        return highscores[:limit]
+            if len(highscores) == limit:
+                break
+        return highscores
+
+    def get_number_sold(self):
+        return len(self.get_highscores())
 
 
 class Ownership(models.Model):
