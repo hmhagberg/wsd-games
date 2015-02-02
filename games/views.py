@@ -63,8 +63,8 @@ class SignupView(View):
 
         if form.is_valid():
             user = form.save()
-            SignupView.send_activation_mail(user)
-            return render(request, "games/auth/activate_pending.html", {"username": user.username})
+            link = SignupView.send_activation_mail(user)
+            return render(request, "games/auth/activate_pending.html", {"username": user.username, "link": link})
         else:
             return render(request, "games/auth/base_signup.html", {"form": form, "dev_signup": dev_signup})
 
@@ -73,11 +73,13 @@ class SignupView(View):
         activation = SignupActivation(user=user)
         activation.save()
         # TODO: Write better message, possibly in separate file?
+        activation_link = "{domain}/signup/activate/{key}".format(domain=settings.DOMAIN, key=activation.key)
         message = "Thank you for signing up, {username}\n" \
-                  "To activate your account click the following link: http://localhost:8000/signup/activate/{key}\n" \
-                  "The link expires in {expires_in} hours".format(username=user.username, key=activation.key,
-                                                                  expires_in=24)
+                  "To activate your account click the following link: {link}\n" \
+                  "The link expires in {expires_in} hours".format(username=user.username, link=activation_link,
+                                                                  expires_in=settings.ACTIVATION_EXPIRATION_HOURS)
         send_mail("WSD Games Account Activation", message, "noreply@wsd-games.fi", [user.email])
+        return activation_link
 
 
 def signup_activation(request, activation_key):
@@ -86,15 +88,15 @@ def signup_activation(request, activation_key):
 
     # TODO: Is it better to return 404 or redirect to home?
     confirmation = get_object_or_404(SignupActivation, key=activation_key)
-    if confirmation.has_expired:
+    if confirmation.has_expired():
         confirmation.delete()
-        return render_to_response("games/auth/activate_expired.html")
+        return render(request, "games/auth/activate_expired.html")
 
     user = confirmation.user
     user.is_active = True
     user.save()
     confirmation.delete()
-    return render_to_response("games/auth/activate.html")
+    return render(request, "games/auth/activate.html")
 
 
 def logout_view(request):

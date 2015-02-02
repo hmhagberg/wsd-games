@@ -111,13 +111,13 @@ class SignupActivation(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.id:
-            self.key = uuid.uuid4().hex()
+            self.key = uuid.uuid4().hex
         super(SignupActivation, self).save(*args, **kwargs)
 
     def has_expired(self):
         diff = datetime.datetime.now() - self.time_sent
         diff_hours = diff.total_seconds() / 3600
-        return diff_hours < settings.ACTIVATION_EXPIRATION_HOURS
+        return diff_hours > settings.ACTIVATION_EXPIRATION_HOURS
 
 
 class Category(AbstractSlugModel):

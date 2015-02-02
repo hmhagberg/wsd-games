@@ -2,12 +2,21 @@
 
 {% load staticfiles %}
 
-{% block content %}
-<div id="form_container">
-	<div id="form">
-		<h2>An activation email has been sent to the address you gave.</h2>
-    	<h2>To complete the signup process click the activation link in the email.</h2>
-	</div>
-</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        console.log("Account activation link: ");
+    });
+</script>
 
+{% block content %}
+    <div id="form_container">
+        <div id="form">
+            <h2>An activation email has been sent to the address you gave.</h2>
+            <h2>To complete the signup process click the activation link in the email.</h2>
+            {% if debug %}
+                <p>Activation link printed here for debugging purposes:</p>
+                <p>{{ link }}</p>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}

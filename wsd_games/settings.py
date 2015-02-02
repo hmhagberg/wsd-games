@@ -60,7 +60,13 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
+INTERNAL_IPS = ("127.0.0.1",)
+
+ALLOWED_HOSTS = [
+    ".heroku.com",
+    ".herokuapp.com",
+    "localhost",
+]
 
 AUTH_USER_MODEL = 'games.WsdGamesUser'
 
@@ -120,7 +126,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False  # FIXME: Enabling timezones leads to problems in SignupActivation.has_expired()
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
