@@ -203,22 +203,25 @@ class PaymentView(View):
         request_checksum = request.GET.get("checksum")
         if not (pid and ref and request_checksum):
             raise Http404
-        ownership = get_object_or_404(Ownership, payment_pid=pid)
-        context = {"player": ownership.player, "game": ownership.game}
+        payment = get_object_or_404(Payment, pid=pid)
+        context = {"player": payment.player, "game": payment.game}
 
         if payment_status == "success":
             checksumstr = "pid=%s&ref=%s&token=%s" % (pid, ref, settings.SID_KEY)
             checksum = hashlib.md5(checksumstr.encode("ascii")).hexdigest()
             if checksum == request_checksum:
-                ownership.payment_completed = True
-                ownership.payment_ref = ref
-                ownership.save()
-                return render_to_response("games/payment/payment_success.html", context, context_instance=RequestContext(request))
-        elif payment_status == "cancel":
-            ownership.delete()
-            return render_to_response("games/payment/payment_cancel.html", context, context_instance=RequestContext(request))
+                payment.completed = True
+                payment.ref = ref
+                payment.save()
 
-        return render_to_response("games/payment/payment_error.html", context_instance=RequestContext(request))
+                ownership = Ownership(game=payment.game, player=payment.player)
+                ownership.save()
+                return render(request, "games/payment/payment_success.html", context)
+        elif payment_status == "cancel":
+            payment.delete()
+            return render(request, "games/payment/payment_cancel.html", context)
+
+        return render(request, "games/payment/payment_error.html")
 
     def post(self, request, *args, **kwargs):
         game = get_object_or_404(Game, id=request.POST["game_id"])
@@ -241,17 +244,16 @@ class PaymentView(View):
 
         # Check for old payments that haven't been completed properly (either via /payment/success/ or payment/cancel/)
         try:
-            old_ownership = request.user.player.ownerships.all().get(game=game)
-            if old_ownership.payment_completed:
+            old_payment = request.user.player.payments.get(game=game)
+            if old_payment.completed:
                 return render_to_response("games/payment/payment_error.html")
-            old_ownership.delete()
-        except Ownership.DoesNotExist:
+            old_payment.delete()
+        except Payment.DoesNotExist:
             pass
 
-        ownership = Ownership(game=game, player=request.user.player, payment_pid=pid)
-        ownership.save()
-        return render_to_response("games/payment/payment.html", {"game": game, "form": form},
-                                  context_instance=RequestContext(request))
+        payment = Payment(game=game, player=request.user.player, pid=pid)
+        payment.save()
+        return render(request, "games/payment/payment.html", {"game": game, "form": form})
 
 
 def api_objects(request, api_version, collection, response_format, object_id=""):
@@ -275,7 +277,7 @@ def api_objects(request, api_version, collection, response_format, object_id="")
 
         model, serializer, check_owner, id_field_name = api.model_info[collection]
         if object_id == "":
-            objs = model.objects.all()[offset:offset+limit]
+            objs = model.objects.all()[offset:offset+limit]  # TODO: Bounds checks
             data = []
             for obj in objs:
                 data.append(serializer(obj))

@@ -58,7 +58,6 @@ class WsdGamesUser(AbstractUser):
         return h.hexdigest()
 
 
-
 class Player(models.Model):
     """
     Player profile
@@ -79,16 +78,16 @@ class Player(models.Model):
 
     def owns_game(self, game):
         try:
-            ownership = self.ownerships.all().get(game=game)
-            return ownership.payment_completed
+            self.ownerships.get(game=game)
+            return True
         except Ownership.DoesNotExist:
             return False
 
     def games(self):
+        # FIXME: Iterating here is probably not necessary
         games = []
         for i in self.ownerships.all():
-            if i.payment_completed:
-                games.append(i.game)
+            games.append(i.game)
         return games
 
 
@@ -142,14 +141,13 @@ class Game(AbstractSlugModel):
     def get_highscores(self, limit=10):
         highscores = []
         for i in self.ownerships.all():
-            if i.payment_completed:
-                highscores.append(i)
+            highscores.append(i)
             if len(highscores) == limit:
                 break
         return highscores
 
     def get_number_sold(self):
-        return len(self.get_highscores())
+        return self.payments.count()
 
 
 class Ownership(models.Model):
@@ -160,12 +158,6 @@ class Ownership(models.Model):
     saved_score = models.PositiveIntegerField(default=0)
     saved_data = models.TextField(default='[]')
     rating = models.PositiveIntegerField(null=True, choices=RATING_OPTIONS)
-
-    # Payment information
-    payment_timestamp = models.DateTimeField(auto_now_add=True)
-    payment_completed = models.BooleanField(default=False)
-    payment_pid = models.CharField(max_length=32, unique=True)
-    payment_ref = models.CharField(max_length=32, blank=True)
 
     class Meta:
         ordering = ["-highscore"]
@@ -186,3 +178,13 @@ class Ownership(models.Model):
         self.saved_score = score
         self.saved_data = data
         self.save()
+
+
+class Payment(models.Model):
+    game = models.ForeignKey(Game, related_name="payments")
+    player = models.ForeignKey(Player, related_name="payments")
+
+    completed = models.BooleanField(default=False)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    pid = models.CharField(max_length=32, unique=True)
+    ref = models.CharField(max_length=32, blank=True)

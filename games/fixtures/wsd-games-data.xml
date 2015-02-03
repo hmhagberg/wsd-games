@@ -335,11 +335,6 @@
         <field to="games.player" name="player" rel="ManyToOneRel">3</field>
         <field type="PositiveIntegerField" name="highscore">100</field>
         <field type="PositiveIntegerField" name="rating">3</field>
-
-        <field type="DateTimeField" name="payment_timestamp">2013-03-16T17:41:28+00:00</field>
-        <field type="BooleanField" name="payment_completed">True</field>
-        <field type="CharField" name="payment_pid">43e0bebb763b49a09fb95413872d791b</field>
-        <field type="CharField" name="payment_ref">43e0bebb763b49a09fb95413872d791b</field>
     </object>
 
     <object pk="2" model="games.ownership">
@@ -347,11 +342,6 @@
         <field to="games.player" name="player" rel="ManyToOneRel">1</field>
         <field type="PositiveIntegerField" name="highscore">300</field>
         <field type="PositiveIntegerField" name="rating">4</field>
-
-        <field type="DateTimeField" name="payment_timestamp">2015-01-11T01:41:28+02:00</field>
-        <field type="BooleanField" name="payment_completed">True</field>
-        <field type="CharField" name="payment_pid">63dc7c0ec25248c892ea30130b7a814b</field>
-        <field type="CharField" name="payment_ref">63dc7c0ec25248c892ea30130b7a814b</field>
     </object>
 
     <object pk="3" model="games.ownership">
@@ -359,11 +349,6 @@
         <field to="games.player" name="player" rel="ManyToOneRel">2</field>
         <field type="PositiveIntegerField" name="highscore">147</field>
         <field type="PositiveIntegerField" name="rating">2</field>
-
-        <field type="DateTimeField" name="payment_timestamp">2014-03-16T20:16:30+02:00</field>
-        <field type="BooleanField" name="payment_completed">True</field>
-        <field type="CharField" name="payment_pid">a77eb9f1076e4e41812c22655fbe512b</field>
-        <field type="CharField" name="payment_ref">a77eb9f1076e4e41812c22655fbe512b</field>
     </object>
 
     <object pk="4" model="games.ownership">
@@ -371,11 +356,44 @@
         <field to="games.player" name="player" rel="ManyToOneRel">2</field>
         <field type="PositiveIntegerField" name="highscore">10</field>
         <field type="PositiveIntegerField" name="rating">1</field>
+    </object>
 
-        <field type="DateTimeField" name="payment_timestamp">2014-06-02T14:02:11+01:00</field>
-        <field type="BooleanField" name="payment_completed">True</field>
-        <field type="CharField" name="payment_pid">58c9d96684184ef39a6ce24f72283903</field>
-        <field type="CharField" name="payment_ref">58c9d96684184ef39a6ce24f72283903</field>
+    <!-- PAYMENTS -->
+
+    <object pk="1" model="games.payment">
+        <field to="games.game" name="game" rel="ManyToOneRel">2</field>
+        <field to="games.player" name="player" rel="ManyToOneRel">3</field>
+        <field type="DateTimeField" name="timestamp">2013-03-16T17:41:28</field>
+        <field type="BooleanField" name="completed">True</field>
+        <field type="CharField" name="pid">43e0bebb763b49a09fb95413872d791b</field>
+        <field type="CharField" name="ref">43e0bebb763b49a09fb95413872d791b</field>
+    </object>
+
+    <object pk="2" model="games.payment">
+        <field to="games.game" name="game" rel="ManyToOneRel">2</field>
+        <field to="games.player" name="player" rel="ManyToOneRel">1</field>
+        <field type="DateTimeField" name="timestamp">2015-01-11T01:41:28</field>
+        <field type="BooleanField" name="completed">True</field>
+        <field type="CharField" name="pid">63dc7c0ec25248c892ea30130b7a814b</field>
+        <field type="CharField" name="ref">63dc7c0ec25248c892ea30130b7a814b</field>
+    </object>
+
+    <object pk="3" model="games.payment">
+        <field to="games.game" name="game" rel="ManyToOneRel">1</field>
+        <field to="games.player" name="player" rel="ManyToOneRel">2</field>
+        <field type="DateTimeField" name="timestamp">2014-03-16T20:16:30</field>
+        <field type="BooleanField" name="completed">True</field>
+        <field type="CharField" name="pid">a77eb9f1076e4e41812c22655fbe512b</field>
+        <field type="CharField" name="ref">a77eb9f1076e4e41812c22655fbe512b</field>
+    </object>
+
+    <object pk="4" model="games.payment">
+        <field to="games.game" name="game" rel="ManyToOneRel">3</field>
+        <field to="games.player" name="player" rel="ManyToOneRel">2</field>
+        <field type="DateTimeField" name="timestamp">2014-06-02T14:02:11</field>
+        <field type="BooleanField" name="completed">True</field>
+        <field type="CharField" name="pid">58c9d96684184ef39a6ce24f72283903</field>
+        <field type="CharField" name="ref">58c9d96684184ef39a6ce24f72283903</field>
     </object>
 
 </django-objects>
