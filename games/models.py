@@ -84,11 +84,7 @@ class Player(models.Model):
             return False
 
     def games(self):
-        # FIXME: Iterating here is probably not necessary
-        games = []
-        for i in self.ownerships.all():
-            games.append(i.game)
-        return games
+        return [o.game for o in self.ownerships.all()]
 
 
 class Developer(AbstractSlugModel):
@@ -138,16 +134,14 @@ class Game(AbstractSlugModel):
     def get_absolute_url(self):
         return reverse("games.views.game", args=[self.slug])
 
-    def get_highscores(self, limit=10):
-        highscores = []
-        for i in self.ownerships.all():
-            highscores.append(i)
-            if len(highscores) == limit:
-                break
-        return highscores
-
-    def get_number_sold(self):
-        return self.payments.count()
+    """
+    Returns Ownerships with highest scores for this game
+    """
+    def get_highscores(self, limit=10, nonzero_only=True):
+        if nonzero_only:
+            return self.ownerships.all().filter(highscore__gt=0)[:limit]
+        else:
+            return self.ownerships.all()[:limit]
 
 
 class Ownership(models.Model):
@@ -181,7 +175,7 @@ class Ownership(models.Model):
 
 
 class Payment(models.Model):
-    game = models.ForeignKey(Game, related_name="payments")
+    game = models.ForeignKey(Game, related_name="sales")
     player = models.ForeignKey(Player, related_name="payments")
 
     completed = models.BooleanField(default=False)

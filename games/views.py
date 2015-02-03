@@ -251,6 +251,8 @@ class PaymentView(View):
         except Payment.DoesNotExist:
             pass
 
+        Payment.objects.values()
+
         payment = Payment(game=game, player=request.user.player, pid=pid)
         payment.save()
         return render(request, "games/payment/payment.html", {"game": game, "form": form})

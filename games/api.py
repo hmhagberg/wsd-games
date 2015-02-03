@@ -33,11 +33,11 @@ def _serialize_game(game_obj, include_confidential=False):
                   "categories": [c.name for c in game_obj.categories.all()],
                   "price": str(game_obj.price),  # Default JSON encoder doesn't support Decimal
                   "highscores": [{"username": o.player.user.username, "score": o.highscore} for o in
-                                 game_obj.get_highscores() if o.highscore],  # Include only non-zero highscores
+                                 game_obj.get_highscores()],
                   }
     if include_confidential:
         serialized.update({"url": game_obj.url,
-                           "sold": game_obj.get_number_sold(),
+                           "sold": game_obj.sales.count(),
                            })
     return serialized
 
@@ -47,7 +47,8 @@ def _serialize_category(category_obj, include_confidential=False):
                   "slug": category_obj.slug,
                   "image_url": category_obj.image_url,
                   "description": category_obj.description,
-                  "games": [g.name for g in category_obj.games.all()],
+                  "games": [{"name": g.name, }
+                            for g in category_obj.games.all()],
                   }
 
     return serialized
@@ -62,7 +63,7 @@ def _serialize_developer(developer_obj, include_confidential=False):
 
     if include_confidential:
         serialized.update({"games": [{"name": g.name,
-                                      "sold": g.get_number_sold(), }
+                                      "sold": g.sales.count(), }
                                      for g in developer_obj.games.all()]
                            })
     else:
