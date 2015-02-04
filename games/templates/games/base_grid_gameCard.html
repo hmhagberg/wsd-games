@@ -103,14 +103,16 @@
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 					{% if game in user.player.games %}
 						<a href="{% url 'games.views.game' game.slug %}"><button type="button" class="btn btn-primary">Play Game</button></a>
+                    {% elif user.is_developer %}
+                        <a href="{% url 'games.views.game' game.slug %}"><button type="button" class="btn btn-primary">Inspect</button></a>
 					{% else %}
-					        {% if user.is_authenticated %}
-            					<form action="{% url 'payment' %}" method="POST">
-                					{% csrf_token %}
-               	 					<input type="hidden" name="game_id" value="{{ game.id }}">
-               	 					<button type="button submit" class="btn btn-primary">Buy Game</button>
-            					</form>
-        					{% endif %}
+				        {% if user.is_authenticated %}
+        					<form action="{% url 'payment' %}" method="POST">
+            					{% csrf_token %}
+           	 					<input type="hidden" name="game_id" value="{{ game.id }}">
+           	 					<button type="button submit" class="btn btn-primary">Buy Game</button>
+        					</form>
+    					{% endif %}
 					{% endif %}
 				</div>
 			</div><!-- /.modal-content -->

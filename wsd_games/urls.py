@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
-from games.views import PaymentView, SignupView, LoginView
+from games.views import PaymentView, SignupView, LoginView, GamePublishingView
 
 urlpatterns = patterns('',
     url(r'^$', 'games.views.home', name='home'),
@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     url(r'^logout/$', 'games.views.logout_view', name='logout'),
     url(r'^signup/(dev)?$', SignupView.as_view(), name="signup"),
     url(r'^signup/activate/([a-z0-9]+)$', 'games.views.signup_activation', name='signup_activation'),
+    url(r'^publish-game/?$', GamePublishingView.as_view(), name="game_publishing"),
 
     url(r'^profiles/([a-z0-9\-]+)$', 'games.views.profiles'),
 

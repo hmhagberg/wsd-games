@@ -3,7 +3,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import ugettext_lazy as _
 from django import forms
 
-from games.models import Player, Developer
+from games.models import Player, Developer, Game
 
 
 class LoginForm(AuthenticationForm):
@@ -105,6 +105,12 @@ class DeveloperSignupForm(WsdGamesUserCreationForm):
         developer.description = self.cleaned_data["description"]
         developer.save()
         return user
+
+class GamePublishingForm(forms.ModelForm):
+
+    class Meta:
+        model = Game
+        fields = ("name", "url", "image_url", "description", "categories", "price")
 
 
 class PaymentForm(forms.Form):

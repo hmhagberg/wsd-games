@@ -59,13 +59,15 @@
 
         <!-- NOTE: Make sure only players are allowed to buy games -->
         {% if user.is_authenticated %}
-            <div id="form_container">
-                <form action="{% url 'payment' %}" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="game_id" value="{{ game.id }}">
-                    <input type="submit" value="Buy game">
-                </form>
-            </div>
+            {% if user.is_player %}
+                <div id="form_container">
+                    <form action="{% url 'payment' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="game_id" value="{{ game.id }}">
+                        <input type="submit" value="Buy game">
+                    </form>
+                </div>
+            {% endif %}
         {% endif %}
     {% endif %}
     <div id="highscore-container">

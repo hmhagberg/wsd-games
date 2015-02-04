@@ -1,4 +1,3 @@
-import uuid
 import hashlib
 import json
 
@@ -80,6 +79,20 @@ class SignupView(View):
                                                                   expires_in=settings.ACTIVATION_EXPIRATION_HOURS)
         send_mail("WSD Games Account Activation", message, "noreply@wsd-games.fi", [user.email])
         return activation_link
+
+
+class GamePublishingView(View):
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            form = GamePublishingForm()
+            return render(request, "games/auth/base_signup.html", {"form": form,})
+
+    def post(self, request, *args, **kwargs):
+        form = GamePublishingForm(request.POST)
+
+        if form.is_valid():
+            user = form.save()
 
 
 def signup_activation(request, activation_key):

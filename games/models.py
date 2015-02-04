@@ -99,6 +99,7 @@ class Developer(AbstractSlugModel):
         return reverse("games.views.developer", args=[self.slug])
 
 
+
 class SignupActivation(models.Model):
     key = models.CharField(unique=True, max_length=32)
     user = models.OneToOneField(settings.AUTH_USER_MODEL)
