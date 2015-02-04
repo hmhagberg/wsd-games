@@ -17,7 +17,7 @@
             if (data.messageType === "LOAD_REQUEST") {
                 var game_data = "{{ownership.saved_data}}";
                 var child = document.getElementById("game").contentWindow;
-                var msg = {"messageType": "LOAD","gameState": {"score": {{ownership.saved_score}}, "playerItems": game_data.split(",")}};
+                var msg = {"messageType": "LOAD", "gameState": {"score": {{ownership.saved_score}}, "playerItems": game_data.split(",")}};
                 child.postMessage(msg, "*");
             }
             else if (data.messageType === "SCORE") {
@@ -55,20 +55,38 @@
     {% elif ownership_status == "developer"  %}
         <h1>YOU DEVELOPED THIS GAME</h1>
     {% else %}
-        <h1>YOU DON'T OWN THIS GAME</h1>
-
-        <!-- NOTE: Make sure only players are allowed to buy games -->
-        {% if user.is_authenticated %}
-            {% if user.is_player %}
-                <div id="form_container">
-                    <form action="{% url 'payment' %}" method="POST">
-                        {% csrf_token %}
-                        <input type="hidden" name="game_id" value="{{ game.id }}">
-                        <input type="submit" value="Buy game">
-                    </form>
-                </div>
-            {% endif %}
-        {% endif %}
+        <div class="modal fade" id="modal{{game.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">{{game.name}}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="img-container">
+                            <img src="{{game.image_url}}" class="img-responsive img-circle" alt="{{game.developer.name}} image">
+                        </div>
+                        <p>{{game.description}}</p>
+                        <p class="developer">Developer: <a href="{% url 'games.views.developer' game.developer.slug %}">{{game.developer.name}}</a></p>
+                        <p>Categories: {% for category in game.categories.all %}<a href="{% url 'games.views.category' category.slug %}">{{category}}</a> | {% endfor %}</p>
+                        <p class="price">Price: {{game.price|floatformat:2}}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        {% if user.is_authenticated %}
+                            {% if user.is_player %}
+                                <form action="{% url 'payment' %}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="game_id" value="{{ game.id }}">
+                                    <button type="button submit" class="btn btn-primary">Buy Game</button>
+                                </form>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+        <script type="text/javascript">$('#modal{{game.id}}').modal('show');</script>
     {% endif %}
 
     <!-- Google+ Share button-->
