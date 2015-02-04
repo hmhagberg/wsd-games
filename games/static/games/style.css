@@ -125,5 +125,6 @@ h1 {
 	margin-left: 50px;
 }
 
-#sort {
+#share-button-container {
+	text-align: center;
 }
