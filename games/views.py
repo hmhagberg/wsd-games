@@ -92,7 +92,12 @@ class GamePublishingView(View):
         form = GamePublishingForm(request.POST)
 
         if form.is_valid():
-            user = form.save()
+            game = form.save(commit=False)
+            game.developer = request.user.developer
+            game.save()
+            return redirect("games/"+game.slug)
+        else:
+            return render(request, "games/auth/base_signup.html", {"form": form,})
 
 
 def signup_activation(request, activation_key):
