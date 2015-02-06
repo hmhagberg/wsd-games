@@ -86,7 +86,7 @@ class GamePublishingView(View):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated():
             form = GamePublishingForm()
-            return render(request, "games/auth/base_signup.html", {"form": form,})
+            return render(request, "games/base_game_publish.html", {"form": form,})
 
     def post(self, request, *args, **kwargs):
         form = GamePublishingForm(request.POST)
@@ -97,7 +97,7 @@ class GamePublishingView(View):
             game.save()
             return redirect("games/"+game.slug)
         else:
-            return render(request, "games/auth/base_signup.html", {"form": form,})
+            return render(request, "games/base_game_publish.html", {"form": form,})
 
 
 def signup_activation(request, activation_key):
@@ -184,6 +184,7 @@ def game(request, game_slug):
                 ownership = request.user.player.ownerships.get(player=request.user.player, game=game)
         elif game.developer == request.user.developer:
             ownership_status = "developer"
+            context.update({'sales_count':game.get_sales_count()})
     context.update({'game': game, 'categories': categories, 'ownership_status': ownership_status, 'ownership':
         ownership})
 

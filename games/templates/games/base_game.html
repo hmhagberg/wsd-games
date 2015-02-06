@@ -53,7 +53,8 @@
         <iframe id="game" src="{{game.url}}"></iframe>
         <button id="message" class="hidden">Send message</button>
     {% elif ownership_status == "developer"  %}
-        <h1>YOU DEVELOPED THIS GAME</h1>
+        <h1>Sales info</h1>
+        <p class="sales-info">{{sales_count}} players have bougth this game.</p>
     {% else %}
         <div class="modal fade" id="modal{{game.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">

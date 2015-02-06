@@ -145,6 +145,9 @@ class Game(AbstractSlugModel):
         else:
             return self.ownerships.all()[:limit]
 
+    def get_sales_count(self):
+        return self.ownerships.count()
+
 
 class Ownership(models.Model):
     RATING_OPTIONS = ((1, 1), (2, 2), (3, 3), (4, 4), (5, 5),)
