@@ -284,12 +284,15 @@ class PaymentView(View):
 
                 ownership = Ownership(game=payment.game, player=payment.player)
                 ownership.save()
-                return render(request, "games/payment/payment_success.html", context)
+                messages.success(request, "Congratulations on you purchase!")
+                return redirect(ownership.game.get_absolute_url())
         elif payment_status == "cancel":
             payment.delete()
-            return render(request, "games/payment/payment_cancel.html", context)
+            messages.info(request, "Your purchase has been cancelled.")
+            return redirect("home")
 
-        return render(request, "games/payment/payment_error.html")
+        messages.error(request, "Oops! Something went wrong while handling your payment. Please, try again!")
+        return redirect("home")
 
     def post(self, request, *args, **kwargs):
         game = get_object_or_404(Game, id=request.POST["game_id"])
@@ -314,7 +317,8 @@ class PaymentView(View):
         try:
             old_payment = request.user.player.payments.get(game=game)
             if old_payment.completed:
-                return render_to_response("games/payment/payment_error.html")
+                messages.error(request, "Oops! Something went wrong while handling your payment. Please, try again!")
+                return redirect("home")
             old_payment.delete()
         except Payment.DoesNotExist:
             pass
@@ -323,7 +327,7 @@ class PaymentView(View):
 
         payment = Payment(game=game, player=request.user.player, pid=pid)
         payment.save()
-        return render(request, "games/payment/payment.html", {"game": game, "form": form})
+        return render(request, "games/base_payment.html", {"game": game, "form": form})
 
 
 def api_objects(request, api_version, collection, response_format, object_id=""):
