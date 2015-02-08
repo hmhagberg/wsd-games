@@ -7,6 +7,7 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import AbstractUser
 from django.core.urlresolvers import reverse
+from django.core.validators import MinValueValidator
 
 
 class AbstractSlugModel(models.Model):
@@ -130,7 +131,7 @@ class Game(AbstractSlugModel):
     image_url = models.URLField(blank=True, default='http://rammb.cira.colostate.edu/dev/hillger/WSD_logo.gif')
     developer = models.ForeignKey(Developer, related_name='games')
     categories = models.ManyToManyField(Category, related_name='games')
-    price = models.DecimalField(max_digits=6, decimal_places=2)
+    price = models.DecimalField(max_digits=6, decimal_places=2, validators=[MinValueValidator(0)])
 
     def get_absolute_url(self):
         return reverse("games.views.game", args=[self.slug])
@@ -143,6 +144,9 @@ class Game(AbstractSlugModel):
             return self.ownerships.all().filter(highscore__gt=0)[:limit]
         else:
             return self.ownerships.all()[:limit]
+
+    def get_sales_count(self):
+        return self.ownerships.count()
 
 
 class Ownership(models.Model):
