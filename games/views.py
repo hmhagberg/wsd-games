@@ -111,7 +111,7 @@ class EditProfileView(View):
         else:
             profile_form = DeveloperEditProfileForm(self.request.user)
 
-        return render(request, "games/user_edit_profile.html", {"password_form": password_form,
+        return render(request, "games/base_edit_profile.html", {"password_form": password_form,
                                                                 "profile_form": profile_form})
 
     def post(self, request, *args, **kwargs):
@@ -144,7 +144,7 @@ class EditProfileView(View):
             messages.add_message(request, messages.SUCCESS, "Changes saved succesfully")
             return redirect("home")
         else:
-            return render(self.request, "games/user_edit_profile.html", {"password_form": password_form,
+            return render(self.request, "games/base_edit_profile.html", {"password_form": password_form,
                                                                          "profile_form": profile_form})
 
 
