@@ -1,7 +1,8 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+from django.contrib.auth.decorators import login_required
 
-from games.views import PaymentView, SignupView, LoginView, GamePublishingView
+from games.views import *
 
 urlpatterns = patterns('',
     url(r'^$', 'games.views.home', name='home'),
@@ -16,20 +17,22 @@ urlpatterns = patterns('',
     url(r'^signup/activate/([a-z0-9]+)$', 'games.views.signup_activation', name='signup_activation'),
     url(r'^publish-game/?$', GamePublishingView.as_view(), name="game_publishing"),
 
-    url(r'^profiles/([a-z0-9\-]+)$', 'games.views.profiles'),
+    url(r'^edit_profile$', login_required(EditProfileView.as_view()), name="edit_profile"),
+    url(r'^profiles/([a-z0-9\-]+)$', 'games.views.profiles', name="profiles"),
+
 
     url(r'^payment/(success|cancel|error)?$', PaymentView.as_view(), name="payment"),
 
-    url(r'^games/categories[/]?$', 'games.views.categories_list'),  # FIXME: HACK [/]?
-    url(r'^games/categories/([a-z0-9\-]+)$', 'games.views.category'),
+    url(r'^games/categories[/]?$', 'games.views.category_list', name='category_list'),
+    url(r'^games/categories/([a-z0-9\-]+)$', 'games.views.category_detail', name='category_detail'),
 
-    url(r'^games/developers[/]?$', 'games.views.developers_list'),
-    url(r'^games/developers/([a-z0-9\-]+)$', 'games.views.developer'),
+    url(r'^games/developers[/]?$', 'games.views.developer_list', name='developer_list'),
+    url(r'^games/developers/([a-z0-9\-]+)$', 'games.views.developer_detail', name='developer_detail'),
 
-    url(r'^games/$', 'games.views.games_list'),
-    url(r'^games/([a-z0-9\-]+)$', 'games.views.game'),
+    url(r'^games/$', 'games.views.game_list', name='game_list'),
+    url(r'^games/([a-z0-9\-]+)$', 'games.views.game_detail', name='game_detail'),
 
-    url(r'^games/my_games[/]?$', 'games.views.my_games'),
+    url(r'^games/my_games[/]?$', 'games.views.my_games', name='my_games'),
 
     url(r'^api/v(?P<api_version>\d+)/(?P<collection>profiles|games|categories|developers).(?P<response_format>json)$',
         'games.views.api_objects'),

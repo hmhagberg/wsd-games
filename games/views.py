@@ -1,15 +1,14 @@
 import hashlib
-import json
 
 from django.conf import settings
 from django.contrib.auth import login, logout
 from django.contrib.auth.models import AnonymousUser
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
 from django.core.mail import send_mail
-from django.shortcuts import get_object_or_404, redirect, render_to_response, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.http import Http404, HttpResponse
 from django.views.generic import View, FormView
-from django.template import RequestContext
 
 from games import api
 from games.models import *
@@ -19,13 +18,9 @@ context = {}
 
 
 def home(request):
-    try:
-        games = Game.objects.all()
-        categories = Category.objects.all()
-        context.update({'games': games, 'categories': categories, 'category': '', 'developer': '', 'title': ''})
-    except Game.DoesNotExist:
-        raise Http404
-    return render_to_response('games/base_grid_gameCard.html', context, context_instance=RequestContext(request))
+    games = Game.objects.all()
+    context.update({'games': games, 'category': '', 'developer': '', 'title': ''})
+    return render(request, 'games/base_grid_gameCard.html', context)
 
 
 class LoginView(FormView):
@@ -39,7 +34,7 @@ class LoginView(FormView):
 
     def form_valid(self, form):
         login(self.request, form.get_user())
-        return redirect("home")
+        return redirect(self.request.GET.get("next") or "home")
 
 
 class SignupView(View):
@@ -72,7 +67,7 @@ class SignupView(View):
     def send_activation_mail(user):
         activation = SignupActivation(user=user)
         activation.save()
-        # TODO: Write better message, possibly in separate file?
+
         activation_link = "{domain}/signup/activate/{key}".format(domain=settings.DOMAIN, key=activation.key)
         message = "Thank you for signing up, {username}\n" \
                   "To activate your account click the following link: {link}\n" \
@@ -101,21 +96,67 @@ class GamePublishingView(View):
             return render(request, "games/base_game_publish.html", {"form": form,})
 
 
+class EditProfileView(View):
+
+    def get(self, request, *args, **kwargs):
+        password_form = PasswordChangeForm(self.request.user)
+        if self.request.user.is_player():
+            profile_form = PlayerEditProfileForm(self.request.user)
+        else:
+            profile_form = DeveloperEditProfileForm(self.request.user)
+
+        return render(request, "games/base_edit_profile.html", {"password_form": password_form,
+                                                                "profile_form": profile_form})
+
+    def post(self, request, *args, **kwargs):
+        errors = False
+
+        if self.request.user.is_player():
+            profile_form_cls = PlayerEditProfileForm
+        else:
+            profile_form_cls = DeveloperEditProfileForm
+
+        if "edit_profile" in request.POST:
+            profile_form = profile_form_cls(self.request.user, data=request.POST)
+            if profile_form.is_valid():
+                profile_form.save()
+            else:
+                errors = True
+        else:
+            profile_form = profile_form_cls(self.request.user)
+
+        if "change_password" in request.POST:
+            password_form = PasswordChangeForm(self.request.user, data=request.POST)
+            if password_form.is_valid():
+                password_form.save()
+            else:
+                errors = True
+        else:
+            password_form = PasswordChangeForm(self.request.user)
+
+        if errors:
+            return render(self.request, "games/base_edit_profile.html", {"password_form": password_form,
+                                                                         "profile_form": profile_form})
+        else:
+            messages.success(request, "Changes saved succesfully.")
+            return redirect("home")
+
+
 def signup_activation(request, activation_key):
     if request.user.is_authenticated():
         return redirect("home")
 
-    # TODO: Is it better to return 404 or redirect to home?
     confirmation = get_object_or_404(SignupActivation, key=activation_key)
     if confirmation.has_expired():
         confirmation.delete()
-        return render(request, "games/auth/activate_expired.html")
+        messages.error(request, "This account activation confirmation has expired. You have to sign up again")
+        return redirect("signup")
 
-    user = confirmation.user
-    user.is_active = True
-    user.save()
+    confirmation.user.is_active = True
+    confirmation.user.save()
     confirmation.delete()
-    return render(request, "games/auth/activate.html")
+    messages.success(request, "Congratulations! Your account has been activated. You can now log in.")
+    return redirect("login")
 
 
 def logout_view(request):
@@ -125,20 +166,15 @@ def logout_view(request):
 
 def profiles(request, profile_slug):
     profile = get_object_or_404(Player, slug=profile_slug)
-    categories = Category.objects.all()
-    context.update({'profile': profile, 'categories': categories})
+    context.update({'profile': profile})
 
-    return render_to_response('games/base_profile.html', context, context_instance=RequestContext(request))
+    return render(request, 'games/base_profile.html', context)
 
 
 def my_games(request):
-    try:
-        games = request.user.player.games()
-        categories = Category.objects.all()
-        context.update({'games': games, 'categories': categories, 'category': '', 'developer': '', 'title': 'My'})
-    except Game.DoesNotExist:
-        raise Http404
-    return render_to_response('games/base_grid_gameCard.html', context, context_instance=RequestContext(request))
+    games = request.user.player.games()
+    context.update({'games': games, 'category': '', 'developer': '', 'title': 'My'})
+    return render(request, 'games/base_grid_gameCard.html', context)
 
 
 def social_select_username(request, backend):
@@ -146,36 +182,27 @@ def social_select_username(request, backend):
     Username selection view for social auth
     """
     form = UsernameForm()
-    return render_to_response("games/auth/base_selectUsername.html", {"form": form, "backend": backend},
-                              context_instance=RequestContext(request))
+    return render(request, "games/auth/base_selectUsername.html", {"form": form, "backend": backend})
 
 
-def games_list(request):
+def game_list(request):
     return home(request)
 
 
-def categories_list(request):
-    try:
-        categories = Category.objects.all().order_by('name')
-        context.update({'categories': categories})
-    except Category.DoesNotExist:
-        raise Http404
-    return render_to_response('games/base_grid_categoryCard.html', context, context_instance=RequestContext(request))
+def category_list(request):
+    categories = Category.objects.all().order_by('name')
+    context.update({'categories': categories})
+    return render(request, 'games/base_grid_categoryCard.html', context)
 
 
-def developers_list(request):
-    try:
-        developers = Developer.objects.all().order_by('slug')
-        categories = Category.objects.all()
-        context.update({'developers': developers, 'categories': categories})
-    except Developer.DoesNotExist:
-        raise Http404
-    return render_to_response('games/base_grid_developerCard.html', context, context_instance=RequestContext(request))
+def developer_list(request):
+    developers = Developer.objects.all().order_by('slug')
+    context.update({'developers': developers})
+    return render(request, 'games/base_grid_developerCard.html', context)
 
 
-def game(request, game_slug):
+def game_detail(request, game_slug):
     game = get_object_or_404(Game, slug=game_slug)
-    categories = Category.objects.all()
     ownership_status = "not_owned"
     ownership = None
     if request.user.is_authenticated():
@@ -186,7 +213,7 @@ def game(request, game_slug):
         elif game.developer == request.user.developer:
             ownership_status = "developer"
             context.update({'sales_count':game.get_sales_count()})
-    context.update({'game': game, 'categories': categories, 'ownership_status': ownership_status, 'ownership':
+    context.update({'game': game, 'ownership_status': ownership_status, 'ownership':
         ownership})
 
     # Handle game messages
@@ -196,23 +223,22 @@ def game(request, game_slug):
         elif request.POST['messageType'] == "SAVE":
             ownership.save_game(int(request.POST["gameState[score]"]), ','.join(request.POST.getlist("gameState[playerItems][]")))
 
-    return render_to_response('games/base_game.html', context, context_instance=RequestContext(request))
+    return render(request, 'games/base_game.html', context)
 
-def category(request, category_slug):
+
+def category_detail(request, category_slug):
     category = get_object_or_404(Category, slug=category_slug)
     games = category.games.all()
-    categories = Category.objects.all()
-    context.update({'category': category, 'games': games, 'categories': categories, 'developer': '', 'title': ''})
+    context.update({'category': category, 'games': games, 'developer': '', 'title': ''})
 
-    return render_to_response('games/base_grid_gameCard.html', context, context_instance=RequestContext(request))
+    return render(request, 'games/base_grid_gameCard.html', context)
 
 
-def developer(request, developers_slug):
+def developer_detail(request, developers_slug):
     developer = get_object_or_404(Developer, slug=developers_slug)
     games = developer.games.all()
-    categories = Category.objects.all()
-    context.update({'developer': developer, 'games': games, 'categories': categories, 'category': '', 'title': ''})
-    return render_to_response('games/base_grid_gameCard.html', context, context_instance=RequestContext(request))
+    context.update({'developer': developer, 'games': games, 'category': '', 'title': ''})
+    return render(request, 'games/base_grid_gameCard.html', context)
 
 
 class PaymentView(View):
@@ -236,12 +262,15 @@ class PaymentView(View):
 
                 ownership = Ownership(game=payment.game, player=payment.player)
                 ownership.save()
-                return render(request, "games/payment/payment_success.html", context)
+                messages.success(request, "Congratulations on you purchase!")
+                return redirect(ownership.game.get_absolute_url())
         elif payment_status == "cancel":
             payment.delete()
-            return render(request, "games/payment/payment_cancel.html", context)
+            messages.info(request, "Your purchase has been cancelled.")
+            return redirect("home")
 
-        return render(request, "games/payment/payment_error.html")
+        messages.error(request, "Oops! Something went wrong while handling your payment. Please, try again!")
+        return redirect("home")
 
     def post(self, request, *args, **kwargs):
         game = get_object_or_404(Game, id=request.POST["game_id"])
@@ -266,7 +295,8 @@ class PaymentView(View):
         try:
             old_payment = request.user.player.payments.get(game=game)
             if old_payment.completed:
-                return render_to_response("games/payment/payment_error.html")
+                messages.error(request, "Oops! Something went wrong while handling your payment. Please, try again!")
+                return redirect("home")
             old_payment.delete()
         except Payment.DoesNotExist:
             pass
@@ -275,7 +305,7 @@ class PaymentView(View):
 
         payment = Payment(game=game, player=request.user.player, pid=pid)
         payment.save()
-        return render(request, "games/payment/payment.html", {"game": game, "form": form})
+        return render(request, "games/base_payment.html", {"game": game, "form": form})
 
 
 def api_objects(request, api_version, collection, response_format, object_id=""):

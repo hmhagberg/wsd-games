@@ -21,7 +21,7 @@
             <br>
             <input id="submit" type="submit" value="Login" />
             <input type="hidden" name="next" value="{{ next }}" />
-            <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}">Login with Google</a>
+            <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ next }}">Login with Google</a>
         </form>
     </div>
 {% endblock %}

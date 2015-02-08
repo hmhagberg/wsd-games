@@ -136,8 +136,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.static",
     "django.core.context_processors.tz",
     "django.contrib.messages.context_processors.messages",
-    'social.apps.django_app.context_processors.backends',
-    'social.apps.django_app.context_processors.login_redirect',
+    "social.apps.django_app.context_processors.backends",
+    "social.apps.django_app.context_processors.login_redirect",
+    "games.context_processors.categories",
 )
 
 # Static files (CSS, JavaScript, Images)

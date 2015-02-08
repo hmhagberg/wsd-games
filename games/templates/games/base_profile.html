@@ -7,19 +7,27 @@
 {% block header %}{{profile.user.username}}{% endblock %}
 
 {% block content %}
-{% if profile.user.username == user.username %}
+
 <div id="form_container">
     <div id="form">
         <div class="img-container">
             <img src="http://www.comicbookmovie.com/images/uploads/nerd.jpg" class="img-responsive img-circle" alt=" profile image">
         </div>
-        <p>Hello, I'm Matti and I like to play Call of Duty with my friends.</p>
-        <p>Name: {{profile.user.first_name}} {{profile.user.last_name}}</p>
-        <p>Email: {{profile.user.email}}</p>
-        <p>API token: {{ profile.user.api_token }}</p>
-        <a href="#"><button>Profile</button></a>
-        <a href="#"><button>Settings</button></a>
+        <h3>About me</h3>
+        {% if profile.about_me %}
+            <p>{{ profile.about_me }}</p>
+        {% else %}
+            <p>There's nothing to know about me!</p>
+        {% endif %}
+
+        {% if profile.user == user %}
+            <p>Name: {{profile.user.first_name}} {{profile.user.last_name}}</p>
+            <p>Email: {{profile.user.email}}</p>
+            <p>API token: {{ profile.user.api_token }}</p>
+            <a href="{% url 'edit_profile' %}"><button>Edit profile</button></a>
+        {% endif %}
+
     </div>
 </div>
-{% endif %}
+
 {% endblock %}

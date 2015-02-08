@@ -24,7 +24,7 @@
                 if (!isNaN(data.score)){
                     $.ajax({
                         'type': 'POST',
-                        'url': '{% url 'games.views.game' game.slug %}',
+                        'url': '{% url 'game_detail' game.slug %}',
                         'headers': { "X-CSRFToken": '{{ csrf_token }}' },
                         'data': data
                     });
@@ -34,7 +34,7 @@
                 if (!isNaN(data.gameState.score)) {
                     $.ajax({
                         'type': 'POST',
-                        'url': '{% url 'games.views.game' game.slug %}',
+                        'url': '{% url 'game_detail' game.slug %}',
                         'headers': { "X-CSRFToken": '{{ csrf_token }}' },
                         'data': data
                     });
@@ -68,8 +68,10 @@
                             <img src="{{game.image_url}}" class="img-responsive img-circle" alt="{{game.developer.name}} image">
                         </div>
                         <p>{{game.description}}</p>
-                        <p class="developer">Developer: <a href="{% url 'games.views.developer' game.developer.slug %}">{{game.developer.name}}</a></p>
-                        <p>Categories: {% for category in game.categories.all %}<a href="{% url 'games.views.category' category.slug %}">{{category}}</a> | {% endfor %}</p>
+                        <p class="developer">Developer: <a href="{% url 'developer_detail' game.developer.slug %}"
+                                >{{game.developer.name}}</a></p>
+                        <p>Categories: {% for category in game.categories.all %}<a href="
+                        {% url 'gategory_detail' category.slug %}">{{category}}</a> | {% endfor %}</p>
                         {% if game.price == 0 %}
                             <p class="price">Price: Free</p>
                         {% else %}
