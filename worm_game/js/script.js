@@ -5,6 +5,7 @@ var stage;
 var step = 20;
 var level = 5;
 var score = 0;
+var score2 = null;
 var worm = [];
 var appleBoolean = false;
 var apples = [];
@@ -12,14 +13,24 @@ var direction = "r";
 var scoreText;
 var apple;
 var view = "mainMenu";
+var msg;
 
 function init() {
 	stage = new createjs.Stage("game");
 	mainMenu();
 };
 
+function loadData() {
+	msg = {"messageType": "LOAD_REQUEST",};
+	window.parent.postMessage(msg, "*");
+}
+
 function mainMenu() {
 	view = "mainMenu";
+
+	if (worm.length == 0) {
+		loadData();
+	}
 
 	stage.removeAllChildren();
 
@@ -47,6 +58,12 @@ function mainMenu() {
 };
 
 function game() {
+	score = 0;
+	worm = [];
+	appleBoolean = false;
+	apples = [];
+	direction = "r";
+
 	stage.removeAllChildren();
 	var boxGraphics = new createjs.Graphics();
 	boxGraphics.setStrokeStyle(1).beginStroke("black").drawRect(-5, 0, 610, 50);
@@ -226,6 +243,8 @@ function endGame() {
 	stage.addChild(endTitle, endScore, submitScore, endMainMenu);
 	stage.update();
 
+	score2 = score;
+
 	score = 0;
 	worm = [];
 	appleBoolean = false;
@@ -342,11 +361,33 @@ function onKeyDown(x) { //listens for wasd-keypress
   	else if (x.keyCode == 51 && view == "mainMenu") instructionsPage();
   	else if (x.keyCode == 52 && view == "mainMenu") settingsPage();
 
-  	else if (x.keyCode == 49 && view == "endGame") mainMenu(); // ToDo submit highscore
+  	//Submit score
+  	else if (x.keyCode == 49 && view == "endGame") {
+  		if (score2 != null){
+  			msg = {"messageType": "SCORE", "score": score2};
+  			window.parent.postMessage(msg, "*");
+  			score2 = null;
+  		}
+  	}
   	else if (x.keyCode == 50 && view == "endGame") mainMenu();
 
   	else if (x.keyCode == 49 && view == "pauseGame") continueGame();
-  	else if (x.keyCode == 50 && view == "pauseGame"); // ToDo save game
+  	//Save game
+  	else if (x.keyCode == 50 && view == "pauseGame") {
+  		var playerItems = [];
+  		playerItems.push(level);
+  		playerItems.push(worm.length*2);
+  		for (var i = 0; i < worm.length; i++) {
+  			playerItems.push(worm[i].x);
+  			playerItems.push(worm[i].y);
+  		}
+  		playerItems.push(appleBoolean);
+  		playerItems.push(direction);
+  		playerItems.push(apple.x);
+  		playerItems.push(apple.y);
+  		msg = {"messageType": "SAVE", "gameState": {"playerItems": playerItems, "score": score}};
+  		window.parent.postMessage(msg, "*");
+  	}
   	else if (x.keyCode == 51 && view == "pauseGame") {
   		score = 0;
 		worm = [];
@@ -357,5 +398,47 @@ function onKeyDown(x) { //listens for wasd-keypress
   	}
 };
 $(document).keydown(onKeyDown);
+
+//Load data from the service
+window.addEventListener("message", function(evt) {
+	if (evt.data.messageType === "LOAD" && !isNaN(evt.data.gameState.playerItems[0])) {
+		score = 0;
+		worm = [];
+		appleBoolean = false;
+		apples = [];
+		direction = "r";
+
+		score = parseInt(evt.data.gameState.score);
+		level = parseInt(evt.data.gameState.playerItems[0]);
+		var wormLength = parseInt(evt.data.gameState.playerItems[1]);
+
+		var headGraphics = new createjs.Graphics();
+		headGraphics.setStrokeStyle(1).beginStroke("black").beginFill("red").drawCircle(0, 0, 10);
+		var head = new createjs.Shape(headGraphics);
+		head.x = parseInt(evt.data.gameState.playerItems[2]);
+		head.y = parseInt(evt.data.gameState.playerItems[3]);
+		worm.push(head);
+
+		var tailGraphics = new createjs.Graphics();
+		tailGraphics.setStrokeStyle(1).beginStroke("black").beginFill("black").drawCircle(0, 0, 10);
+		for (var i = 4; i < wormLength + 2; i++) {
+			var tail = new createjs.Shape(tailGraphics);
+			tail.x =  parseInt(evt.data.gameState.playerItems[i]);
+			tail.y = parseInt(evt.data.gameState.playerItems[i + 1]);
+			worm.push(tail);
+			i++;
+		}
+
+		appleBoolean = evt.data.gameState.playerItems[wormLength + 2];
+		direction = evt.data.gameState.playerItems[wormLength + 3];
+
+		var appleGraphics = new createjs.Graphics();
+		appleGraphics.setStrokeStyle(1).beginStroke("black").beginFill("blue").drawCircle(0, 0, 10);
+		apple = new createjs.Shape(appleGraphics);
+		apple.x = parseInt(evt.data.gameState.playerItems[wormLength + 4]);
+		apple.y = parseInt(evt.data.gameState.playerItems[wormLength + 5]);
+		apples.push(apple);
+	}
+})
 
 init();
