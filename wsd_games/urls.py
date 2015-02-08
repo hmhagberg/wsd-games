@@ -23,7 +23,7 @@ urlpatterns = patterns('',
 
     url(r'^payment/(success|cancel|error)?$', PaymentView.as_view(), name="payment"),
 
-    url(r'^games/categories[/]?$', 'games.views.categories_list'),  # FIXME: HACK [/]?
+    url(r'^games/categories[/]?$', 'games.views.categories_list'),
     url(r'^games/categories/([a-z0-9\-]+)$', 'games.views.category'),
 
     url(r'^games/developers[/]?$', 'games.views.developers_list'),

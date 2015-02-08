@@ -1,5 +1,4 @@
 import hashlib
-import json
 
 from django.conf import settings
 from django.contrib.auth import login, logout
@@ -21,8 +20,7 @@ context = {}
 def home(request):
     try:
         games = Game.objects.all()
-        categories = Category.objects.all()
-        context.update({'games': games, 'categories': categories, 'category': '', 'developer': '', 'title': ''})
+        context.update({'games': games, 'category': '', 'developer': '', 'title': ''})
     except Game.DoesNotExist:
         raise Http404
     return render(request, 'games/base_grid_gameCard.html', context)
@@ -72,7 +70,7 @@ class SignupView(View):
     def send_activation_mail(user):
         activation = SignupActivation(user=user)
         activation.save()
-        # TODO: Write better message, possibly in separate file?
+
         activation_link = "{domain}/signup/activate/{key}".format(domain=settings.DOMAIN, key=activation.key)
         message = "Thank you for signing up, {username}\n" \
                   "To activate your account click the following link: {link}\n" \
@@ -139,12 +137,12 @@ class EditProfileView(View):
         else:
             password_form = PasswordChangeForm(self.request.user)
 
-        if not errors:
-            messages.add_message(request, messages.SUCCESS, "Changes saved succesfully")
-            return redirect("home")
-        else:
+        if errors:
             return render(self.request, "games/base_edit_profile.html", {"password_form": password_form,
                                                                          "profile_form": profile_form})
+        else:
+            messages.success(request, "Changes saved succesfully.")
+            return redirect("home")
 
 
 def signup_activation(request, activation_key):
@@ -157,9 +155,8 @@ def signup_activation(request, activation_key):
         messages.error(request, "This account activation confirmation has expired. You have to sign up again")
         return redirect("signup")
 
-    user = confirmation.user
-    user.is_active = True
-    user.save()
+    confirmation.user.is_active = True
+    confirmation.user.save()
     confirmation.delete()
     messages.success(request, "Congratulations! Your account has been activated. You can now log in.")
     return redirect("login")
@@ -172,8 +169,7 @@ def logout_view(request):
 
 def profiles(request, profile_slug):
     profile = get_object_or_404(Player, slug=profile_slug)
-    categories = Category.objects.all()
-    context.update({'profile': profile, 'categories': categories})
+    context.update({'profile': profile})
 
     return render(request, 'games/base_profile.html', context)
 
@@ -181,8 +177,7 @@ def profiles(request, profile_slug):
 def my_games(request):
     try:
         games = request.user.player.games()
-        categories = Category.objects.all()
-        context.update({'games': games, 'categories': categories, 'category': '', 'developer': '', 'title': 'My'})
+        context.update({'games': games, 'category': '', 'developer': '', 'title': 'My'})
     except Game.DoesNotExist:
         raise Http404
     return render(request, 'games/base_grid_gameCard.html', context)
@@ -212,8 +207,7 @@ def categories_list(request):
 def developers_list(request):
     try:
         developers = Developer.objects.all().order_by('slug')
-        categories = Category.objects.all()
-        context.update({'developers': developers, 'categories': categories})
+        context.update({'developers': developers})
     except Developer.DoesNotExist:
         raise Http404
     return render(request, 'games/base_grid_developerCard.html', context)
@@ -221,7 +215,6 @@ def developers_list(request):
 
 def game(request, game_slug):
     game = get_object_or_404(Game, slug=game_slug)
-    categories = Category.objects.all()
     ownership_status = "not_owned"
     ownership = None
     if request.user.is_authenticated():
@@ -232,7 +225,7 @@ def game(request, game_slug):
         elif game.developer == request.user.developer:
             ownership_status = "developer"
             context.update({'sales_count':game.get_sales_count()})
-    context.update({'game': game, 'categories': categories, 'ownership_status': ownership_status, 'ownership':
+    context.update({'game': game, 'ownership_status': ownership_status, 'ownership':
         ownership})
 
     # Handle game messages
@@ -247,8 +240,7 @@ def game(request, game_slug):
 def category(request, category_slug):
     category = get_object_or_404(Category, slug=category_slug)
     games = category.games.all()
-    categories = Category.objects.all()
-    context.update({'category': category, 'games': games, 'categories': categories, 'developer': '', 'title': ''})
+    context.update({'category': category, 'games': games, 'developer': '', 'title': ''})
 
     return render(request, 'games/base_grid_gameCard.html', context)
 
@@ -256,8 +248,7 @@ def category(request, category_slug):
 def developer(request, developers_slug):
     developer = get_object_or_404(Developer, slug=developers_slug)
     games = developer.games.all()
-    categories = Category.objects.all()
-    context.update({'developer': developer, 'games': games, 'categories': categories, 'category': '', 'title': ''})
+    context.update({'developer': developer, 'games': games, 'category': '', 'title': ''})
     return render(request, 'games/base_grid_gameCard.html', context)
 
 
