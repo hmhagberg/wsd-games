@@ -1,0 +1,21 @@
+{% extends "games/base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}WSD-Games - Publish Game{% endblock %}
+
+{% block header %}Publish Game{% endblock %}
+
+{% block content %}
+    <div id="form_container">
+        <form id="form" method="POST">
+            {% csrf_token %}
+            <table>
+                {{ form.as_table }}
+            </table>
+            <br>
+            <input id="submit" type="submit" value="Publish">
+
+        </form>
+    </div>
+{% endblock %}
