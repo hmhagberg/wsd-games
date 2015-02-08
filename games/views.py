@@ -152,17 +152,18 @@ def signup_activation(request, activation_key):
     if request.user.is_authenticated():
         return redirect("home")
 
-    # TODO: Is it better to return 404 or redirect to home?
     confirmation = get_object_or_404(SignupActivation, key=activation_key)
     if confirmation.has_expired():
         confirmation.delete()
-        return render(request, "games/auth/activate_expired.html")
+        messages.error(request, "This account activation confirmation has expired. You have to sign up again")
+        return redirect("signup")
 
     user = confirmation.user
     user.is_active = True
     user.save()
     confirmation.delete()
-    return render(request, "games/auth/activate.html")
+    messages.success(request, "Congratulations! Your account has been activated. You can now log in.")
+    return redirect("login")
 
 
 def logout_view(request):
