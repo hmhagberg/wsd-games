@@ -65,6 +65,7 @@ class Player(models.Model):
     """
     user = models.OneToOneField(settings.AUTH_USER_MODEL)
     slug = models.SlugField()
+    about_me = models.TextField(blank=True)
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -98,7 +99,6 @@ class Developer(AbstractSlugModel):
 
     def get_absolute_url(self):
         return reverse("games.views.developer", args=[self.slug])
-
 
 
 class SignupActivation(models.Model):

@@ -4,10 +4,11 @@ import json
 from django.conf import settings
 from django.contrib.auth import login, logout
 from django.contrib.auth.models import AnonymousUser
+from django.contrib.auth.forms import PasswordChangeForm
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect, render_to_response, render
 from django.http import Http404, HttpResponse
-from django.views.generic import View, FormView
+from django.views.generic import View, FormView, UpdateView
 from django.template import RequestContext
 
 from games import api
@@ -98,6 +99,53 @@ class GamePublishingView(View):
             return redirect("games/"+game.slug)
         else:
             return render(request, "games/base_game_publish.html", {"form": form,})
+
+
+class EditProfileView(View):
+
+    def get(self, request, *args, **kwargs):
+        password_form = PasswordChangeForm(self.request.user)
+        if self.request.user.is_player():
+            player = self.request.user.player
+            profile_form = PlayerEditProfileForm(self.request.user)
+        else:
+            developer = self.request.user.developer
+            profile_form = DeveloperEditProfileForm(self.request.user)
+
+        return render(request, "games/user_edit_profile.html", {"password_form": password_form,
+                                                                "profile_form": profile_form})
+
+    def post(self, request, *args, **kwargs):
+        errors = False
+
+        if self.request.user.is_player():
+            profile_form_cls = PlayerEditProfileForm
+        else:
+            profile_form_cls = DeveloperEditProfileForm
+
+        if "edit_profile" in request.POST:
+            profile_form = profile_form_cls(self.request.user, data=request.POST)
+            if profile_form.is_valid():
+                profile_form.save()
+            else:
+                errors = True
+        else:
+            profile_form = profile_form_cls(self.request.user)
+
+        if "change_password" in request.POST:
+            password_form = PasswordChangeForm(self.request.user, data=request.POST)
+            if password_form.is_valid():
+                password_form.save()
+            else:
+                errors = True
+        else:
+            password_form = PasswordChangeForm(self.request.user)
+
+        if not errors:
+            return redirect("home")
+        else:
+            return render(self.request, "games/user_edit_profile.html", {"password_form": password_form,
+                                                                         "profile_form": profile_form})
 
 
 def signup_activation(request, activation_key):

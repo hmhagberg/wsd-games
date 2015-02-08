@@ -1,0 +1,26 @@
+{% extends "games/base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}WSD-Games - {{profile.user.username}}{% endblock %}
+
+{% block header %}{{profile.user.username}}{% endblock %}
+
+{% block content %}
+    <div id="form_container">
+        <div id="form">
+            <form method="POST">
+                {% csrf_token %}
+                {{ profile_form.as_p }}
+                <br>
+                <input id="submit_profile" type="submit" value="Submit changes" name="edit_profile"/>
+            </form>
+            <form method="POST">
+                {% csrf_token %}
+                {{ password_form.as_p }}
+                <br>
+                <input id="submit_password" type="submit" value="Change password" name="change_password" />
+            </form>
+        </div>
+    </div>
+{% endblock %}
