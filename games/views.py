@@ -4,6 +4,7 @@ import json
 from django.conf import settings
 from django.contrib.auth import login, logout
 from django.contrib.auth.models import AnonymousUser
+from django.contrib import messages
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect, render_to_response, render
 from django.http import Http404, HttpResponse
