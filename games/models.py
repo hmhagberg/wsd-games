@@ -96,7 +96,7 @@ class Developer(AbstractSlugModel):
     description = models.TextField(default='Developer description')
 
     def get_absolute_url(self):
-        return reverse("games.views.developer", args=[self.slug])
+        return reverse("games.views.developer_detail", args=[self.slug])
 
 
 class SignupActivation(models.Model):
@@ -120,7 +120,7 @@ class Category(AbstractSlugModel):
     description = models.TextField(default='Category description')
 
     def get_absolute_url(self):
-        return reverse("games.views.category", args=[self.slug])
+        return reverse("games.views.category_detail", args=[self.slug])
 
 
 class Game(AbstractSlugModel):
@@ -132,7 +132,7 @@ class Game(AbstractSlugModel):
     price = models.DecimalField(max_digits=6, decimal_places=2, validators=[MinValueValidator(0)])
 
     def get_absolute_url(self):
-        return reverse("games.views.game", args=[self.slug])
+        return reverse("games.views.game_detail", args=[self.slug])
 
     """
     Returns Ownerships with highest scores for this game
