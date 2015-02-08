@@ -18,11 +18,8 @@ context = {}
 
 
 def home(request):
-    try:
-        games = Game.objects.all()
-        context.update({'games': games, 'category': '', 'developer': '', 'title': ''})
-    except Game.DoesNotExist:
-        raise Http404
+    games = Game.objects.all()
+    context.update({'games': games, 'category': '', 'developer': '', 'title': ''})
     return render(request, 'games/base_grid_gameCard.html', context)
 
 
@@ -175,11 +172,8 @@ def profiles(request, profile_slug):
 
 
 def my_games(request):
-    try:
-        games = request.user.player.games()
-        context.update({'games': games, 'category': '', 'developer': '', 'title': 'My'})
-    except Game.DoesNotExist:
-        raise Http404
+    games = request.user.player.games()
+    context.update({'games': games, 'category': '', 'developer': '', 'title': 'My'})
     return render(request, 'games/base_grid_gameCard.html', context)
 
 
@@ -196,20 +190,14 @@ def games_list(request):
 
 
 def categories_list(request):
-    try:
-        categories = Category.objects.all().order_by('name')
-        context.update({'categories': categories})
-    except Category.DoesNotExist:
-        raise Http404
+    categories = Category.objects.all().order_by('name')
+    context.update({'categories': categories})
     return render(request, 'games/base_grid_categoryCard.html', context)
 
 
 def developers_list(request):
-    try:
-        developers = Developer.objects.all().order_by('slug')
-        context.update({'developers': developers})
-    except Developer.DoesNotExist:
-        raise Http404
+    developers = Developer.objects.all().order_by('slug')
+    context.update({'developers': developers})
     return render(request, 'games/base_grid_developerCard.html', context)
 
 
