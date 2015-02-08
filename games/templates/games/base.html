@@ -63,6 +63,49 @@
 				</div><!-- /.navbar-collapse -->
 			</div><!-- /.container-fluid -->
 		</nav>
+
+        {% if messages %}
+            <ul>
+            {% for message in messages %}
+                <li>
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                    <div class="alert alert-danger alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert"
+                                aria-hidden="true">
+                            &times;
+                        </button>
+                        {{ message }}
+                    </div>
+                {% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+                    <div class="alert alert-warning alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert"
+                                aria-hidden="true">
+                            &times;
+                        </button>
+                        {{ message }}
+                    </div>
+                {% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+                    <div class="alert alert-info alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert"
+                                aria-hidden="true">
+                            &times;
+                        </button>
+                        {{ message }}
+                    </div>
+                {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert"
+                                aria-hidden="true">
+                            &times;
+                        </button>
+                        {{ message }}
+                    </div>
+                {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+
 		<div id="content">
 			<h1>{% block header %}WSD-Games{% endblock %}</h1>
 			{% block search %}{% endblock %}
