@@ -185,23 +185,23 @@ def social_select_username(request, backend):
     return render(request, "games/auth/base_selectUsername.html", {"form": form, "backend": backend})
 
 
-def games_list(request):
+def game_list(request):
     return home(request)
 
 
-def categories_list(request):
+def category_list(request):
     categories = Category.objects.all().order_by('name')
     context.update({'categories': categories})
     return render(request, 'games/base_grid_categoryCard.html', context)
 
 
-def developers_list(request):
+def developer_list(request):
     developers = Developer.objects.all().order_by('slug')
     context.update({'developers': developers})
     return render(request, 'games/base_grid_developerCard.html', context)
 
 
-def game(request, game_slug):
+def game_detail(request, game_slug):
     game = get_object_or_404(Game, slug=game_slug)
     ownership_status = "not_owned"
     ownership = None
@@ -225,7 +225,8 @@ def game(request, game_slug):
 
     return render(request, 'games/base_game.html', context)
 
-def category(request, category_slug):
+
+def category_detail(request, category_slug):
     category = get_object_or_404(Category, slug=category_slug)
     games = category.games.all()
     context.update({'category': category, 'games': games, 'developer': '', 'title': ''})
@@ -233,7 +234,7 @@ def category(request, category_slug):
     return render(request, 'games/base_grid_gameCard.html', context)
 
 
-def developer(request, developers_slug):
+def developer_detail(request, developers_slug):
     developer = get_object_or_404(Developer, slug=developers_slug)
     games = developer.games.all()
     context.update({'developer': developer, 'games': games, 'category': '', 'title': ''})
