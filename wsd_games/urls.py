@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+from django.contrib.auth.decorators import login_required
 
 from games.views import *
 
@@ -16,7 +17,7 @@ urlpatterns = patterns('',
     url(r'^signup/activate/([a-z0-9]+)$', 'games.views.signup_activation', name='signup_activation'),
     url(r'^publish-game/?$', GamePublishingView.as_view(), name="game_publishing"),
 
-    url(r'^profiles/edit$', EditProfileView.as_view(), name="edit_profile"),
+    url(r'^edit_profile$', login_required(EditProfileView.as_view()), name="edit_profile"),
     url(r'^profiles/([a-z0-9\-]+)$', 'games.views.profiles'),
 
 

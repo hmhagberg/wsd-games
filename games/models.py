@@ -24,8 +24,7 @@ class AbstractSlugModel(models.Model):
         ordering = ["name"]
 
     def save(self, *args, **kwargs):
-        if not self.id:
-            self.slug = slugify(self.name)
+        self.slug = slugify(self.name)
         return super(AbstractSlugModel, self).save(*args, **kwargs)
 
     def natural_key(self):
@@ -68,8 +67,7 @@ class Player(models.Model):
     about_me = models.TextField(blank=True)
 
     def save(self, *args, **kwargs):
-        if not self.id:
-            self.slug = slugify(self.user.username)
+        self.slug = slugify(self.user.username)
         super(Player, self).save(*args, **kwargs)
 
     def __str__(self):

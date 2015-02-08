@@ -49,6 +49,7 @@
                                         <li><a href="{% url 'games.views.profiles' user.player.slug %}">Profile</a></li>
                                         <li><a href="{% url 'games.views.my_games' %}">My Games</a></li>
                                     {% elif user.is_developer %}
+                                        <li><a href="{% url 'edit_profile' %}">Edit profile</a> </li>
                                     	<li><a href="{% url 'games.views.developer' user.developer.slug %}">My Games</a></li>
                                     	<li><a href="{% url 'game_publishing' %}">Publish Game</a></li>
                                     {% endif %}

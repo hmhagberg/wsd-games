@@ -40,7 +40,7 @@ class LoginView(FormView):
 
     def form_valid(self, form):
         login(self.request, form.get_user())
-        return redirect("home")
+        return redirect(self.request.GET.get("next") or "home")
 
 
 class SignupView(View):
@@ -107,10 +107,8 @@ class EditProfileView(View):
     def get(self, request, *args, **kwargs):
         password_form = PasswordChangeForm(self.request.user)
         if self.request.user.is_player():
-            player = self.request.user.player
             profile_form = PlayerEditProfileForm(self.request.user)
         else:
-            developer = self.request.user.developer
             profile_form = DeveloperEditProfileForm(self.request.user)
 
         return render(request, "games/user_edit_profile.html", {"password_form": password_form,
@@ -143,6 +141,7 @@ class EditProfileView(View):
             password_form = PasswordChangeForm(self.request.user)
 
         if not errors:
+            messages.add_message(request, messages.SUCCESS, "Changes saved succesfully")
             return redirect("home")
         else:
             return render(self.request, "games/user_edit_profile.html", {"password_form": password_form,
