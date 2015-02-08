@@ -7,10 +7,9 @@ from django.contrib.auth.models import AnonymousUser
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
 from django.core.mail import send_mail
-from django.shortcuts import get_object_or_404, redirect, render_to_response, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.http import Http404, HttpResponse
-from django.views.generic import View, FormView, UpdateView
-from django.template import RequestContext
+from django.views.generic import View, FormView
 
 from games import api
 from games.models import *
@@ -26,7 +25,7 @@ def home(request):
         context.update({'games': games, 'categories': categories, 'category': '', 'developer': '', 'title': ''})
     except Game.DoesNotExist:
         raise Http404
-    return render_to_response('games/base_grid_gameCard.html', context, context_instance=RequestContext(request))
+    return render(request, 'games/base_grid_gameCard.html', context)
 
 
 class LoginView(FormView):
@@ -176,7 +175,7 @@ def profiles(request, profile_slug):
     categories = Category.objects.all()
     context.update({'profile': profile, 'categories': categories})
 
-    return render_to_response('games/base_profile.html', context, context_instance=RequestContext(request))
+    return render(request, 'games/base_profile.html', context)
 
 
 def my_games(request):
@@ -186,7 +185,7 @@ def my_games(request):
         context.update({'games': games, 'categories': categories, 'category': '', 'developer': '', 'title': 'My'})
     except Game.DoesNotExist:
         raise Http404
-    return render_to_response('games/base_grid_gameCard.html', context, context_instance=RequestContext(request))
+    return render(request, 'games/base_grid_gameCard.html', context)
 
 
 def social_select_username(request, backend):
@@ -194,8 +193,7 @@ def social_select_username(request, backend):
     Username selection view for social auth
     """
     form = UsernameForm()
-    return render_to_response("games/auth/base_selectUsername.html", {"form": form, "backend": backend},
-                              context_instance=RequestContext(request))
+    return render(request, "games/auth/base_selectUsername.html", {"form": form, "backend": backend})
 
 
 def games_list(request):
@@ -208,7 +206,7 @@ def categories_list(request):
         context.update({'categories': categories})
     except Category.DoesNotExist:
         raise Http404
-    return render_to_response('games/base_grid_categoryCard.html', context, context_instance=RequestContext(request))
+    return render(request, 'games/base_grid_categoryCard.html', context)
 
 
 def developers_list(request):
@@ -218,7 +216,7 @@ def developers_list(request):
         context.update({'developers': developers, 'categories': categories})
     except Developer.DoesNotExist:
         raise Http404
-    return render_to_response('games/base_grid_developerCard.html', context, context_instance=RequestContext(request))
+    return render(request, 'games/base_grid_developerCard.html', context)
 
 
 def game(request, game_slug):
@@ -244,7 +242,7 @@ def game(request, game_slug):
         elif request.POST['messageType'] == "SAVE":
             ownership.save_game(int(request.POST["gameState[score]"]), ','.join(request.POST.getlist("gameState[playerItems][]")))
 
-    return render_to_response('games/base_game.html', context, context_instance=RequestContext(request))
+    return render(request, 'games/base_game.html', context)
 
 def category(request, category_slug):
     category = get_object_or_404(Category, slug=category_slug)
@@ -252,7 +250,7 @@ def category(request, category_slug):
     categories = Category.objects.all()
     context.update({'category': category, 'games': games, 'categories': categories, 'developer': '', 'title': ''})
 
-    return render_to_response('games/base_grid_gameCard.html', context, context_instance=RequestContext(request))
+    return render(request, 'games/base_grid_gameCard.html', context)
 
 
 def developer(request, developers_slug):
@@ -260,7 +258,7 @@ def developer(request, developers_slug):
     games = developer.games.all()
     categories = Category.objects.all()
     context.update({'developer': developer, 'games': games, 'categories': categories, 'category': '', 'title': ''})
-    return render_to_response('games/base_grid_gameCard.html', context, context_instance=RequestContext(request))
+    return render(request, 'games/base_grid_gameCard.html', context)
 
 
 class PaymentView(View):
