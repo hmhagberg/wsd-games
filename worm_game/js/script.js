@@ -11,7 +11,7 @@ var apples = [];
 var direction = "r";
 var scoreText;
 var apple;
-var menu = true;
+var view = "mainMenu";
 
 function init() {
 	stage = new createjs.Stage("game");
@@ -19,24 +19,30 @@ function init() {
 };
 
 function mainMenu() {
+	view = "mainMenu";
+
 	stage.removeAllChildren();
 
-	var title = new createjs.Text("Worm", "40px Arial", "#000000");
-	title.x = 250;
+	var title = new createjs.Text("Worm Game", "40px Arial", "#ff0000");
+	title.x = 180;
 
-	var start = new createjs.Text("Start game", "30px Arial", "#000000");
+	var start = new createjs.Text("1: New game", "30px Arial", "#000000");
 	start.x = 10;
 	start.y = 200;
 
-	var instructions = new createjs.Text("Instructions", "30px Arial", "#000000");
+	var continueGameText = new createjs.Text("2: Continue Game", "30px Arial", "#000000");
+	continueGameText.x = 10;
+	continueGameText.y = 250;
+
+	var instructions = new createjs.Text("3: Instructions", "30px Arial", "#000000");
 	instructions.x = 10;
 	instructions.y = 300;
 
-	var settings = new createjs.Text("Settings", "30px Arial", "#000000");
+	var settings = new createjs.Text("4: Settings", "30px Arial", "#000000");
 	settings.x = 10;
-	settings.y = 400;
+	settings.y = 350;
 
-	stage.addChild(title, start, instructions, settings);
+	stage.addChild(title, start, continueGameText, instructions, settings);
 	stage.update();
 };
 
@@ -76,12 +82,41 @@ function game() {
 		stage.addChild(worm[j]);
 	}
 	stage.update();
-	menu = false;
+	view = "game";
 	createjs.Ticker.setFPS(level*3);
 	createjs.Ticker.addEventListener("tick", tick);
 	createjs.Ticker.setPaused(false);
 
 };
+
+function continueGame() {
+	if (worm.length > 0) {
+		stage.removeAllChildren();
+		var boxGraphics = new createjs.Graphics();
+		boxGraphics.setStrokeStyle(1).beginStroke("black").drawRect(-5, 0, 610, 50);
+
+		var box = new createjs.Shape(boxGraphics);
+
+		updateScore();
+
+		var levelText = new createjs.Text("Level: " + level, "30px Arial");
+		levelText.x = 300;
+		levelText.y = 10;
+
+		stage.addChild(box, scoreText, levelText, apple);
+		for (var j = 0; j < worm.length; j++) {
+			stage.addChild(worm[j]);
+		}
+		stage.update();
+		view = "game";
+		createjs.Ticker.setFPS(level*3);
+		createjs.Ticker.addEventListener("tick", tick);
+		createjs.Ticker.setPaused(false);
+	}
+	else {
+		game();
+	}
+}
 
 function tick(event) {
 	if (!createjs.Ticker.getPaused()){
@@ -168,46 +203,158 @@ function createApple() {
 }
 
 function endGame() {
-	menu = true;
+	view = "endGame";
+
 	stage.removeAllChildren();
-	stage.addChild(scoreText);
+
+	var endTitle = new createjs.Text("Game Over", "40px Arial", "#ff0000");
+	endTitle.x = 190;
+	endTitle.y = 0;
+
+	var endScore = new createjs.Text("Your score was: " + score, "35px Arial", "#ff0000");
+	endScore.x = 10;
+	endScore.y = 200;
+
+	var submitScore = new createjs.Text("1: Submit score", "30px Arial", "#000000");
+	submitScore.x = 10;
+	submitScore.y = 250;
+
+	var endMainMenu= new createjs.Text("2: Return to main menu", "30px Arial", "#000000");
+	endMainMenu.x = 10;
+	endMainMenu.y = 300;
+
+	stage.addChild(endTitle, endScore, submitScore, endMainMenu);
+	stage.update();
+
 	score = 0;
 	worm = [];
 	appleBoolean = false;
 	apples = [];
 	direction = "r";
-	scoreText.addEventListener("click", mainMenu);
+	
 };
 
-function instructionsPage() {
+function pauseGame() {
+	view = "pauseGame";
+	createjs.Ticker.setPaused(true);
 	stage.removeAllChildren();
+
+	var pauseTitle = new createjs.Text("Paused", "40px Arial", "#000000");
+	pauseTitle.x = 220;
+	pauseTitle.y = 0;
+
+	var pauseContinue = new createjs.Text("1: Continue", "30px Arial", "#000000");
+	pauseContinue.x = 10;
+	pauseContinue.y = 200;
+
+	var pauseSave = new createjs.Text("2: Save game", "30px Arial", "#000000");
+	pauseSave.x = 10;
+	pauseSave.y = 250;
+
+	var pauseExit = new createjs.Text("3: Exit game", "30px Arial", "#000000");
+	pauseExit.x = 10;
+	pauseExit.y = 300;
+
+	stage.addChild(pauseTitle, pauseContinue, pauseSave, pauseExit);
+	stage.update();
+}
+
+function instructionsPage() {
+	view = "instructions";
+
+	stage.removeAllChildren();
+
+	var instructionsTitle = new createjs.Text("Instructions", "40px Arial", "#000000");
+	instructionsTitle.x = 200;
+	instructionsTitle.y = 0;
+
+	var instructions1 = new createjs.Text("Feed the worm as many apples as possible", "30px Arial", "#000000");
+	instructions1.x = 10;
+	instructions1.y = 200;
+
+	var instructions2 = new createjs.Text("without running into walls or itself.", "30px Arial", "#000000");
+	instructions2.x = 10;
+	instructions2.y = 250;
+
+	var instructions3 = new createjs.Text("Use WASD-keys to control the worm.", "30px Arial", "#000000");
+	instructions3.x = 10;
+	instructions3.y = 300;
+
+	var instructions4 = new createjs.Text("Press 1 to pause the game.", "30px Arial", "#000000");
+	instructions4.x = 10;
+	instructions4.y = 350;
+
+	var instructionsBack = new createjs.Text("1: Back", "30px Arial", "#000000");
+	instructionsBack.x = 10;
+	instructionsBack.y = 500;
+
+	stage.addChild(instructionsTitle, instructions1, instructions2, instructions3, instructions4, instructionsBack);
 	stage.update();
 };
 
 function settingsPage() {
+	view = "settings";
+
 	stage.removeAllChildren();
 
-	var levelSetting = new createjs.Text("Taso: " + level, "30px Arial", "#000000");
+	var settingsTitle = new createjs.Text("Settings", "40px Arial", "#000000");
+	settingsTitle.x = 220;
+	settingsTitle.y = 0;
+
+	var levelSetting = new createjs.Text("Level: " + level, "30px Arial", "#ff0000");
 	levelSetting.x = 10;
 	levelSetting.y = 200;
 
-	var wallSetting = new createjs.Text("Seinä: " + level, "30px Arial", "#000000");
-	wallSetting.x = 10;
-	wallSetting.y = 300;
+	var settingInstruction = new createjs.Text("Use W and S keys to change the level.", "30px Arial", "#000000");
+	settingInstruction.x = 10;
+	settingInstruction.y = 250;
 
-	stage.addChild(levelSetting, wallSetting);
+	var settingsBack = new createjs.Text("1: Back", "30px Arial", "#000000");
+	settingsBack.x = 10;
+	settingsBack.y = 500;
+
+	stage.addChild(settingsTitle, levelSetting, settingInstruction, settingsBack);
 	stage.update();
 
 };
 
 function onKeyDown(x) { //listens for wasd-keypress
-	if (x.keyCode == 87 && direction != "d") direction = "u";
-  	if (x.keyCode == 65 && direction != "r") direction = "l";
-  	if (x.keyCode == 83 && direction != "u") direction = "d";
-  	if (x.keyCode == 68 && direction != "l") direction = "r";
-  	if (x.keyCode == 49 && menu == true) game();
-  	if (x.keyCode == 50 && menu == true) instructionsPage();
-  	if (x.keyCode == 51 && menu == true) settingsPage();
+	if (x.keyCode == 87 && direction != "d" && view == "game") direction = "u";
+  	else if (x.keyCode == 65 && direction != "r" && view == "game") direction = "l";
+  	else if (x.keyCode == 83 && direction != "u" && view == "game") direction = "d";
+  	else if (x.keyCode == 68 && direction != "l" && view == "game") direction = "r";
+  	else if (x.keyCode == 49 && view == "game") pauseGame(); // ToDo pause game
+
+  	else if (x.keyCode == 49 && (view == "instructions" || view == "settings")) mainMenu();
+
+  	else if (x.keyCode == 87 && view == "settings" && level < 10) {
+  		level += 1;
+  		settingsPage()
+  	}
+
+  	else if (x.keyCode == 83 && view == "settings" && level > 1) {
+  		level -= 1;
+  		settingsPage()
+  	}
+
+  	else if (x.keyCode == 49 && view == "mainMenu") game();
+  	else if (x.keyCode == 50 && view == "mainMenu") continueGame();
+  	else if (x.keyCode == 51 && view == "mainMenu") instructionsPage();
+  	else if (x.keyCode == 52 && view == "mainMenu") settingsPage();
+
+  	else if (x.keyCode == 49 && view == "endGame") mainMenu(); // ToDo submit highscore
+  	else if (x.keyCode == 50 && view == "endGame") mainMenu();
+
+  	else if (x.keyCode == 49 && view == "pauseGame") continueGame();
+  	else if (x.keyCode == 50 && view == "pauseGame"); // ToDo save game
+  	else if (x.keyCode == 51 && view == "pauseGame") {
+  		score = 0;
+		worm = [];
+		appleBoolean = false;
+		apples = [];
+		direction = "r";
+  		mainMenu();
+  	}
 };
 $(document).keydown(onKeyDown);
 
