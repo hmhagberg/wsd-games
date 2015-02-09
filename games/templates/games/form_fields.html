@@ -9,7 +9,7 @@
         <label class="col-md-4 control-label" for="{{ field.id_for_label }}">{{ field.label }}:</label>
         <div class="col-md-8 form-field"
                 {% if field.errors %}
-                    data-toggle="tooltip" data-placement="right" data-trigger="manual focus hover"
+                    data-toggle="tooltip" data-placement="right" data-trigger="manual focus"
                     title="{% for error in field.errors %}
                                 {{ error }}
                             {% endfor %}"

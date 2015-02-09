@@ -10,7 +10,7 @@
     <div id="form_container" class="container-fluid">
         <form id="form" class="form-horizontal" method="POST">
             {% csrf_token %}
-            {% include "games/form_template.html" %}
+            {% include "games/form_fields.html" %}
             <button id="submit" type="submit" class="btn btn-primary">Sign up</button>
 
             {% if not dev_signup %}

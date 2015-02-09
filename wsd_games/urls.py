@@ -17,6 +17,7 @@ urlpatterns = patterns('',
     url(r'^publish-game/?$', GamePublishingView.as_view(), name="game_publishing"),
 
     url(r'^edit_profile$', login_required(EditProfileView.as_view()), name="edit_profile"),
+    url(r'^change_password$', login_required(ChangePasswordView.as_view()), name="change_password"),
     url(r'^profiles/([a-z0-9\-]+)$', 'games.views.profiles', name="profiles"),
 
 

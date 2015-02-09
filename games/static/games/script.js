@@ -7,5 +7,5 @@ $(document).ready(function() {
 
     window.setTimeout(function(){
         $('.form-field').tooltip('hide');
-    }, 2500);
+    }, 3500);
 });

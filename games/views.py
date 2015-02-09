@@ -30,9 +30,6 @@ class LoginView(FormView):
             return redirect("home")
         return super(LoginView, self).get(request, *args, **kwargs)
 
-    def post(self, request, *args, **kwargs):
-        return super(LoginView, self).post(request, *args, **kwargs)
-
     def form_valid(self, form):
         login(self.request, form.get_user())
         messages.success(self.request, "You have logged in")
@@ -113,50 +110,57 @@ class GamePublishingView(View):
             return render(request, "games/base_game_publish.html", {"form": form,})
 
 
-class EditProfileView(View):
+class ChangePasswordView(FormView):
+    template_name = "games/base_generic_form.html"
+    form_class = PasswordChangeForm
+    success_url = "/"
 
-    def get(self, request, *args, **kwargs):
-        password_form = PasswordChangeForm(self.request.user)
-        if self.request.user.is_player():
-            profile_form = PlayerEditProfileForm(self.request.user)
-        else:
-            profile_form = DeveloperEditProfileForm(self.request.user)
+    def get_form_kwargs(self):
+        kwargs = super(ChangePasswordView, self).get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
-        return render(request, "games/base_edit_profile.html", {"password_form": password_form,
-                                                                "profile_form": profile_form})
+    def get_context_data(self, **kwargs):
+        context = super(ChangePasswordView, self).get_context_data(**kwargs)
+        context.update({"title": "Change password",
+                        "header": self.request.user.username,
+                        "submit_button_text": "Change password"})
+        return context
 
-    def post(self, request, *args, **kwargs):
-        errors = False
+    def form_valid(self, form):
+        messages.success(self.request, "Your password has been changed.")
+        return super(ChangePasswordView, self).form_valid(form)
 
-        if self.request.user.is_player():
-            profile_form_cls = PlayerEditProfileForm
-        else:
-            profile_form_cls = DeveloperEditProfileForm
 
-        if "edit_profile" in request.POST:
-            profile_form = profile_form_cls(self.request.user, data=request.POST)
-            if profile_form.is_valid():
-                profile_form.save()
+class EditProfileView(FormView):
+    template_name = "games/base_generic_form.html"
+    form_class = PasswordChangeForm
+    success_url = "/"
+
+    def get_form_class(self):
+        if self.request.user.is_authenticated():
+            if self.request.user.is_player():
+                return PlayerEditProfileForm
             else:
-                errors = True
+                return DeveloperEditProfileForm
         else:
-            profile_form = profile_form_cls(self.request.user)
+            raise Http404
 
-        if "change_password" in request.POST:
-            password_form = PasswordChangeForm(self.request.user, data=request.POST)
-            if password_form.is_valid():
-                password_form.save()
-            else:
-                errors = True
-        else:
-            password_form = PasswordChangeForm(self.request.user)
+    def get_form_kwargs(self):
+        kwargs = super(EditProfileView, self).get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
-        if errors:
-            return render(self.request, "games/base_edit_profile.html", {"password_form": password_form,
-                                                                         "profile_form": profile_form})
-        else:
-            messages.success(request, "Changes saved succesfully.")
-            return redirect("home")
+    def get_context_data(self, **kwargs):
+        context = super(EditProfileView, self).get_context_data(**kwargs)
+        context.update({"title": "Change password",
+                        "header": self.request.user.username,
+                        "submit_button_text": "Change password"})
+        return context
+
+    def form_valid(self, form):
+        messages.success(self.request, "Changes to your profile have been changed.")
+        return super(EditProfileView, self).form_valid(form)
 
 
 def logout_view(request):

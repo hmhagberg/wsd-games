@@ -24,7 +24,8 @@
             <p>Name: {{profile.user.first_name}} {{profile.user.last_name}}</p>
             <p>Email: {{profile.user.email}}</p>
             <p>API token: {{ profile.user.api_token }}</p>
-            <a href="{% url 'edit_profile' %}"><button>Edit profile</button></a>
+            <a class="btn btn-primary" href="{% url 'edit_profile' %}">Edit profile</a>
+            <a class="btn btn-primary" href="{% url 'change_password' %}">Change password</a>
         {% endif %}
 
     </div>
