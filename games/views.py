@@ -14,12 +14,10 @@ from games import api
 from games.models import *
 from games.forms import *
 
-context = {}
-
 
 def home(request):
     games = Game.objects.all()
-    context.update({'games': games, 'category': '', 'developer': '', 'title': ''})
+    context = {"title": "Games", "games": games}
     return render(request, 'games/base_grid_gameCard.html', context)
 
 
@@ -166,15 +164,15 @@ def logout_view(request):
 
 def profiles(request, profile_slug):
     profile = get_object_or_404(Player, slug=profile_slug)
-    context.update({'profile': profile})
+    context = {'profile': profile}
 
     return render(request, 'games/base_profile.html', context)
 
 
 def my_games(request):
     games = request.user.player.games()
-    context.update({'games': games, 'category': '', 'developer': '', 'title': 'My'})
-    return render(request, 'games/base_grid_gameCard.html', context)
+    context = {"games": games, "title": "My Games"}
+    return render(request, "games/base_grid_gameCard.html", context)
 
 
 def social_select_username(request, backend):
@@ -191,13 +189,13 @@ def game_list(request):
 
 def category_list(request):
     categories = Category.objects.all().order_by('name')
-    context.update({'categories': categories})
+    context = {'categories': categories}
     return render(request, 'games/base_grid_categoryCard.html', context)
 
 
 def developer_list(request):
     developers = Developer.objects.all().order_by('slug')
-    context.update({'developers': developers})
+    context = {'developers': developers}
     return render(request, 'games/base_grid_developerCard.html', context)
 
 
@@ -205,6 +203,7 @@ def game_detail(request, game_slug):
     game = get_object_or_404(Game, slug=game_slug)
     ownership_status = "not_owned"
     ownership = None
+    context = {"game": game}
     if request.user.is_authenticated():
         if hasattr(request.user, "player"):
             if request.user.player.owns_game(game):
@@ -212,12 +211,12 @@ def game_detail(request, game_slug):
                 ownership = request.user.player.ownerships.get(player=request.user.player, game=game)
         elif game.developer == request.user.developer:
             ownership_status = "developer"
-            context.update({'sales_count':game.get_sales_count()})
-    context.update({'game': game, 'ownership_status': ownership_status, 'ownership':
-        ownership})
+            context.update({'sales_count': game.get_sales_count()})
+
+        context.update({'ownership_status': ownership_status, 'ownership': ownership})
 
     # Handle game messages
-    if request.method == 'POST':
+    if request.method == 'POST' and ownership:
         if request.POST['messageType'] == "SCORE":
             ownership.set_new_score(int(request.POST['score']))
         elif request.POST['messageType'] == "SAVE":
@@ -229,16 +228,16 @@ def game_detail(request, game_slug):
 def category_detail(request, category_slug):
     category = get_object_or_404(Category, slug=category_slug)
     games = category.games.all()
-    context.update({'category': category, 'games': games, 'developer': '', 'title': ''})
+    context = {"title": category.name + " Games", "games": games}
 
-    return render(request, 'games/base_grid_gameCard.html', context)
+    return render(request, "games/base_grid_gameCard.html", context)
 
 
 def developer_detail(request, developers_slug):
     developer = get_object_or_404(Developer, slug=developers_slug)
     games = developer.games.all()
-    context.update({'developer': developer, 'games': games, 'category': '', 'title': ''})
-    return render(request, 'games/base_grid_gameCard.html', context)
+    context = {"title": "Games by " + developer.name, "games": games}
+    return render(request, "games/base_grid_gameCard.html", context)
 
 
 class PaymentView(View):
