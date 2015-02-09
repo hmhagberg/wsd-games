@@ -9,19 +9,17 @@
 {% block content %}
     <div id="form_container">
         <div id="form">
-            <form method="POST">
+            <form class="form-horizontal" method="POST">
                 {% csrf_token %}
                 {% include "games/form_template.html" with form=profile_form %}
-                <br>
-                <button id="submit_profile" type="submit" class="btn btn-primary" name="edit_profile">Submit
+                <button id="submit" type="submit" class="btn btn-primary" name="edit_profile">Submit
                     changes</button>
             </form>
             <br>
-            <form method="POST">
+            <form class="form-horizontal" method="POST">
                 {% csrf_token %}
                 {% include "games/form_template.html" with form=password_form %}
-                <br>
-                <button id="submit_password" type="submit"  class="btn btn-primary" name="change_password">Change password</button>
+                <button id="submit" type="submit"  class="btn btn-primary" name="change_password">Change password</button>
             </form>
         </div>
     </div>

@@ -7,17 +7,15 @@
 {% block header %}Signup{% endblock %}
 
 {% block content %}
-    <div id="form_container">
-        <form id="form" method="POST">
+    <div id="form_container" class="container-fluid">
+        <form id="form" class="form-horizontal" method="POST">
             {% csrf_token %}
             {% include "games/form_template.html" %}
-            <br>
             <button id="submit" type="submit" class="btn btn-primary">Sign up</button>
 
             {% if not dev_signup %}
                 Click <a href="{% url 'signup' 'dev' %}">here</a> if you want to create a developer account.
             {% endif %}
-
         </form>
     </div>
 {% endblock %}

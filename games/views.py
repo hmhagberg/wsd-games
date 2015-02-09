@@ -30,6 +30,9 @@ class LoginView(FormView):
             return redirect("home")
         return super(LoginView, self).get(request, *args, **kwargs)
 
+    def post(self, request, *args, **kwargs):
+        return super(LoginView, self).post(request, *args, **kwargs)
+
     def form_valid(self, form):
         login(self.request, form.get_user())
         messages.success(self.request, "You have logged in")

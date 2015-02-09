@@ -11,9 +11,21 @@ username_regex = r"^[\w.@+-]+$"
 
 
 class LoginForm(AuthenticationForm):
+    error_messages = {
+        'invalid_login': _("Please enter a correct %(username)s and password. "
+                           "Note that both fields may be case-sensitive."),
+        'not_activated': _("You must activate your account before logging in."),
+        }
+
     def confirm_login_allowed(self, user):
         if not user.is_active:
-            raise forms.ValidationError(_("You must activate your account before logging in."), code="not_activated")
+            raise forms.ValidationError(self.error_messages["not_activated"], code="not_activated")
+
+    def clean(self):
+        try:
+            super(LoginForm, self).clean()
+        except forms.ValidationError as e:  # Attach error to password field rather than the form as a whole
+            self.add_error("password", e)
 
 
 class WsdGamesUserCreationForm(forms.ModelForm):

@@ -7,17 +7,11 @@
 {% block header %}Login{% endblock %}
 
 {% block content %}
-    
-    {% if form.errors %}
-        <p>Your username and password didn't match. Please try again.</p>
-    {% endif %}
-    
-    <div id="form_container">
-        <form id="form" method="POST">
+    <div id="form_container" class="container">
+        <form id="form" class="form-horizontal" method="POST">
             {% csrf_token %}
             {% include "games/form_template.html" %}
 
-            <br>
             <button id="submit" type="submit" class="btn btn-primary">Login</button>
             <input type="hidden" name="next" value="{{ next }}" />
             <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ next }}">Login with Google</a>

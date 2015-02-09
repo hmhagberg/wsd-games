@@ -1,10 +1,20 @@
 {% load wsd_filters %}
 
+
 {% for field in form %}
-    <div class="form-group">
-    <!-- TODO: Style errors -->
-        {{ field.errors }}
-        <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
-        {{ field|add_class_to_field:"form-control" }}
+    <div class="form-group
+    {% if field.errors %}
+        has-error
+    {% endif %} ">
+        <label class="col-md-4 control-label" for="{{ field.id_for_label }}">{{ field.label }}:</label>
+        <div class="col-md-8 form-field"
+                {% if field.errors %}
+                    data-toggle="tooltip" data-placement="right" data-trigger="manual focus hover"
+                    title="{% for error in field.errors %}
+                                {{ error }}
+                            {% endfor %}"
+                {% endif %} > <!-- Iteration must be done because 'field.errors' returns a HTML list -->
+            {{ field|add_class_to_field:"form-control" }}
+        </div>
     </div>
 {% endfor %}
