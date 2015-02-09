@@ -91,7 +91,7 @@ class PlayerSignupForm(WsdGamesUserCreationForm):
 class DeveloperSignupForm(WsdGamesUserCreationForm):
     name = forms.RegexField(label=_("Company name"), min_length=1,  max_length=50, regex=name_regex)
     image_url = forms.URLField(label=_("Logo URL"), required=False)
-    description = forms.CharField(label=_(label="Company description"), required=False)
+    description = forms.CharField(label=_("Company description"), required=False)
 
     class Meta:
         model = get_user_model()

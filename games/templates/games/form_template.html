@@ -1,0 +1,10 @@
+{% load wsd_filters %}
+
+{% for field in form %}
+    <div class="form-group">
+    <!-- TODO: Style errors -->
+        {{ field.errors }}
+        <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+        {{ field|add_class_to_field:"form-control" }}
+    </div>
+{% endfor %}

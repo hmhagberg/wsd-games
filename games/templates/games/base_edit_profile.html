@@ -11,20 +11,17 @@
         <div id="form">
             <form method="POST">
                 {% csrf_token %}
-                <table>
-                    {{ profile_form.as_table }}
-                </table>
+                {% include "games/form_template.html" with form=profile_form %}
                 <br>
-                <input id="submit_profile" type="submit" value="Submit changes" name="edit_profile"/>
+                <button id="submit_profile" type="submit" class="btn btn-primary" name="edit_profile">Submit
+                    changes</button>
             </form>
             <br>
             <form method="POST">
                 {% csrf_token %}
-                <table>
-                    {{ password_form.as_table }}
-                </table>
+                {% include "games/form_template.html" with form=password_form %}
                 <br>
-                <input id="submit_password" type="submit" value="Change password" name="change_password" />
+                <button id="submit_password" type="submit"  class="btn btn-primary" name="change_password">Change password</button>
             </form>
         </div>
     </div>

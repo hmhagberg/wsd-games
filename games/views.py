@@ -14,12 +14,10 @@ from games import api
 from games.models import *
 from games.forms import *
 
-context = {}
-
 
 def home(request):
     games = Game.objects.all()
-    context.update({'games': games, 'category': '', 'developer': '', 'title': ''})
+    context = {"title": "Games", "games": games}
     return render(request, 'games/base_grid_gameCard.html', context)
 
 
@@ -34,6 +32,7 @@ class LoginView(FormView):
 
     def form_valid(self, form):
         login(self.request, form.get_user())
+        messages.success(self.request, "You have logged in")
         return redirect(self.request.GET.get("next") or "home")
 
 
@@ -43,12 +42,27 @@ class SignupView(View):
         if request.user.is_authenticated():
             return redirect("home")
 
-        if dev_signup is None:
-            form = PlayerSignupForm()
-        else:
-            form = DeveloperSignupForm()
+        activation_key = request.GET.get("activation_key")
+        if activation_key:
+            confirmation = get_object_or_404(SignupActivation, key=activation_key)
+            if confirmation.has_expired():
+                confirmation.delete()
+                messages.error(request, "This account activation confirmation has expired. You have to sign up again")
+                return redirect("signup")
+            else:
+                confirmation.user.is_active = True
+                confirmation.user.save()
+                confirmation.delete()
+                messages.success(request, "Congratulations! Your account has been activated. You can now log in.")
+                return redirect("login")
 
-        return render(request, "games/auth/base_signup.html", {"form": form, "dev_signup": dev_signup})
+        else:
+            if dev_signup is None:
+                form = PlayerSignupForm()
+            else:
+                form = DeveloperSignupForm()
+
+            return render(request, "games/auth/base_signup.html", {"form": form, "dev_signup": dev_signup})
 
     def post(self, request, dev_signup, *args, **kwargs):
         if dev_signup is None:
@@ -68,7 +82,7 @@ class SignupView(View):
         activation = SignupActivation(user=user)
         activation.save()
 
-        activation_link = "{domain}/signup/activate/{key}".format(domain=settings.DOMAIN, key=activation.key)
+        activation_link = "{domain}/signup?activation_key={key}".format(domain=settings.DOMAIN, key=activation.key)
         message = "Thank you for signing up, {username}\n" \
                   "To activate your account click the following link: {link}\n" \
                   "The link expires in {expires_in} hours".format(username=user.username, link=activation_link,
@@ -142,39 +156,23 @@ class EditProfileView(View):
             return redirect("home")
 
 
-def signup_activation(request, activation_key):
-    if request.user.is_authenticated():
-        return redirect("home")
-
-    confirmation = get_object_or_404(SignupActivation, key=activation_key)
-    if confirmation.has_expired():
-        confirmation.delete()
-        messages.error(request, "This account activation confirmation has expired. You have to sign up again")
-        return redirect("signup")
-
-    confirmation.user.is_active = True
-    confirmation.user.save()
-    confirmation.delete()
-    messages.success(request, "Congratulations! Your account has been activated. You can now log in.")
-    return redirect("login")
-
-
 def logout_view(request):
     logout(request)
+    messages.success(request, "You have logged out")
     return redirect("home")
 
 
 def profiles(request, profile_slug):
     profile = get_object_or_404(Player, slug=profile_slug)
-    context.update({'profile': profile})
+    context = {'profile': profile}
 
     return render(request, 'games/base_profile.html', context)
 
 
 def my_games(request):
     games = request.user.player.games()
-    context.update({'games': games, 'category': '', 'developer': '', 'title': 'My'})
-    return render(request, 'games/base_grid_gameCard.html', context)
+    context = {"games": games, "title": "My Games"}
+    return render(request, "games/base_grid_gameCard.html", context)
 
 
 def social_select_username(request, backend):
@@ -191,13 +189,13 @@ def game_list(request):
 
 def category_list(request):
     categories = Category.objects.all().order_by('name')
-    context.update({'categories': categories})
+    context = {'categories': categories}
     return render(request, 'games/base_grid_categoryCard.html', context)
 
 
 def developer_list(request):
     developers = Developer.objects.all().order_by('slug')
-    context.update({'developers': developers})
+    context = {'developers': developers}
     return render(request, 'games/base_grid_developerCard.html', context)
 
 
@@ -205,6 +203,7 @@ def game_detail(request, game_slug):
     game = get_object_or_404(Game, slug=game_slug)
     ownership_status = "not_owned"
     ownership = None
+    context = {"game": game}
     if request.user.is_authenticated():
         if hasattr(request.user, "player"):
             if request.user.player.owns_game(game):
@@ -212,12 +211,12 @@ def game_detail(request, game_slug):
                 ownership = request.user.player.ownerships.get(player=request.user.player, game=game)
         elif game.developer == request.user.developer:
             ownership_status = "developer"
-            context.update({'sales_count':game.get_sales_count()})
-    context.update({'game': game, 'ownership_status': ownership_status, 'ownership':
-        ownership})
+            context.update({'sales_count': game.get_sales_count()})
+
+        context.update({'ownership_status': ownership_status, 'ownership': ownership})
 
     # Handle game messages
-    if request.method == 'POST':
+    if request.method == 'POST' and ownership:
         if request.POST['messageType'] == "SCORE":
             ownership.set_new_score(int(request.POST['score']))
         elif request.POST['messageType'] == "SAVE":
@@ -229,16 +228,16 @@ def game_detail(request, game_slug):
 def category_detail(request, category_slug):
     category = get_object_or_404(Category, slug=category_slug)
     games = category.games.all()
-    context.update({'category': category, 'games': games, 'developer': '', 'title': ''})
+    context = {"title": category.name + " Games", "games": games}
 
-    return render(request, 'games/base_grid_gameCard.html', context)
+    return render(request, "games/base_grid_gameCard.html", context)
 
 
 def developer_detail(request, developers_slug):
     developer = get_object_or_404(Developer, slug=developers_slug)
     games = developer.games.all()
-    context.update({'developer': developer, 'games': games, 'category': '', 'title': ''})
-    return render(request, 'games/base_grid_gameCard.html', context)
+    context = {"title": "Games by " + developer.name, "games": games}
+    return render(request, "games/base_grid_gameCard.html", context)
 
 
 class PaymentView(View):
@@ -329,7 +328,7 @@ def api_objects(request, api_version, collection, response_format, object_id="")
 
         model, serializer, check_owner, id_field_name = api.model_info[collection]
         if object_id == "":
-            objs = model.objects.all()[offset:offset+limit]  # TODO: Bounds checks
+            objs = model.objects.all()[offset:offset+limit]
             data = []
             for obj in objs:
                 data.append(serializer(obj))
