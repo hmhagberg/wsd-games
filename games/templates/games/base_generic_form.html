@@ -2,7 +2,9 @@
 
 {% load staticfiles %}
 
-{% block title %}WSD-Games - {{ title }}{% endblock %}
+{% load wsd_filters %}
+
+{% block title %}WSD-Games{{ title|title_prefix }}{% endblock %}
 
 {% block header %}{{ header }}{% endblock %}
 

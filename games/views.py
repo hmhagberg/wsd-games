@@ -110,57 +110,77 @@ class GamePublishingView(View):
             return render(request, "games/base_game_publish.html", {"form": form,})
 
 
-class ChangePasswordView(FormView):
+class GenericWsdFormView(FormView):
     template_name = "games/base_generic_form.html"
-    form_class = PasswordChangeForm
     success_url = "/"
+    success_message = None
+
+    def get_title(self):
+        return ""
+
+    def get_header(self):
+        return ""
+
+    def get_submit_button_text(self):
+        return "Submit"
+
+    def get_context_data(self, **kwargs):
+        context = super(GenericWsdFormView, self).get_context_data(**kwargs)
+        context.update({"title": self.get_title(),
+                        "header": self.get_header(),
+                        "submit_button_text": self.get_submit_button_text()})
+        return context
+
+    def form_valid(self, form):
+        if self.success_message is not None:
+            messages.success(self.request, self.success_message)
+        return super(GenericWsdFormView, self).form_valid(form)
+
+
+class ChangePasswordView(GenericWsdFormView):
+    form_class = PasswordChangeForm
+    success_message = "Your password has been changed."
+
+    def get_title(self):
+        return "Change password"
+
+    def get_header(self):
+        return self.request.user.username
+
+    def get_submit_button_text(self):
+        return "Change password"
 
     def get_form_kwargs(self):
         kwargs = super(ChangePasswordView, self).get_form_kwargs()
         kwargs["user"] = self.request.user
         return kwargs
 
-    def get_context_data(self, **kwargs):
-        context = super(ChangePasswordView, self).get_context_data(**kwargs)
-        context.update({"title": "Change password",
-                        "header": self.request.user.username,
-                        "submit_button_text": "Change password"})
-        return context
 
-    def form_valid(self, form):
-        messages.success(self.request, "Your password has been changed.")
-        return super(ChangePasswordView, self).form_valid(form)
+class EditProfileView(GenericWsdFormView):
+    form_class = EditProfileForm
+    success_message = "Changes to your profile have been saved."
 
+    def get_title(self):
+        return "Edit password"
 
-class EditProfileView(FormView):
-    template_name = "games/base_generic_form.html"
-    form_class = PasswordChangeForm
-    success_url = "/"
+    def get_header(self):
+        return self.request.user.username
 
-    def get_form_class(self):
-        if self.request.user.is_authenticated():
-            if self.request.user.is_player():
-                return PlayerEditProfileForm
-            else:
-                return DeveloperEditProfileForm
-        else:
-            raise Http404
+    def get_submit_button_text(self):
+        return "Submit changes"
 
     def get_form_kwargs(self):
         kwargs = super(EditProfileView, self).get_form_kwargs()
         kwargs["user"] = self.request.user
         return kwargs
 
-    def get_context_data(self, **kwargs):
-        context = super(EditProfileView, self).get_context_data(**kwargs)
-        context.update({"title": "Change password",
-                        "header": self.request.user.username,
-                        "submit_button_text": "Change password"})
-        return context
-
-    def form_valid(self, form):
-        messages.success(self.request, "Changes to your profile have been changed.")
-        return super(EditProfileView, self).form_valid(form)
+    def get_form_class(self):
+        if self.request.user.is_player():
+            return PlayerEditProfileForm
+        elif self.request.user.is_developer():
+            return DeveloperEditProfileForm
+        else:
+            return EditProfileForm
 
 
 def logout_view(request):
