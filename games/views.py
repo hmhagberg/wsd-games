@@ -95,6 +95,23 @@ class GamePublishingView(View):
         else:
             return render(request, "games/base_game_publish.html", {"form": form,})
 
+class EditGameView(View):
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            form = GameEditForm()
+            return render(request, "games/base_edit_game.html", {"form": form,})
+
+    def post(self, request, *args, **kwargs):
+        form = GameEditForm(request.POST)
+
+        if form.is_valid():
+            game = form.save(commit=False)
+            game.developer = request.user.developer
+            game.save()
+            return redirect("games/"+game.slug)
+        else:
+            return render(request, "games/base_edit_game.html", {"form": form,})
 
 class EditProfileView(View):
 
