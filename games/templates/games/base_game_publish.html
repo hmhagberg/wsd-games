@@ -10,12 +10,9 @@
     <div id="form_container">
         <form id="form" method="POST">
             {% csrf_token %}
-            <table>
-                {{ form.as_table }}
-            </table>
+            {% include "games/form_template.html" %}
             <br>
-            <input id="submit" type="submit" value="Publish">
-
+            <button id="submit" type="submit" class="btn btn-primary">Publish</button>
         </form>
     </div>
 {% endblock %}
