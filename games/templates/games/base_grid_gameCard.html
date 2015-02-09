@@ -7,65 +7,67 @@
 {% block header %}{{ title }}{% endblock %}
 
 {% block sort %}
-<select id="sort">
-    <option>Name</option>
-    <option>Price</option>
-    <option>Developer</option>
-</select>
+<div id="sort-div" class="input-group-btn">
+    <button id="sort" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Name <span class="caret"></span></button>
+    <ul id="sort-menu" class="dropdown-menu" role="menu">
+        <li><a>Name</a></li>
+        <li><a>Price</a></li>
+        <li><a>Developer</a></li>
+    </ul>
+</div>
 <script>
-    $( "#sort" ).change(function() {
+    $("#sort-menu a").click(function() {
+        $("#sort").html($(this).text() + " <span class='caret'></span>");
         var sort = "";
         var compare = "";
         var count = 0;
         var count2 = 0;
-        $( "#sort option:selected" ).each(function() {
-            sort = $(this).text();
-        });
-            if (sort === "Name") {
-                for (var i = 0; i < $("#grid").children().length; i++) {
-                    compare = "";
-                    $("#grid").children().each(function() {
-                        if ($(this).find("h2").html() > compare && count >= i) {
-                            compare = $(this).find("h2").html();
-                            count2 = count;
-                        }
-                        count++;
-                    });
-                    $("#grid > div:nth-child(" + (count2 + 1).toString() + ")").prependTo("#grid");
-                    count = 0;
-                    count2 = 0;
-                }
+        sort = $(this).text();
+        if (sort === "Name") {
+            for (var i = 0; i < $("#grid").children().length; i++) {
+                compare = "";
+                $("#grid").children().each(function() {
+                    if ($(this).find("h2").html() > compare && count >= i) {
+                        compare = $(this).find("h2").html();
+                        count2 = count;
+                    }
+                    count++;
+                });
+                $("#grid > div:nth-child(" + (count2 + 1).toString() + ")").prependTo("#grid");
+                count = 0;
+                count2 = 0;
             }
-            else if (sort === "Price") {
-                for (var i = 0; i < $("#grid").children().length; i++) {
-                    compare = "";
-                    $("#grid").children().each(function() {
-                        if (parseFloat($(this).find(".price").html().substring(7)) > compare && count >= i) {
-                            compare = parseFloat($(this).find(".price").html().substring(7));
-                            count2 = count;
-                        }
-                        count++;
-                    });
-                    $("#grid > div:nth-child(" + (count2 + 1).toString() + ")").prependTo("#grid");
-                    count = 0;
-                    count2 = 0;
-                }
+        }
+        else if (sort === "Price") {
+            for (var i = 0; i < $("#grid").children().length; i++) {
+                compare = "";
+                $("#grid").children().each(function() {
+                    if (parseFloat($(this).find(".price").html().substring(7)) > compare && count >= i) {
+                        compare = parseFloat($(this).find(".price").html().substring(7));
+                        count2 = count;
+                    }
+                    count++;
+                });
+                $("#grid > div:nth-child(" + (count2 + 1).toString() + ")").prependTo("#grid");
+                count = 0;
+                count2 = 0;
             }
-            else if (sort === "Developer") {
-                for (var i = 0; i < $("#grid").children().length; i++) {
-                    compare = "";
-                    $("#grid").children().each(function() {
-                        if ($(this).find(".developer").html() > compare && count >= i) {
-                            compare = $(this).find(".developer").html();
-                            count2 = count;
-                        }
-                        count++;
-                    });
-                    $("#grid > div:nth-child(" + (count2 + 1).toString() + ")").prependTo("#grid");
-                    count = 0;
-                    count2 = 0;
-                }
+        }
+        else if (sort === "Developer") {
+            for (var i = 0; i < $("#grid").children().length; i++) {
+                compare = "";
+                $("#grid").children().each(function() {
+                    if ($(this).find(".developer").html() > compare && count >= i) {
+                        compare = $(this).find(".developer").html();
+                        count2 = count;
+                    }
+                    count++;
+                });
+                $("#grid > div:nth-child(" + (count2 + 1).toString() + ")").prependTo("#grid");
+                count = 0;
+                count2 = 0;
             }
+        }
     });
 </script>
 {% endblock %}

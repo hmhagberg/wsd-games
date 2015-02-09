@@ -122,7 +122,11 @@ h1 {
 
 #searchForm {
 	display: inline-block;
-	margin-left: 50px;
+}
+
+.sort-div {
+	display: inline-block;
+	margin-left: 25px;
 }
 
 #share-button-container {
@@ -132,4 +136,13 @@ h1 {
 .sales-info {
 	color: white;
 	text-align: center;
+}
+
+/* Sort */
+.dropdown-menu a:hover {
+	cursor: pointer;
+}
+
+#search-div {
+	margin: auto;
 }
