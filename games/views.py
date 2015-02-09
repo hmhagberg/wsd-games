@@ -34,6 +34,7 @@ class LoginView(FormView):
 
     def form_valid(self, form):
         login(self.request, form.get_user())
+        messages.success(self.request, "You have logged in")
         return redirect(self.request.GET.get("next") or "home")
 
 
@@ -161,6 +162,7 @@ def signup_activation(request, activation_key):
 
 def logout_view(request):
     logout(request)
+    messages.success(request, "You have logged out")
     return redirect("home")
 
 
