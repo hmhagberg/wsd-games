@@ -19,7 +19,7 @@
             </tr>
             <tr>
                 <td><h2>Price:</h2></td>
-                <td><h2>{{ game.price }}€</h2></td>
+                <td><h2>{{game.price|floatformat:2}}€</h2></td>
             </tr>
         </table>
         <form action="http://payments.webcourse.niksula.hut.fi/pay/" method="POST">
