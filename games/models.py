@@ -130,6 +130,7 @@ class Game(AbstractSlugModel):
     developer = models.ForeignKey(Developer, related_name='games')
     categories = models.ManyToManyField(Category, related_name='games')
     price = models.DecimalField(max_digits=6, decimal_places=2, validators=[MinValueValidator(0.01)])
+    publish_date = models.DateField(auto_now_add=True, default=datetime.date.today())
 
     def get_absolute_url(self):
         return reverse("games.views.game_detail", args=[self.slug])
@@ -143,8 +144,11 @@ class Game(AbstractSlugModel):
         else:
             return self.ownerships.all()[:limit]
 
-    def get_sales_count(self):
-        return self.ownerships.count()
+    def get_sales_count(self, time_scope=0):
+        if time_scope == 0:
+            return self.ownerships.count()
+        else:
+            return self.ownerships.filter(timestamp__lte=datetime.datetime.now()+datetime.timedelta(hours=time_scope)).count()
 
 
 class Ownership(models.Model):
@@ -155,6 +159,7 @@ class Ownership(models.Model):
     saved_score = models.PositiveIntegerField(default=0)
     saved_data = models.TextField(default='[]')
     rating = models.PositiveIntegerField(null=True, choices=RATING_OPTIONS)
+    timestamp = models.DateTimeField(auto_now_add=True, default=datetime.datetime.now())
 
     class Meta:
         ordering = ["-highscore"]

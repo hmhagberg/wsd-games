@@ -1,0 +1,23 @@
+{% extends "games/base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}WSD-Games - {{ game.name }}{% endblock %}
+
+{% block header %}Edit - {{ game.name }}{% endblock %}
+
+{% block content %}
+    <div id="form_container">
+        <div id="form">
+            <form method="POST">
+                {% csrf_token %}
+                <table>
+                    {{ game_edit_form.as_table }}
+                </table>
+                <br>
+                <input id="submit_profile" type="submit" value="Submit changes" name="edit_game"/>
+            </form>
+            <br>
+        </div>
+    </div>
+{% endblock %}

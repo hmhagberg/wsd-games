@@ -213,6 +213,12 @@ class GamePublishingForm(forms.ModelForm):
         model = Game
         fields = ("name", "url", "image_url", "description", "categories", "price")
 
+class GameEditForm(forms.ModelForm):
+
+    class Meta:
+        model = Game
+        fields = ("name", "url", "image_url", "description", "categories", "price")
+
 
 class PaymentForm(forms.Form):
     pid = forms.CharField(widget=forms.HiddenInput)

@@ -109,6 +109,23 @@ class GamePublishingView(View):
         else:
             return render(request, "games/base_game_publish.html", {"form": form,})
 
+class EditGameView(View):
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            form = GameEditForm()
+            return render(request, "games/base_edit_game.html", {"form": form,})
+
+    def post(self, request, *args, **kwargs):
+        form = GameEditForm(request.POST)
+
+        if form.is_valid():
+            game = form.save(commit=False)
+            game.developer = request.user.developer
+            game.save()
+            return redirect("games/"+game.slug)
+        else:
+            return render(request, "games/base_edit_game.html", {"form": form,})
 
 class EditProfileView(View):
 
@@ -211,9 +228,15 @@ def game_detail(request, game_slug):
                 ownership = request.user.player.ownerships.get(player=request.user.player, game=game)
         elif game.developer == request.user.developer:
             ownership_status = "developer"
-            context.update({'sales_count': game.get_sales_count()})
-
-        context.update({'ownership_status': ownership_status, 'ownership': ownership})
+            context.update({'publish_date':game.publish_date,
+                            'sales_count':game.get_sales_count(),
+                            'sales_count_year':game.get_sales_count(8760),
+                            'sales_count_month':game.get_sales_count(720),
+                            'sales_count_week':game.get_sales_count(168),
+                            'sales_count_day':game.get_sales_count(24),
+                            'sales_count_hour':game.get_sales_count(1),})
+    context.update({'game': game, 'ownership_status': ownership_status, 'ownership':
+        ownership})
 
     # Handle game messages
     if request.method == 'POST' and ownership:

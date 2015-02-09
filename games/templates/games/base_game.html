@@ -54,7 +54,14 @@
         <button id="message" class="hidden">Send message</button>
     {% elif ownership_status == "developer"  %}
         <h1>Sales info</h1>
-        <p class="sales-info">{{sales_count}} players have bougth this game.</p>
+        <p class="sales-info">Since its publication on {{ publish_date }} this game has been sold:</p>
+        <p class="sales-info">{{ sales_count }} </p>
+        <p class="sales-info">In last year: {{ sales_count_year }} </p>
+        <p class="sales-info">In last 30 days: {{ sales_count_month }} </p>
+        <p class="sales-info">In last 7 days: {{ sales_count_week }} </p>
+        <p class="sales-info">In last day: {{ sales_count_day }} </p>
+        <p class="sales-info">In last hour: {{ sales_count_hour }} </p>
+
     {% else %}
         <div id="form_container">
             <div id="form">
