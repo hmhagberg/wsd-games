@@ -44,12 +44,27 @@ class SignupView(View):
         if request.user.is_authenticated():
             return redirect("home")
 
-        if dev_signup is None:
-            form = PlayerSignupForm()
-        else:
-            form = DeveloperSignupForm()
+        activation_key = request.GET.get("activation_key")
+        if activation_key:
+            confirmation = get_object_or_404(SignupActivation, key=activation_key)
+            if confirmation.has_expired():
+                confirmation.delete()
+                messages.error(request, "This account activation confirmation has expired. You have to sign up again")
+                return redirect("signup")
+            else:
+                confirmation.user.is_active = True
+                confirmation.user.save()
+                confirmation.delete()
+                messages.success(request, "Congratulations! Your account has been activated. You can now log in.")
+                return redirect("login")
 
-        return render(request, "games/auth/base_signup.html", {"form": form, "dev_signup": dev_signup})
+        else:
+            if dev_signup is None:
+                form = PlayerSignupForm()
+            else:
+                form = DeveloperSignupForm()
+
+            return render(request, "games/auth/base_signup.html", {"form": form, "dev_signup": dev_signup})
 
     def post(self, request, dev_signup, *args, **kwargs):
         if dev_signup is None:
@@ -69,7 +84,7 @@ class SignupView(View):
         activation = SignupActivation(user=user)
         activation.save()
 
-        activation_link = "{domain}/signup/activate/{key}".format(domain=settings.DOMAIN, key=activation.key)
+        activation_link = "{domain}/signup?activation_key={key}".format(domain=settings.DOMAIN, key=activation.key)
         message = "Thank you for signing up, {username}\n" \
                   "To activate your account click the following link: {link}\n" \
                   "The link expires in {expires_in} hours".format(username=user.username, link=activation_link,
@@ -141,23 +156,6 @@ class EditProfileView(View):
         else:
             messages.success(request, "Changes saved succesfully.")
             return redirect("home")
-
-
-def signup_activation(request, activation_key):
-    if request.user.is_authenticated():
-        return redirect("home")
-
-    confirmation = get_object_or_404(SignupActivation, key=activation_key)
-    if confirmation.has_expired():
-        confirmation.delete()
-        messages.error(request, "This account activation confirmation has expired. You have to sign up again")
-        return redirect("signup")
-
-    confirmation.user.is_active = True
-    confirmation.user.save()
-    confirmation.delete()
-    messages.success(request, "Congratulations! Your account has been activated. You can now log in.")
-    return redirect("login")
 
 
 def logout_view(request):
@@ -331,7 +329,7 @@ def api_objects(request, api_version, collection, response_format, object_id="")
 
         model, serializer, check_owner, id_field_name = api.model_info[collection]
         if object_id == "":
-            objs = model.objects.all()[offset:offset+limit]  # TODO: Bounds checks
+            objs = model.objects.all()[offset:offset+limit]
             data = []
             for obj in objs:
                 data.append(serializer(obj))

@@ -14,7 +14,6 @@ urlpatterns = patterns('',
     url(r'^login/$', LoginView.as_view(), name='login'),
     url(r'^logout/$', 'games.views.logout_view', name='logout'),
     url(r'^signup/(dev)?$', SignupView.as_view(), name="signup"),
-    url(r'^signup/activate/([a-z0-9]+)$', 'games.views.signup_activation', name='signup_activation'),
     url(r'^publish-game/?$', GamePublishingView.as_view(), name="game_publishing"),
 
     url(r'^edit_profile$', login_required(EditProfileView.as_view()), name="edit_profile"),
