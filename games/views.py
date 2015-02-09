@@ -91,38 +91,23 @@ class SignupView(View):
         return activation_link
 
 
-class GamePublishingView(View):
-
-    def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated():
-            form = GamePublishingForm()
-            return render(request, "games/base_game_publish.html", {"form": form,})
-
-    def post(self, request, *args, **kwargs):
-        form = GamePublishingForm(request.POST)
-
-        if form.is_valid():
-            game = form.save(commit=False)
-            game.developer = request.user.developer
-            game.save()
-            return redirect("games/"+game.slug)
-        else:
-            return render(request, "games/base_game_publish.html", {"form": form,})
-
-
 class GenericWsdFormView(FormView):
     template_name = "games/base_generic_form.html"
     success_url = "/"
     success_message = None
 
+    title = ""
+    header = ""
+    submit_button_text = "Submit"
+
     def get_title(self):
-        return ""
+        return self.title
 
     def get_header(self):
-        return ""
+        return self.header
 
     def get_submit_button_text(self):
-        return "Submit"
+        return self.submit_button_text
 
     def get_context_data(self, **kwargs):
         context = super(GenericWsdFormView, self).get_context_data(**kwargs)
@@ -137,18 +122,38 @@ class GenericWsdFormView(FormView):
         return super(GenericWsdFormView, self).form_valid(form)
 
 
+class GamePublishingView(GenericWsdFormView):
+    form_class = GamePublishingForm
+    success_message = "Your game has been published."
+
+    title = "Publish game"
+    header = "Publish game"
+    submit_button_text = "Publish"
+
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_developer():
+            messages.error(request, "You must be developer to publish games")
+            return redirect("home")
+        else:
+            return super(GamePublishingView, self).get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        game = form.save(commit=False)
+        game.developer = self.request.user.developer
+        game.save()
+        messages.success(self.request, self.success_message)
+        return redirect(game.get_absolute_url())
+
+
 class ChangePasswordView(GenericWsdFormView):
     form_class = PasswordChangeForm
     success_message = "Your password has been changed."
 
-    def get_title(self):
-        return "Change password"
+    title = "Change password"
+    submit_button_text = "Change password"
 
     def get_header(self):
         return self.request.user.username
-
-    def get_submit_button_text(self):
-        return "Change password"
 
     def get_form_kwargs(self):
         kwargs = super(ChangePasswordView, self).get_form_kwargs()
@@ -160,14 +165,11 @@ class EditProfileView(GenericWsdFormView):
     form_class = EditProfileForm
     success_message = "Changes to your profile have been saved."
 
-    def get_title(self):
-        return "Edit password"
+    title = "Edit profile"
+    submit_button_text = "Submit changes"
 
     def get_header(self):
         return self.request.user.username
-
-    def get_submit_button_text(self):
-        return "Submit changes"
 
     def get_form_kwargs(self):
         kwargs = super(EditProfileView, self).get_form_kwargs()
@@ -274,7 +276,7 @@ class PaymentView(View):
         ref = request.GET.get("ref")
         request_checksum = request.GET.get("checksum")
         if not (pid and ref and request_checksum):
-            raise Http404
+            return redirect("home")
         payment = get_object_or_404(Payment, pid=pid)
         context = {"player": payment.player, "game": payment.game}
 
