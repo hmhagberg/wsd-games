@@ -27,6 +27,7 @@ class LoginView(FormView):
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated():
+            messages.info(request, "You are already logged in.")
             return redirect("home")
         return super(LoginView, self).get(request, *args, **kwargs)
 
@@ -96,9 +97,13 @@ class GenericWsdFormView(FormView):
     success_url = "/"
     success_message = None
 
+    action = ""
     title = ""
     header = ""
     submit_button_text = "Submit"
+
+    def get_action(self):
+        return self.action
 
     def get_title(self):
         return self.title
@@ -111,7 +116,8 @@ class GenericWsdFormView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super(GenericWsdFormView, self).get_context_data(**kwargs)
-        context.update({"title": self.get_title(),
+        context.update({"action": self.get_action(),
+                        "title": self.get_title(),
                         "header": self.get_header(),
                         "submit_button_text": self.get_submit_button_text()})
         return context
@@ -120,6 +126,17 @@ class GenericWsdFormView(FormView):
         if self.success_message is not None:
             messages.success(self.request, self.success_message)
         return super(GenericWsdFormView, self).form_valid(form)
+
+
+class SocialSignupSelectUsernameView(GenericWsdFormView):
+    form_class = UsernameForm
+
+    title = "Select username"
+    header = "Select username"
+    submit_button_text = "OK"
+
+    def get_action(self):
+        return reverse("social:complete", args=[self.request.GET.get("backend")])
 
 
 class GamePublishingView(GenericWsdFormView):
@@ -202,14 +219,6 @@ def my_games(request):
     games = request.user.player.games()
     context = {"games": games, "title": "My Games"}
     return render(request, "games/base_grid_gameCard.html", context)
-
-
-def social_select_username(request, backend):
-    """
-    Username selection view for social auth
-    """
-    form = UsernameForm()
-    return render(request, "games/auth/base_selectUsername.html", {"form": form, "backend": backend})
 
 
 def game_list(request):

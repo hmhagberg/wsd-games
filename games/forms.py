@@ -237,10 +237,20 @@ class PaymentForm(forms.Form):
 
 
 class UsernameForm(forms.Form):
+    user_model = get_user_model()
+
     username_from_user = forms.RegexField(label=_("Username"), max_length=30, regex=username_regex,
-                                          help_text=_("Required. 30 characters or fewer. Letters, digits and "
-                                                      "@/./+/-/_ only."),
                                           error_messages={
-                                              "invalid": _("This value may contain only letters, numbers and "
-                                                           "@/./+/-/_ characters.")})
+                                          "invalid": _("This value may contain only letters, numbers and "
+                                                       "@/./+/-/_ characters.")})
+
+    def clean_username(self):
+        username_from_user = self.cleaned_data["username"]
+        try:
+            other = self.user_model._default_manager.get(username=username_from_user)
+            if self.user.id == other.id:
+                return username_from_user
+        except self.user_model.DoesNotExist:
+            return username_from_user
+        raise forms.ValidationError(self.error_messages["duplicate_username"], code="duplicate_username")
 
