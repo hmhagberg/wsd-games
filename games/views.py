@@ -212,7 +212,13 @@ def game_detail(request, game_slug):
                 ownership = request.user.player.ownerships.get(player=request.user.player, game=game)
         elif game.developer == request.user.developer:
             ownership_status = "developer"
-            context.update({'sales_count':game.get_sales_count()})
+            context.update({'publish_date':game.publish_date,
+                            'sales_count':game.get_sales_count(),
+                            'sales_count_year':game.get_sales_count(8760),
+                            'sales_count_month':game.get_sales_count(720),
+                            'sales_count_week':game.get_sales_count(168),
+                            'sales_count_day':game.get_sales_count(24),
+                            'sales_count_hour':game.get_sales_count(1),})
     context.update({'game': game, 'ownership_status': ownership_status, 'ownership':
         ownership})
 

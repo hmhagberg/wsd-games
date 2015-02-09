@@ -54,24 +54,31 @@
         <button id="message" class="hidden">Send message</button>
     {% elif ownership_status == "developer"  %}
         <h1>Sales info</h1>
-        <p class="sales-info">{{sales_count}} players have bougth this game.</p>
+        <p class="sales-info">Since its publication on {{ publish_date }} this game has been sold:</p>
+        <p class="sales-info">{{ sales_count }} </p>
+        <p class="sales-info">In last year: {{ sales_count_year }} </p>
+        <p class="sales-info">In last 30 days: {{ sales_count_month }} </p>
+        <p class="sales-info">In last 7 days: {{ sales_count_week }} </p>
+        <p class="sales-info">In last day: {{ sales_count_day }} </p>
+        <p class="sales-info">In last hour: {{ sales_count_hour }} </p>
+
     {% else %}
         <div class="modal fade" id="modal{{game.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">{{game.name}}</h4>
+                        <h4 class="modal-title">{{ game.name }}</h4>
                     </div>
                     <div class="modal-body">
                         <div class="img-container">
                             <img src="{{game.image_url}}" class="img-responsive img-circle" alt="{{game.developer.name}} image">
                         </div>
-                        <p>{{game.description}}</p>
+                        <p>{{ game.description }}</p>
                         <p class="developer">Developer: <a href="{% url 'developer_detail' game.developer.slug %}"
                                 >{{game.developer.name}}</a></p>
                         <p>Categories: {% for category in game.categories.all %}<a href="
-                        {% url 'gategory_detail' category.slug %}">{{category}}</a> | {% endfor %}</p>
+                        {% url 'gategory_detail' category.slug %}">{{ category }}</a> | {% endfor %}</p>
                         {% if game.price == 0 %}
                             <p class="price">Price: Free</p>
                         {% else %}
