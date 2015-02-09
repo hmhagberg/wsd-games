@@ -12,7 +12,8 @@
                     title="{% for error in field.errors %}
                                 {{ error }}
                             {% endfor %}"
-                {% endif %} > <!-- Iteration must be done because 'field.errors' returns a HTML list -->
+                {% endif %}
+        > <!-- Iteration must be done because 'field.errors' returns a HTML list -->
             {{ field|add_class_to_field:"form-control" }}
         </div>
     </div>

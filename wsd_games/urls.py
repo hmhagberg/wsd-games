@@ -10,7 +10,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
     url('', include('social.apps.django_app.urls', namespace='social')),
-    url(r'^login/username/([a-z0-9\-_]+)$', 'games.views.social_select_username', name='social_select_username'),
+    url(r'^login/select_username[/]?$', SocialSignupSelectUsernameView.as_view(), name='social_select_username'),
     url(r'^login/$', LoginView.as_view(), name='login'),
     url(r'^logout/$', 'games.views.logout_view', name='logout'),
     url(r'^signup/(dev)?$', SignupView.as_view(), name="signup"),
