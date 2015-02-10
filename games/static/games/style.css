@@ -108,6 +108,11 @@ h1 {
 	color: black;
 }
 
+.is-invalid {
+    border-color: #900;
+    background-color: #FDD;
+}
+
 #submit {
 	float: right;
 }
