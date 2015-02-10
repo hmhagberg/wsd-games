@@ -151,3 +151,8 @@ h1 {
 #search-div {
 	margin: auto;
 }
+
+/* google sign in image */
+#g-signin {
+	height: 40px;
+}

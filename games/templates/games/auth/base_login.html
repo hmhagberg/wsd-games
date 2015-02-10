@@ -14,7 +14,8 @@
 
             <button id="submit" type="submit" class="btn btn-primary">Login</button>
             <input type="hidden" name="next" value="{{ next }}" />
-            <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ next }}">Login with Google</a>
+            <!-- Google sign in butoon -->
+            <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ next }}"><img id="g-signin" src="https://developers.google.com/+/images/branding/sign-in-buttons/White-signin_Medium_base_44dp.png" alt="google sign in button"/></a>
         </form>
     </div>
 {% endblock %}
