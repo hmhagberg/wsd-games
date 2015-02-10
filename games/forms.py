@@ -6,8 +6,8 @@ from django import forms
 from games.models import Player, Developer, Game
 
 
-name_regex = r"^[^\W\d_]+$"
-username_regex = r"^[\w.@+-]+$"
+name_regex = r"^[a-zA-Z]+$"
+username_regex = r"^[a-zA-Z.@+-]+$"
 
 
 class LoginForm(AuthenticationForm):
@@ -101,13 +101,26 @@ class PlayerSignupForm(WsdGamesUserCreationForm):
 
 
 class DeveloperSignupForm(WsdGamesUserCreationForm):
-    name = forms.RegexField(label=_("Company name"), min_length=1,  max_length=50, regex=name_regex)
+    error_messages = WsdGamesUserCreationForm.error_messages.copy()
+    error_messages.update({
+        "duplicate_name": _("A developer with that name already exists.")
+        })
+
+    name = forms.RegexField(label=_("Company name"), max_length=50, regex=name_regex)
     image_url = forms.URLField(label=_("Logo URL"), required=False)
     description = forms.CharField(label=_("Company description"), required=False)
 
     class Meta:
         model = get_user_model()
         fields = ("username", "name", "email", "image_url", "description")
+
+    def clean_name(self):
+        name = self.cleaned_data["name"]
+        try:
+            Developer.objects.get(name=name)
+        except Developer.DoesNotExist:
+            return name
+        raise forms.ValidationError(self.error_messages["duplicate_name"], code="duplicate_name")
 
     def save(self, commit=True):
         user = super(DeveloperSignupForm, self).save(commit=False)
@@ -243,6 +256,10 @@ class PaymentForm(forms.Form):
 
 
 class UsernameForm(forms.Form):
+    error_messages = {
+        "duplicate_username": _("A user with that username already exists."),
+        }
+
     user_model = get_user_model()
 
     username_from_user = forms.RegexField(label=_("Username"), max_length=30, regex=username_regex,
@@ -250,12 +267,10 @@ class UsernameForm(forms.Form):
                                           "invalid": _("This value may contain only letters, numbers and "
                                                        "@/./+/-/_ characters.")})
 
-    def clean_username(self):
-        username_from_user = self.cleaned_data["username"]
+    def clean_username_from_user(self):
+        username_from_user = self.cleaned_data["username_from_user"]
         try:
-            other = self.user_model._default_manager.get(username=username_from_user)
-            if self.user.id == other.id:
-                return username_from_user
+            self.user_model._default_manager.get(username=username_from_user)
         except self.user_model.DoesNotExist:
             return username_from_user
         raise forms.ValidationError(self.error_messages["duplicate_username"], code="duplicate_username")
