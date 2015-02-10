@@ -7,6 +7,7 @@
 {% block header %}{{ title }}{% endblock %}
 
 {% block sort %}
+<!-- Sort games -->
 <div id="sort-div" class="input-group-btn">
     <button id="sort" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Name <span class="caret"></span></button>
     <ul id="sort-menu" class="dropdown-menu" role="menu">
@@ -15,66 +16,12 @@
         <li><a>Developer</a></li>
     </ul>
 </div>
-<script>
-    $("#sort-menu a").click(function() {
-        $("#sort").html($(this).text() + " <span class='caret'></span>");
-        var sort = "";
-        var compare = "";
-        var count = 0;
-        var count2 = 0;
-        sort = $(this).text();
-        if (sort === "Name") {
-            for (var i = 0; i < $("#grid").children().length; i++) {
-                compare = "";
-                $("#grid").children().each(function() {
-                    if ($(this).find("h2").html() > compare && count >= i) {
-                        compare = $(this).find("h2").html();
-                        count2 = count;
-                    }
-                    count++;
-                });
-                $("#grid > div:nth-child(" + (count2 + 1).toString() + ")").prependTo("#grid");
-                count = 0;
-                count2 = 0;
-            }
-        }
-        else if (sort === "Price") {
-            for (var i = 0; i < $("#grid").children().length; i++) {
-                compare = "";
-                $("#grid").children().each(function() {
-                    if (parseFloat($(this).find(".price").html().substring(7)) > compare && count >= i) {
-                        compare = parseFloat($(this).find(".price").html().substring(7));
-                        count2 = count;
-                    }
-                    count++;
-                });
-                $("#grid > div:nth-child(" + (count2 + 1).toString() + ")").prependTo("#grid");
-                count = 0;
-                count2 = 0;
-            }
-        }
-        else if (sort === "Developer") {
-            for (var i = 0; i < $("#grid").children().length; i++) {
-                compare = "";
-                $("#grid").children().each(function() {
-                    if ($(this).find(".developer").html() > compare && count >= i) {
-                        compare = $(this).find(".developer").html();
-                        count2 = count;
-                    }
-                    count++;
-                });
-                $("#grid > div:nth-child(" + (count2 + 1).toString() + ")").prependTo("#grid");
-                count = 0;
-                count2 = 0;
-            }
-        }
-    });
-</script>
 {% endblock %}
 
 {% block cards %}
 {% for game in games %}
 <div class="col-xs-12 col-sm-6 col-md-3 ">
+    <!-- The div with the "inner" class is the card. The outer div is for making the margins between the cards -->
 	<div class="inner" data-toggle="modal" data-target="#modal{{game.id}}">
 		<h2>{{game.name}}</h2>
 		<div class="img-container">
@@ -86,6 +33,7 @@
 		{% url 'category_detail' category.slug %}">{{category}}</a> | {% endfor %}</p>
         <p class="price">Price: {{game.price|floatformat:2}}€</p>
 	</div>
+    <!-- The following div is the modal which opens when a card is clicked -->
 	<div class="modal fade" id="modal{{game.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -106,11 +54,14 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <!-- If user is logged as a player and has purchased the game, show "Play game" button -->
 					{% if game in user.player.games %}
 						<a href="{% url 'game_detail' game.slug %}"><button type="button" class="btn btn-primary">Play
                             Game</button></a>
+                    <!-- If the user is logged as developer, show "Inspect" button -->
                     {% elif user.is_developer %}
                         <a href="{% url 'game_detail' game.slug %}"><button type="button" class="btn btn-primary">Inspect</button></a>
+                    <!-- If the is logged as a player and hasn't purchased the game, show "Buy game" button -->
 					{% else %}
 				        {% if user.is_authenticated %}
         					<form action="{% url 'payment' %}" method="POST">

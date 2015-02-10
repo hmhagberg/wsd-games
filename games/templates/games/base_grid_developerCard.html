@@ -7,17 +7,17 @@
 {% block header %}Developers{% endblock %}
 
 {% block cards %}
-{% for developer in developers %}
-<div class="col-xs-12 col-sm-6 col-md-3 ">
-	<a class="card_link" href="{% url 'developer_detail' developer.slug %}">
-		<div class="inner">
-			<h2>{{developer.name}}</h2>
-			<div class="img-container">
-				<img src="{{developer.image_url}}" class="img-responsive img-circle" alt="{{developer.user.first_name}} image">
-			</div>
-			<p>{{developer.description}}</p>
+	{% for developer in developers %}
+		<div class="col-xs-12 col-sm-6 col-md-3 ">
+			<a class="card_link" href="{% url 'developer_detail' developer.slug %}">
+				<div class="inner">
+					<h2>{{developer.name}}</h2>
+					<div class="img-container">
+						<img src="{{developer.image_url}}" class="img-responsive img-circle" alt="{{developer.name}} image">
+					</div>
+					<p>{{developer.description}}</p>
+				</div>
+			</a>
 		</div>
-	</a>
-</div>
-{% endfor %}
+	{% endfor %}
 {% endblock %}

@@ -7,26 +7,26 @@
 {% block header %}Your purchase{% endblock %}
 
 {% block content %}
-<div id="form_container">
-    <div id="form">
-        <div class="img-container">
-            <img src="{{game.image_url}}" class="img-responsive img-circle" alt="{{game.developer.name}} image">
+    <div id="form_container">
+        <div id="form">
+            <div class="img-container">
+                <img src="{{game.image_url}}" class="img-responsive img-circle" alt="{{game.developer.name}} image">
+            </div>
+            <table>
+                <tr>
+                    <td><h2>Game: </h2></td>
+                    <td><h2>{{ game.name }}</h2></td>
+                </tr>
+                <tr>
+                    <td><h2>Price:</h2></td>
+                    <td><h2>{{game.price|floatformat:2}}€</h2></td>
+                </tr>
+            </table>
+            <form action="http://payments.webcourse.niksula.hut.fi/pay/" method="POST">
+                {% csrf_token %}
+                {{ form }}
+                <button type="button submit" class="btn btn-primary">Continue to payment service</button>
+            </form>
         </div>
-        <table>
-            <tr>
-                <td><h2>Game: </h2></td>
-                <td><h2>{{ game.name }}</h2></td>
-            </tr>
-            <tr>
-                <td><h2>Price:</h2></td>
-                <td><h2>{{game.price|floatformat:2}}€</h2></td>
-            </tr>
-        </table>
-        <form action="http://payments.webcourse.niksula.hut.fi/pay/" method="POST">
-            {% csrf_token %}
-            {{ form }}
-            <input type="submit" value="Continue to payment service">
-        </form>
     </div>
-</div>
 {% endblock %}
