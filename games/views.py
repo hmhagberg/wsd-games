@@ -13,6 +13,7 @@ from django.views.generic import View, FormView
 from games import api
 from games.models import *
 from games.forms import *
+from games.utils import set_query_params
 
 
 def home(request):
@@ -133,8 +134,7 @@ class SocialSignupSelectUsernameView(GenericWsdFormView):
 
     def form_valid(self, form):
         response = redirect("social:complete", self.request.GET.get("backend"))
-        response["Location"] = response["Location"].rstrip("/")
-        response["Location"] += "?username_from_user=" + form.cleaned_data["username_from_user"]
+        response = set_query_params(response, username_from_user=form.cleaned_data["username_from_user"])
         return response
 
 
