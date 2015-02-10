@@ -1,4 +1,3 @@
-from django.http import HttpResponseRedirect
 from social.pipeline.partial import partial
 from django.shortcuts import redirect
 

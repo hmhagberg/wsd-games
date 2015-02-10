@@ -102,9 +102,6 @@ class GenericWsdFormView(FormView):
     header = ""
     submit_button_text = "Submit"
 
-    def get_action(self):
-        return self.action
-
     def get_title(self):
         return self.title
 
@@ -116,8 +113,7 @@ class GenericWsdFormView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super(GenericWsdFormView, self).get_context_data(**kwargs)
-        context.update({"action": self.get_action(),
-                        "title": self.get_title(),
+        context.update({"title": self.get_title(),
                         "header": self.get_header(),
                         "submit_button_text": self.get_submit_button_text()})
         return context
@@ -135,8 +131,12 @@ class SocialSignupSelectUsernameView(GenericWsdFormView):
     header = "Select username"
     submit_button_text = "OK"
 
-    def get_action(self):
-        return reverse("social:complete", args=[self.request.GET.get("backend")])
+    def form_valid(self, form):
+        response = redirect("social:complete", self.request.GET.get("backend"))
+        response["Location"] = response["Location"].rstrip("/")
+        response["Location"] += "?username_from_user=" + form.cleaned_data["username_from_user"]
+        return response
+
 
 class EditGameView(View):
 
@@ -155,6 +155,7 @@ class EditGameView(View):
             return redirect("games/"+game.slug)
         else:
             return render(request, "games/base_edit_game.html", {"form": form,})
+
 
 class GamePublishingView(GenericWsdFormView):
     form_class = GamePublishingForm
