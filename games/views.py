@@ -27,6 +27,7 @@ class LoginView(FormView):
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated():
+            messages.info(request, "You are already logged in.")
             return redirect("home")
         return super(LoginView, self).get(request, *args, **kwargs)
 
@@ -91,23 +92,51 @@ class SignupView(View):
         return activation_link
 
 
-class GamePublishingView(View):
+class GenericWsdFormView(FormView):
+    template_name = "games/base_generic_form.html"
+    success_url = "/"
+    success_message = None
 
-    def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated():
-            form = GamePublishingForm()
-            return render(request, "games/base_game_publish.html", {"form": form,})
+    action = ""
+    title = ""
+    header = ""
+    submit_button_text = "Submit"
 
-    def post(self, request, *args, **kwargs):
-        form = GamePublishingForm(request.POST)
+    def get_action(self):
+        return self.action
 
-        if form.is_valid():
-            game = form.save(commit=False)
-            game.developer = request.user.developer
-            game.save()
-            return redirect("games/"+game.slug)
-        else:
-            return render(request, "games/base_game_publish.html", {"form": form,})
+    def get_title(self):
+        return self.title
+
+    def get_header(self):
+        return self.header
+
+    def get_submit_button_text(self):
+        return self.submit_button_text
+
+    def get_context_data(self, **kwargs):
+        context = super(GenericWsdFormView, self).get_context_data(**kwargs)
+        context.update({"action": self.get_action(),
+                        "title": self.get_title(),
+                        "header": self.get_header(),
+                        "submit_button_text": self.get_submit_button_text()})
+        return context
+
+    def form_valid(self, form):
+        if self.success_message is not None:
+            messages.success(self.request, self.success_message)
+        return super(GenericWsdFormView, self).form_valid(form)
+
+
+class SocialSignupSelectUsernameView(GenericWsdFormView):
+    form_class = UsernameForm
+
+    title = "Select username"
+    header = "Select username"
+    submit_button_text = "OK"
+
+    def get_action(self):
+        return reverse("social:complete", args=[self.request.GET.get("backend")])
 
 class EditGameView(View):
 
@@ -127,50 +156,67 @@ class EditGameView(View):
         else:
             return render(request, "games/base_edit_game.html", {"form": form,})
 
-class EditProfileView(View):
+class GamePublishingView(GenericWsdFormView):
+    form_class = GamePublishingForm
+    success_message = "Your game has been published."
+
+    title = "Publish game"
+    header = "Publish game"
+    submit_button_text = "Publish"
 
     def get(self, request, *args, **kwargs):
-        password_form = PasswordChangeForm(self.request.user)
-        if self.request.user.is_player():
-            profile_form = PlayerEditProfileForm(self.request.user)
-        else:
-            profile_form = DeveloperEditProfileForm(self.request.user)
-
-        return render(request, "games/base_edit_profile.html", {"password_form": password_form,
-                                                                "profile_form": profile_form})
-
-    def post(self, request, *args, **kwargs):
-        errors = False
-
-        if self.request.user.is_player():
-            profile_form_cls = PlayerEditProfileForm
-        else:
-            profile_form_cls = DeveloperEditProfileForm
-
-        if "edit_profile" in request.POST:
-            profile_form = profile_form_cls(self.request.user, data=request.POST)
-            if profile_form.is_valid():
-                profile_form.save()
-            else:
-                errors = True
-        else:
-            profile_form = profile_form_cls(self.request.user)
-
-        if "change_password" in request.POST:
-            password_form = PasswordChangeForm(self.request.user, data=request.POST)
-            if password_form.is_valid():
-                password_form.save()
-            else:
-                errors = True
-        else:
-            password_form = PasswordChangeForm(self.request.user)
-
-        if errors:
-            return render(self.request, "games/base_edit_profile.html", {"password_form": password_form,
-                                                                         "profile_form": profile_form})
-        else:
-            messages.success(request, "Changes saved succesfully.")
+        if not request.user.is_developer():
+            messages.error(request, "You must be developer to publish games")
             return redirect("home")
+        else:
+            return super(GamePublishingView, self).get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        game = form.save(commit=False)
+        game.developer = self.request.user.developer
+        game.save()
+        messages.success(self.request, self.success_message)
+        return redirect(game.get_absolute_url())
+
+
+class ChangePasswordView(GenericWsdFormView):
+    form_class = PasswordChangeForm
+    success_message = "Your password has been changed."
+
+    title = "Change password"
+    submit_button_text = "Change password"
+
+    def get_header(self):
+        return self.request.user.username
+
+    def get_form_kwargs(self):
+        kwargs = super(ChangePasswordView, self).get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+
+class EditProfileView(GenericWsdFormView):
+    form_class = EditProfileForm
+    success_message = "Changes to your profile have been saved."
+
+    title = "Edit profile"
+    submit_button_text = "Submit changes"
+
+    def get_header(self):
+        return self.request.user.username
+
+    def get_form_kwargs(self):
+        kwargs = super(EditProfileView, self).get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+    def get_form_class(self):
+        if self.request.user.is_player():
+            return PlayerEditProfileForm
+        elif self.request.user.is_developer():
+            return DeveloperEditProfileForm
+        else:
+            return EditProfileForm
 
 
 def logout_view(request):
@@ -190,14 +236,6 @@ def my_games(request):
     games = request.user.player.games()
     context = {"games": games, "title": "My Games"}
     return render(request, "games/base_grid_gameCard.html", context)
-
-
-def social_select_username(request, backend):
-    """
-    Username selection view for social auth
-    """
-    form = UsernameForm()
-    return render(request, "games/auth/base_selectUsername.html", {"form": form, "backend": backend})
 
 
 def game_list(request):
@@ -270,7 +308,7 @@ class PaymentView(View):
         ref = request.GET.get("ref")
         request_checksum = request.GET.get("checksum")
         if not (pid and ref and request_checksum):
-            raise Http404
+            return redirect("home")
         payment = get_object_or_404(Payment, pid=pid)
         context = {"player": payment.player, "game": payment.game}
 

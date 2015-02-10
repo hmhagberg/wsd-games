@@ -4,8 +4,14 @@
 
 {% block search %}
 <form id="searchForm">
-    <input id="search" type="text" name="search" placeholder="Search">
-    <input type="submit" value="Search">
+    <div id="search-div" class="input-group col-xs-5">
+        <input id="search" class="form-control" type="text" name="search" placeholder="Search">
+        <span class="input-group-btn">
+            <button class="btn btn-primary" type="button submit">Go!</button>
+        </span>
+        {% block sort %}{% endblock %}
+    </div>
+
 </form>
 <script>
     /*http://stackoverflow.com/questions/8746882/jquery-contains-selector-uppercase-and-lower-case-issue*/
