@@ -28,7 +28,7 @@ class LoginForm(AuthenticationForm):
             self.add_error("password", e)
 
 
-class WsdGamesUserCreationForm(forms.ModelForm):
+class WsdGamesUserSignupForm(forms.ModelForm):
     error_messages = {
         "duplicate_username": _("A user with that username already exists."),
         "duplicate_email": _("A user with that email already exists."),
@@ -72,7 +72,7 @@ class WsdGamesUserCreationForm(forms.ModelForm):
         return password2
 
     def save(self, commit=True):
-        user = super(WsdGamesUserCreationForm, self).save(commit=False)
+        user = super(WsdGamesUserSignupForm, self).save(commit=False)
         user.set_password(self.cleaned_data["password1"])
         user.email = self.cleaned_data["email"]
         user.is_active = False
@@ -81,7 +81,7 @@ class WsdGamesUserCreationForm(forms.ModelForm):
         return user
 
 
-class PlayerSignupForm(WsdGamesUserCreationForm):
+class PlayerSignupForm(WsdGamesUserSignupForm):
     first_name = forms.RegexField(label=_("First name"), max_length=50, regex=name_regex)
     last_name = forms.RegexField(label=_("Last name"), max_length=50, regex=name_regex)
 
@@ -100,8 +100,8 @@ class PlayerSignupForm(WsdGamesUserCreationForm):
         return user
 
 
-class DeveloperSignupForm(WsdGamesUserCreationForm):
-    error_messages = WsdGamesUserCreationForm.error_messages.copy()
+class DeveloperSignupForm(WsdGamesUserSignupForm):
+    error_messages = WsdGamesUserSignupForm.error_messages.copy()
     error_messages.update({
         "duplicate_name": _("A developer with that name already exists.")
         })
@@ -237,6 +237,7 @@ class GamePublishingForm(forms.ModelForm):
     class Meta:
         model = Game
         fields = ("name", "url", "image_url", "description", "categories", "price")
+
 
 class GameEditForm(forms.ModelForm):
 

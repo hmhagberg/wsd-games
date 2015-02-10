@@ -38,12 +38,25 @@ class LoginView(FormView):
         return redirect(self.request.GET.get("next") or "home")
 
 
-class SignupView(View):
+class SignupView(FormView):
     """
     View for handling signup.
     """
+    template_name = "games/auth/base_signup.html"
+    form_class = WsdGamesUserSignupForm
 
-    def get(self, request, dev_signup, *args, **kwargs):
+    def get_form_class(self):
+        if self.kwargs["dev_signup"] is None:
+            return PlayerSignupForm
+        else:
+            return DeveloperSignupForm
+
+    def get_context_data(self, **kwargs):
+        context = super(SignupView, self).get_context_data(**kwargs)
+        context.update(self.kwargs)
+        return context
+
+    def get(self, request, *args, **kwargs):
         """
         Display signup form. Player form is displayed by default but if dev_signup is set Developer form is displayed
         instead. If request contains parameter 'activation_key' instead of displaying any form the key is checked
@@ -66,27 +79,13 @@ class SignupView(View):
                 confirmation.delete()
                 messages.success(request, "Congratulations! Your account has been activated. You can now log in.")
                 return redirect("login")
-
         else:
-            if dev_signup:
-                form = DeveloperSignupForm()
-            else:
-                form = PlayerSignupForm()
+            return super(SignupView, self).get(request, *args, **kwargs)
 
-            return render(request, "games/auth/base_signup.html", {"form": form, "dev_signup": dev_signup})
-
-    def post(self, request, dev_signup, *args, **kwargs):
-        if dev_signup is None:
-            form = PlayerSignupForm(request.POST)
-        else:
-            form = DeveloperSignupForm(request.POST)
-
-        if form.is_valid():
-            user = form.save()
-            link = SignupView.send_activation_mail(user)
-            return render(request, "games/auth/activate_pending.html", {"username": user.username, "link": link})
-        else:
-            return render(request, "games/auth/base_signup.html", {"form": form, "dev_signup": dev_signup})
+    def form_valid(self, form):
+        user = form.save()
+        link = SignupView.send_activation_mail(user)
+        return render(self.request, "games/auth/activate_pending.html", {"username": user.username, "link": link})
 
     @staticmethod
     def send_activation_mail(user):

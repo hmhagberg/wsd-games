@@ -14,7 +14,8 @@
             <button id="submit" type="submit" class="btn btn-primary">Sign up</button>
 
             {% if not dev_signup %}
-                <p>Click <a href="{% url 'signup' 'dev' %}">here</a> if you want to create a developer account.</p>
+                <p>Click <a href="{% url 'signup' dev_signup='dev' %}">here</a> if you want to create a developer
+                    account</p>
             {% endif %}
         </form>
     </div>
