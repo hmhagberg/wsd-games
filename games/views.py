@@ -39,8 +39,17 @@ class LoginView(FormView):
 
 
 class SignupView(View):
+    """
+    View for handling signup.
+    """
 
     def get(self, request, dev_signup, *args, **kwargs):
+        """
+        Display signup form. Player form is displayed by default but if dev_signup is set Developer form is displayed
+        instead. If request contains parameter 'activation_key' instead of displaying any form the key is checked
+        against any unactivated users. If match is found user is either activated or, if expired, prompted to
+        register again.
+        """
         if request.user.is_authenticated():
             return redirect("home")
 
@@ -59,10 +68,10 @@ class SignupView(View):
                 return redirect("login")
 
         else:
-            if dev_signup is None:
-                form = PlayerSignupForm()
-            else:
+            if dev_signup:
                 form = DeveloperSignupForm()
+            else:
+                form = PlayerSignupForm()
 
             return render(request, "games/auth/base_signup.html", {"form": form, "dev_signup": dev_signup})
 
@@ -81,6 +90,9 @@ class SignupView(View):
 
     @staticmethod
     def send_activation_mail(user):
+        """
+        Create activation instance and send activation email to user.
+        """
         activation = SignupActivation(user=user)
         activation.save()
 
@@ -94,14 +106,27 @@ class SignupView(View):
 
 
 class GenericWsdFormView(FormView):
+    """
+    Generic view that can be used when a single form needs to be displayed. Designed to be used with
+    'games/base_generic_form.html' template.
+
+    In addition to what there normally is in FormView, the following attributes can be changed:
+    - title: Title of the page
+    - header: Header of the page
+    - submit_button_text: Text of the submit button
+    - success_message: Message that is displayed in a banner when form is submitted succesfully. If None nothing is
+      displayed
+
+    All attributes have getter methods if their content needs to be changed dynamically.
+    """
+
     template_name = "games/base_generic_form.html"
     success_url = "/"
-    success_message = None
 
-    action = ""
     title = ""
     header = ""
     submit_button_text = "Submit"
+    success_message = None
 
     def get_title(self):
         return self.title
@@ -112,6 +137,9 @@ class GenericWsdFormView(FormView):
     def get_submit_button_text(self):
         return self.submit_button_text
 
+    def get_success_message(self):
+        return self.success_message
+
     def get_context_data(self, **kwargs):
         context = super(GenericWsdFormView, self).get_context_data(**kwargs)
         context.update({"title": self.get_title(),
@@ -120,12 +148,16 @@ class GenericWsdFormView(FormView):
         return context
 
     def form_valid(self, form):
+        form.save()
         if self.success_message is not None:
-            messages.success(self.request, self.success_message)
+            messages.success(self.request, self.get_success_message())
         return super(GenericWsdFormView, self).form_valid(form)
 
 
 class SocialSignupSelectUsernameView(GenericWsdFormView):
+    """
+    View for selecting username when user logs in for the first time using social login.
+    """
     form_class = UsernameForm
 
     title = "Select username"
@@ -158,6 +190,10 @@ class EditGameView(View):
 
 
 class GamePublishingView(GenericWsdFormView):
+    """
+    View for publishing games. Only developers are allowed to publish games.
+    """
+
     form_class = GamePublishingForm
     success_message = "Your game has been published."
 
@@ -181,6 +217,10 @@ class GamePublishingView(GenericWsdFormView):
 
 
 class ChangePasswordView(GenericWsdFormView):
+    """
+    View for changing user's password.
+    """
+
     form_class = PasswordChangeForm
     success_message = "Your password has been changed."
 
@@ -197,6 +237,10 @@ class ChangePasswordView(GenericWsdFormView):
 
 
 class EditProfileView(GenericWsdFormView):
+    """
+    View for editing user's profile. Used for both players and developers.
+    """
+
     form_class = EditProfileForm
     success_message = "Changes to your profile have been saved."
 
@@ -256,34 +300,39 @@ def developer_list(request):
 
 
 def game_detail(request, game_slug):
+    """
+    View for game detail. Game saving and highscores are handled here.
+    :param game_slug: Slug for game that should be shown
+    """
+
     game = get_object_or_404(Game, slug=game_slug)
     ownership_status = "not_owned"
     ownership = None
     context = {"game": game}
     if request.user.is_authenticated():
-        if hasattr(request.user, "player"):
-            if request.user.player.owns_game(game):
-                ownership_status = "owned"
-                ownership = request.user.player.ownerships.get(player=request.user.player, game=game)
-        elif game.developer == request.user.developer:
+        if request.user.is_player() and request.user.player.owns_game(game):
+            ownership_status = "owned"
+            ownership = request.user.player.ownerships.get(player=request.user.player, game=game)
+
+            # Handle game messages
+            if request.method == 'POST' and ownership:
+                if request.POST['messageType'] == "SCORE":
+                    ownership.set_new_score(int(request.POST['score']))
+                elif request.POST['messageType'] == "SAVE":
+                    ownership.save_game(int(request.POST["gameState[score]"]),
+                                        ','.join(request.POST.getlist("gameState[playerItems][]")))
+
+        elif request.user.is_developer() and game.developer == request.user.developer:
             ownership_status = "developer"
-            context.update({'publish_date':game.publish_date,
-                            'sales_count':game.get_sales_count(),
-                            'sales_count_year':game.get_sales_count(8760),
-                            'sales_count_month':game.get_sales_count(720),
-                            'sales_count_week':game.get_sales_count(168),
-                            'sales_count_day':game.get_sales_count(24),
-                            'sales_count_hour':game.get_sales_count(1),})
-    context.update({'game': game, 'ownership_status': ownership_status, 'ownership':
-        ownership})
+            context.update({'publish_date': game.publish_date,
+                            'sales_count': game.get_sales_count(),
+                            'sales_count_year': game.get_sales_count(8760),
+                            'sales_count_month': game.get_sales_count(720),
+                            'sales_count_week': game.get_sales_count(168),
+                            'sales_count_day': game.get_sales_count(24),
+                            'sales_count_hour': game.get_sales_count(1), })
 
-    # Handle game messages
-    if request.method == 'POST' and ownership:
-        if request.POST['messageType'] == "SCORE":
-            ownership.set_new_score(int(request.POST['score']))
-        elif request.POST['messageType'] == "SAVE":
-            ownership.save_game(int(request.POST["gameState[score]"]), ','.join(request.POST.getlist("gameState[playerItems][]")))
-
+    context.update({'ownership_status': ownership_status, 'ownership': ownership})
     return render(request, 'games/base_game.html', context)
 
 
@@ -303,20 +352,30 @@ def developer_detail(request, developers_slug):
 
 
 class PaymentView(View):
+    """
+    View for handling payments
+    """
+
 
     def get(self, request, payment_status, *args, **kwargs):
+        """
+        It is assumed that only payment service makes GET requests to this view. If some of the required payment
+        parameters (PID, REF or checksum) are missing user is simply redirected to home. Otherwise parameters are
+        verified and, if valid, payment is completed according to payment status.
+
+        """
+
         pid = request.GET.get("pid")
         ref = request.GET.get("ref")
-        request_checksum = request.GET.get("checksum")
-        if not (pid and ref and request_checksum):
+        received_checksum = request.GET.get("checksum")
+        if not (pid and ref and received_checksum):
             return redirect("home")
         payment = get_object_or_404(Payment, pid=pid)
-        context = {"player": payment.player, "game": payment.game}
+        checksumstr = "pid=%s&ref=%s&token=%s" % (pid, ref, settings.SID_KEY)
+        calculated_checksum = hashlib.md5(checksumstr.encode("ascii")).hexdigest()
 
-        if payment_status == "success":
-            checksumstr = "pid=%s&ref=%s&token=%s" % (pid, ref, settings.SID_KEY)
-            checksum = hashlib.md5(checksumstr.encode("ascii")).hexdigest()
-            if checksum == request_checksum:
+        if calculated_checksum == received_checksum:
+            if payment_status == "success":
                 payment.completed = True
                 payment.ref = ref
                 payment.save()
@@ -325,15 +384,19 @@ class PaymentView(View):
                 ownership.save()
                 messages.success(request, "Congratulations on you purchase!")
                 return redirect(ownership.game.get_absolute_url())
-        elif payment_status == "cancel":
-            payment.delete()
-            messages.info(request, "Your purchase has been cancelled.")
-            return redirect("home")
+            elif payment_status == "cancel":
+                payment.delete()
+                messages.info(request, "Your purchase has been cancelled.")
+                return redirect("home")
 
         messages.error(request, "Oops! Something went wrong while handling your payment. Please, try again!")
         return redirect("home")
 
     def post(self, request, *args, **kwargs):
+        """
+        POST requests generate a form with payment details for game specified in the request. Payment is associated
+        with the authenticated user. The generated form should be submitted to the payment service.
+        """
         game = get_object_or_404(Game, id=request.POST["game_id"])
 
         pid = uuid.uuid4().hex
@@ -362,14 +425,23 @@ class PaymentView(View):
         except Payment.DoesNotExist:
             pass
 
-        Payment.objects.values()
-
-        payment = Payment(game=game, player=request.user.player, pid=pid)
-        payment.save()
+        Payment(game=game, player=request.user.player, pid=pid).save()
         return render(request, "games/base_payment.html", {"game": game, "form": form})
 
 
 def api_objects(request, api_version, collection, response_format, object_id=""):
+    """
+    View for handling API requests. Supported query parameters are:
+    - offset: Offset for returned object range
+    - limit: Number of objects returned
+
+    :param api_version: API version as "v<number>". Currently only v1 is supported.
+    :param collection: Collection of objects to return/search from
+    :param response_format: Response format. Currently only json is supported.
+    :param object_id: ID of requested object. If empty respinse with objects from 'offset' to 'offset+limit' in
+    collection are
+    returned.
+    """
     if api_version == "1":
         content_type, dump_content = api.response_formats[response_format]
         api_token = request.GET.get("api_token")
