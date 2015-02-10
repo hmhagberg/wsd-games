@@ -3,34 +3,24 @@
 {% load staticfiles %}
 
 {% block search %}
-<form id="searchForm">
-    <div id="search-div" class="input-group col-xs-5">
-        <input id="search" class="form-control" type="text" name="search" placeholder="Search">
-        <span class="input-group-btn">
-            <button class="btn btn-primary" type="button submit">Go!</button>
-        </span>
-        {% block sort %}{% endblock %}
-    </div>
-
-</form>
-<script>
-    /*http://stackoverflow.com/questions/8746882/jquery-contains-selector-uppercase-and-lower-case-issue*/
-    jQuery.expr[':'].contains = function(a, i, m) {
-        return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
-    };
-    $("#searchForm").submit(function(event) {
-        var search = $("#search").val();
-        $(".col-xs-12").each(function(){
-           $(this).removeClass("hidden");
-           $(this).not(':contains(' + search + ')').addClass("hidden");
-        });
-        event.preventDefault();
-    });
-</script>
+    <!-- Search form for seaching cards (games, developers and categories) -->
+    <form id="searchForm">
+        <div class="container-fluid">
+            <div id="search-div" class="input-group col-xs-11 col-sm-8 col-md-5 ">
+                <input id="search" class="form-control" type="text" name="search" placeholder="Search">
+                <span class="input-group-btn">
+                    <button class="btn btn-primary" type="button submit">Go!</button>
+                </span>
+                <!-- If cards represent games add possibility to sort cards -->
+                {% block sort %}{% endblock %}
+            </div>
+        </div>
+    </form>
 {% endblock %}
 
 {% block content %}
-<div id="grid" class="container-fluid">
-{% block cards %} {% endblock %}
-</div>
+    <!-- Grid container for the cards -->
+    <div id="grid" class="container-fluid">
+        {% block cards %} {% endblock %}
+    </div>
 {% endblock %}
