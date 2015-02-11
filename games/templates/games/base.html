@@ -38,7 +38,8 @@
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Categories<span class="caret"></span></a>
 							<ul class="dropdown-menu" role="menu">
 								<li><a href="{% url 'category_list' %}">All</a></li>
-								<!-- List all the categories to this dropdown -->
+
+								{# List all the categories to this dropdown #}
 								{% for category in categories %}
 									<li><a href="{% url 'category_detail' category.slug %}">{{category.name}}</a></li>
 								{% endfor %}
@@ -50,21 +51,23 @@
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{user.username}}<span class="caret"></span></a>
 								<ul class="dropdown-menu" role="menu">
-									<!-- If user is logged in as a player show these links in the navigation bar -->
+
+									{# If user is logged in as a player show these links in the navigation bar #}
                                     {% if user.is_player %}
                                         <li><a href="{% url 'profiles' user.player.slug %}">Profile</a></li>
                                         <li><a href="{% url 'my_games' %}">My Games</a></li>
-                                    <!-- If user is logged in as a developer show these links in the navigation bar -->
+                                    {# If user is logged in as a developer show these links in the navigation bar #}
                                     {% elif user.is_developer %}
                                         <li><a href="{% url 'edit_profile' %}">Edit profile</a> </li>
                                     	<li><a href="{% url 'developer_detail' user.developer.slug %}">My Games</a></li>
                                     	<li><a href="{% url 'game_publishing' %}">Publish Game</a></li>
                                     {% endif %}
-                                    <!-- Show the logout link for developers and users when they are logged in -->
+                                    {# Show the logout link for all authenticated users #}
 									<li><a href="{% url 'logout' %}">Logout</a></li>
 								</ul>
 							</li>
-						<!-- If the user is not logged in show the signup and login links in the navigation bar -->	
+
+						{# If the user has not logged in show the signup and login links in the navigation bar #}
 						{% else %}
 							<li><a href="{% url 'signup' %}">Signup</a></li>
 							<li><a href="{% url 'login' %}">Login</a></li>
@@ -74,59 +77,11 @@
 			</div><!-- /.container-fluid -->
 		</nav>
 
-        {% if messages %}
-            <ul id="messages-ul">
-            {% for message in messages %}
-                <li>
-                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
-                    <div class="alert alert-danger alert-dismissible error-msg">
-                        <button type="button" class="close" data-dismiss="alert"
-                                aria-hidden="true">
-                            &times;
-                        </button>
-                        {{ message }}
-                    </div>
-                {% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
-                    <div class="alert alert-warning alert-dismissible warning-msg">
-                        <button type="button" class="close" data-dismiss="alert"
-                                aria-hidden="true">
-                            &times;
-                        </button>
-                        {{ message }}
-                    </div>
-                {% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
-                    <div class="alert alert-info alert-dismissible info-msg">
-                        <button type="button" class="close" data-dismiss="alert"
-                                aria-hidden="true">
-                            &times;
-                        </button>
-                        {{ message }}
-                    </div>
-                {% elif message.level == DEFAULT_MESSAGE_LEVELS.DEBUG %}
-                    <div class="alert alert-info alert-dismissible debug-msg">
-                        <button type="button" class="close" data-dismiss="alert"
-                                aria-hidden="true">
-                            &times;
-                        </button>
-                        DEBUG: {{ message }}
-                    </div>
-                {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-                    <div class="alert alert-success alert-dismissible success-msg">
-                        <button type="button" class="close" data-dismiss="alert"
-                                aria-hidden="true">
-                            &times;
-                        </button>
-                        {{ message }}
-                    </div>
-                {% endif %}
-                </li>
-            {% endfor %}
-            </ul>
-        {% endif %}
+        {% include 'games/messages.html' %}
 
 		<div id="content">
 			<h1>{% block header %}WSD-Games{% endblock %}</h1>
-			<!-- If there is searchable items in content, add a search bar -->
+			{# If there is searchable items in content, add a search bar #}
 			{% block search %}{% endblock %}
 			{% block content %} {% endblock %}
 		</div>
