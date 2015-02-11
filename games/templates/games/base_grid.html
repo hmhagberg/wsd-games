@@ -3,7 +3,7 @@
 {% load staticfiles %}
 
 {% block search %}
-    <!-- Search form for seaching cards (games, developers and categories) -->
+    {# Search form for seaching cards (games, developers and categories) #}
     <form id="searchForm">
         <div class="container-fluid">
             <div id="search-div" class="input-group col-xs-11 col-sm-8 col-md-5 ">
@@ -11,7 +11,7 @@
                 <span class="input-group-btn">
                     <button class="btn btn-primary" type="button submit">Go!</button>
                 </span>
-                <!-- If cards represent games add possibility to sort cards -->
+                {# If cards represent games add possibility to sort cards #}
                 {% block sort %}{% endblock %}
             </div>
         </div>
@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% block content %}
-    <!-- Grid container for the cards -->
+    {# Grid container for the cards #}
     <div id="grid" class="container-fluid">
         {% block cards %} {% endblock %}
     </div>

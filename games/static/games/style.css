@@ -51,7 +51,7 @@ h1 {
 }
 
 /* Remove link decoration from category and developer cards */
-.card_link:hover{
+.card-link:hover{
 	text-decoration: none;
 }
 
