@@ -8,9 +8,9 @@
 
 {% block cards %}
 	{% for category in categories %}
-		<div class="col-xs-12 col-sm-6 col-md-3 ">
-			<a class="card_link" href="{% url 'category_detail' category.slug %}">
-				<div class="inner">
+		<div class="col-xs-12 col-sm-6 col-md-3 outer">
+			<a class="card-link" href="{% url 'category_detail' category.slug %}">
+				<div class="inner gradient">
 					<h2>{{category.name}}</h2>
 					<div class="img-container">
 						<img src="{{category.image_url}}" class="img-responsive img-circle" alt="{{category.name}} image">

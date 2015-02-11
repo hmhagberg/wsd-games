@@ -49,21 +49,28 @@
 </script>
     <!-- If the user is logged in as a player and has purchased the game, show the iframe that contains the game -->
     {% if ownership_status == "owned" %}
-        <iframe id="game" src="{{game.url}}"></iframe>
+        <div class="card-container">
+            <div class="card gradient">
+                <iframe id="game" src="{{game.url}}"></iframe>
+            </div>
+        </div>
     <!-- If the user is logged as a developer and has published this game, show sales info of the game -->
     {% elif ownership_status == "developer"  %}
-        <h1>Sales info</h1>
-        <p class="sales-info">Since its publication on {{ publish_date }} this game has been sold:</p>
-        <p class="sales-info">{{ sales_count }} </p>
-        <p class="sales-info">In last year: {{ sales_count_year }} </p>
-        <p class="sales-info">In last 30 days: {{ sales_count_month }} </p>
-        <p class="sales-info">In last 7 days: {{ sales_count_week }} </p>
-        <p class="sales-info">In last day: {{ sales_count_day }} </p>
-        <p class="sales-info">In last hour: {{ sales_count_hour }} </p>
+        <div class="card-container">
+            <div class="card gradient">
+                <h2>Sales info</h2>
+                <p>Since its publication on {{ publish_date }} this game has been sold: {{ sales_count }}</p>
+                <p>In last year: {{ sales_count_year }} </p>
+                <p>In last 30 days: {{ sales_count_month }} </p>
+                <p>In last 7 days: {{ sales_count_week }} </p>
+                <p>In last day: {{ sales_count_day }} </p>
+                <p>In last hour: {{ sales_count_hour }} </p>
+            </div>
+        </div>
     <!-- If the user isn't logged in or hasn't purchased nor published the game, show basic information of the game -->
     {% else %}
-        <div id="form_container">
-            <div id="form">
+        <div class="card-container">
+            <div class="card gradient">
                 <div class="img-container">
                     <img src="{{game.image_url}}" class="img-responsive img-circle" alt="{{game.name}} image">
                 </div>
@@ -92,16 +99,18 @@
         <span class="hidden" itemprop="name">{{game.name}} - {{game.description}}</span>
         <img class="hidden" itemprop="image" src="{{game.image_url}}">
         <script src="https://apis.google.com/js/platform.js" async defer></script>
-        <div class="g-plus" data-action="share" data-annotation="none"></div>
+        <div class="g-plus" data-action="share" data-annotation="none" data-height="24"></div>
     </div>
 
     <!-- Highscores -->
-    <div id="highscore-container">
-        <h3>Highscores</h3>
-        <ol id="highscores">
-            {% for highscore in game.get_highscores %}
-                <li>{{highscore.player.user.username}} {{highscore.highscore}}</li>
-            {% endfor %}
-        </ol>
+    <div class="card-container">
+        <div class="card gradient">
+            <h3>Highscores</h3>
+            <ol>
+                {% for highscore in game.get_highscores %}
+                    <li>{{highscore.player.user.username}} {{highscore.highscore}}</li>
+                {% endfor %}
+            </ol>
+        </div>
     </div>
 {% endblock %}

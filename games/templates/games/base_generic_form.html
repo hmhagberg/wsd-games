@@ -9,8 +9,8 @@
 {% block header %}{{ header }}{% endblock %}
 
 {% block content %}
-    <div id="form_container" class="container-fluid">
-        <form novalidate id="form" class="form-horizontal" method="POST">
+    <div class="card-container">
+        <form novalidate class="form-horizontal card gradient" method="POST">
             {% csrf_token %}
             {% include "games/form_fields.html" %}
             <button id="submit" type="submit" class="btn btn-primary">{{ submit_button_text }}</button>

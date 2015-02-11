@@ -8,9 +8,9 @@
 
 {% block cards %}
 	{% for developer in developers %}
-		<div class="col-xs-12 col-sm-6 col-md-3 ">
+		<div class="col-xs-12 col-sm-6 col-md-3 outer">
 			<a class="card_link" href="{% url 'developer_detail' developer.slug %}">
-				<div class="inner">
+				<div class="inner gradient">
 					<h2>{{developer.name}}</h2>
 					<div class="img-container">
 						<img src="{{developer.image_url}}" class="img-responsive img-circle" alt="{{developer.name}} image">

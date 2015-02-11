@@ -7,152 +7,114 @@ body {
 	min-height: 100%;
 }
 
-.modal a:hover {
-	cursor: pointer;
-}
-
+/* Page header */
 h1 {
 	text-align: center;
 	color: #B32C2C;
 }
 
-.col-xs-12 {
-	height: 600px; /*Delete after content added*/
-	padding: 30px; /* Gap between the cards */
+/* Search */
+#search-div {
+	margin: auto;
 }
+#searchForm {
+	display: inline-block;
+}
+
+/* Sort */
+.sort-div {
+	display: inline-block;
+	margin-left: 25px;
+}
+.dropdown-menu a:hover {
+	cursor: pointer;
+}
+
+/* Cell of the grid */
+.outer {
+	height: 600px;
+	padding: 1%; /* Gap between the cards */
+}
+
+/* The card inside the cell */
 .inner {
 	width: 100%;
 	height: 100%;
-	border: 5px solid black;
-	border-radius: 10px;
-	background: -webkit-linear-gradient(#B32C2C, #000000); /* For Safari 5.1 to 6.0 */
-	background: -o-linear-gradient(#B32C2C, #000000); /* For Opera 11.1 to 12.0 */
-	background: -moz-linear-gradient(#B32C2C, #000000); /* For Firefox 3.6 to 15 */
-	background: linear-gradient(#B32C2C, #000000); /* Standard syntax */
-	color: white;
+	padding: 5%;
 }
-
+.inner h2 {
+	text-align: center;
+}
 .inner:hover {
 	border: 5px solid #B32C2C;
 	cursor: pointer;
 }
 
-.inner h2 {
-	text-align: center;
-}
-
-.img-container img{
-	max-height: 250px;
-	display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.modal-content {
-	background: -webkit-linear-gradient(#B32C2C, #000000); /* For Safari 5.1 to 6.0 */
-	background: -o-linear-gradient(#B32C2C, #000000); /* For Opera 11.1 to 12.0 */
-	background: -moz-linear-gradient(#B32C2C, #000000); /* For Firefox 3.6 to 15 */
-	background: linear-gradient(#B32C2C, #000000); /* Standard syntax */
-	color: white;
-}
-
-#pagination-nav {
-	text-align: center;
-}
-
-/*Game*/
-#game {
-	display: block;
-	margin: auto;
-	height: 658px;
-	width: 604px;
-	margin-bottom: 10px;
-}
-
-/*Game highscores*/
-#highscore-container {
-	text-align: center;
-}
-
-#highscore-container h3 {
-	color: #B32C2C;
-}
-
-#highscores {
-	display: inline-block;
-	color: #B32C2C;
-	padding-left: 25px;
-}
-
-#highscores li {
-	text-align: left;
-}
-
-#form_container {
-	text-align: center;
-}
-
-#form {
-	display: inline-block;
-	padding: 30px;
-	border-radius: 10px;
-	border: 5px solid black;
-	background: -webkit-linear-gradient(#B32C2C, #000000); /* For Safari 5.1 to 6.0 */
-	background: -o-linear-gradient(#B32C2C, #000000); /* For Opera 11.1 to 12.0 */
-	background: -moz-linear-gradient(#B32C2C, #000000); /* For Firefox 3.6 to 15 */
-	background: linear-gradient(#B32C2C, #000000); /* Standard syntax */
-	color: gray;
-}
-
-#form input {
-	color: black;
-}
-
-.is-invalid {
-    border-color: #900;
-    background-color: #FDD;
-}
-
-#submit {
-	float: right;
-}
-
-.modal-footer form {
-	display: inline-block;
-}
-
+/* Remove link decoration from category and developer cards */
 .card_link:hover{
 	text-decoration: none;
 }
 
-#searchForm {
-	display: inline-block;
+/* Add gradient to cards */
+.gradient {
+	background: -webkit-linear-gradient(#B32C2C, #000000); /* For Safari 5.1 to 6.0 */
+	background: -o-linear-gradient(#B32C2C, #000000); /* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(#B32C2C, #000000); /* For Firefox 3.6 to 15 */
+	background: linear-gradient(#B32C2C, #000000); /* Standard syntax */
+	color: white;
+	border-radius: 10px;
+	border: 5px solid black;
 }
 
-.sort-div {
-	display: inline-block;
-	margin-left: 25px;
+/* Game modals */
+.modal a:hover {
+	cursor: pointer;
+}
+.modal-footer form {
+	display: inline-block; /* display buttons on the same row */
 }
 
+/* Round images in cards and modals */
+.img-container img {
+	height: 250px;
+	display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5%;
+}
+
+/* Game iframe */
+#game {
+	height: 658px;
+	width: 604px;
+	background-color: white;
+}
+
+/* Share button */
 #share-button-container {
 	text-align: center;
 }
 
-.sales-info {
-	color: white;
+/* Cards that are not in a grid (e.g. profile, login, signup...) */
+.card-container {
 	text-align: center;
 }
-
-/* Sort */
-.dropdown-menu a:hover {
-	cursor: pointer;
-}
-
-#search-div {
-	margin: auto;
+.card {
+	display: inline-block;
+	padding: 30px;
 }
 
 /* google sign in image */
 #g-signin {
 	height: 40px;
+}
+
+/* Submit buttons (login and signup)*/
+.submit {
+	float: right;
+}
+
+.is-invalid {
+    border-color: #900;
+    background-color: #FDD;
 }

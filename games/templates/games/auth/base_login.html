@@ -7,12 +7,12 @@
 {% block header %}Login{% endblock %}
 
 {% block content %}
-    <div id="form_container" class="container">
-        <form id="form" class="form-horizontal" method="POST">
+    <div class="card-container">
+        <form class="form-horizontal card gradient" method="POST">
             {% csrf_token %}
             {% include "games/form_fields.html" %}
 
-            <button id="submit" type="submit" class="btn btn-primary">Login</button>
+            <button type="submit" class="btn btn-primary submit">Login</button>
             <input type="hidden" name="next" value="{{ next }}" />
             <!-- Google sign in butoon -->
             <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ next }}"><img id="g-signin" src="https://developers.google.com/+/images/branding/sign-in-buttons/White-signin_Medium_base_44dp.png" alt="google sign in button"/></a>

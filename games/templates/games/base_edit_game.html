@@ -7,8 +7,8 @@
 {% block header %}Edit - {{ game.name }}{% endblock %}
 
 {% block content %}
-    <div id="form_container">
-        <div id="form">
+    <div class="card-container">
+        <div class=" card gradient">
             <form method="POST">
                 {% csrf_token %}
                 <table>
