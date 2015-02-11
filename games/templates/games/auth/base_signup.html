@@ -13,8 +13,12 @@
             {% include "games/form_fields.html" %}
             <button type="submit" class="btn btn-primary submit">Sign up</button>
 
+            {# Link to other account type's signup page #}
             {% if not dev_signup %}
                 <p>Click <a href="{% url 'signup' dev_signup='dev' %}">here</a> if you want to create a developer
+                    account</p>
+            {% else %}
+                <p>Click <a href="{% url 'signup' dev_signup='' %}">here</a> if you want to create a player
                     account</p>
             {% endif %}
         </form>

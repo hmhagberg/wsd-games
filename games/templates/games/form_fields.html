@@ -1,16 +1,22 @@
+{% comment %}
+
+A template which renders all fields of a form. For each field both a label and the actual field are rendered.
+If the field contains errors (after submitting the form) a tooltip with the error message is attached to the field.
+
+{% endcomment %}
+
 {% load wsd_filters %}
 
 {% for field in form %}
     <div class="form-group">
-        <label class="col-md-4 control-label" for="{{ field.id_for_label }}">{{ field.label }}:</label>
+        <label class="col-md-4 control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
         <div class="col-md-8 form-field"
                 {% if field.errors %}
                     data-toggle="tooltip" data-placement="right" data-trigger="manual focus"
-                    title="{% for error in field.errors %}
-                                {{ error }}
-                            {% endfor %}"
+                    {# Errors must be iterated becaus using just 'field.errors' would result in a list. #}
+                    title="{% for error in field.errors %}{{ error }}{% endfor %}"
                 {% endif %}
-        > <!-- Iteration must be done because 'field.errors' returns a HTML list -->
+        >
             {% if not field.errors %}
                 {{ field|add_class_to_field:"form-control" }}
             {% else %}
