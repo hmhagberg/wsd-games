@@ -373,7 +373,10 @@ class PaymentView(View):
         checksumstr = "pid=%s&ref=%s&token=%s" % (pid, ref, settings.SID_KEY)
         calculated_checksum = hashlib.md5(checksumstr.encode("ascii")).hexdigest()
 
-        if calculated_checksum == received_checksum:
+        if payment.completed:
+            messages.error(request, "This payment has already been completed.")
+            return redirect("home")
+        elif calculated_checksum == received_checksum:
             if payment_status == "success":
                 payment.completed = True
                 payment.ref = ref
@@ -388,7 +391,7 @@ class PaymentView(View):
                 messages.info(request, "Your purchase has been cancelled.")
                 return redirect("home")
 
-        messages.error(request, "Oops! Something went wrong while handling your payment. Please, try again!")
+        messages.error(request, "Oops! Something went wrong while handling your payment. Please, try again! GET")
         return redirect("home")
 
     def post(self, request, *args, **kwargs):
