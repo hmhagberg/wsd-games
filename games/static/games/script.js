@@ -9,6 +9,12 @@ $(document).ready(function() {
         $('.form-field').tooltip('hide');
     }, 3500);
 
+    // Timeout for messages (e.g. login, logout...)
+    window.setTimeout(function() {
+        $(".alert").alert('close');
+        $("#messages-ul").addClass("hidden");
+    }, 4000);
+
     // Search (base_grid.html)
     // http://stackoverflow.com/questions/8746882/jquery-contains-selector-uppercase-and-lower-case-issue
     jQuery.expr[':'].contains = function(a, i, m) {
