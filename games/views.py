@@ -159,13 +159,26 @@ class GenericWsdFormView(FormView):
 
 class SocialSignupSelectUsernameView(GenericWsdFormView):
     """
-    View for selecting username when user logs in for the first time using social login.
+    View for selecting username when user logs in for the first time using social login. View checks that user has
+    'pipeline_ask_username' which is set in social auth pipeline. If the flag is not set user is redirected.
     """
     form_class = UsernameForm
 
     title = "Select username"
     header = "Select username"
     submit_button_text = "OK"
+
+    def get(self, request, *args, **kwargs):
+        if request.session.get("pipeline_ask_username") is not None:
+            return super(SocialSignupSelectUsernameView, self).get(request, *args, **kwargs)
+        else:
+            return redirect("home")
+
+    def post(self, request, *args, **kwargs):
+        if request.session.get("pipeline_ask_username") is not None:
+            return super(SocialSignupSelectUsernameView, self).post(request, *args, **kwargs)
+        else:
+            return redirect("home")
 
     def form_valid(self, form):
         response = redirect("social:complete", self.request.GET.get("backend"))

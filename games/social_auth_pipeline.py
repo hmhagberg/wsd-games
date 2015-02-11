@@ -7,17 +7,22 @@ from games.models import Player
 
 
 @partial
-def ask_username(backend, is_new=False, *args, **kwargs):
+def ask_username(backend, strategy, is_new=False, *args, **kwargs):
     """
     Ask user for site-specific username if user logs in for the first time.
     """
     if is_new:
         data = backend.strategy.request_data()
         if data.get("username_from_user") is None:  # Display the form
+
+            # Set flag that allows access to social_select_username view
+            strategy.request.session["pipeline_ask_username"] = True
+
             response = redirect("social_select_username")
             response = set_query_params(response, backend=backend.name)
             return response
         else:  # User has selected username -> continue pipeline
+            del strategy.request.session["pipeline_ask_username"]  # Remove access flag
             return {"username": data.get("username_from_user")}
 
 
