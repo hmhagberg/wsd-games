@@ -4,10 +4,11 @@ import datetime
 
 from django.conf import settings
 from django.db import models
-from django.template.defaultfilters import slugify
 from django.contrib.auth.models import AbstractUser
 from django.core.urlresolvers import reverse
 from django.core.validators import MinValueValidator
+
+from games.utils import unique_slugify
 
 
 class AbstractSlugModel(models.Model):
@@ -24,7 +25,7 @@ class AbstractSlugModel(models.Model):
         ordering = ["name"]
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        unique_slugify(self, self.name)
         return super(AbstractSlugModel, self).save(*args, **kwargs)
 
     def natural_key(self):
@@ -67,7 +68,7 @@ class Player(models.Model):
     about_me = models.TextField(blank=True)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.user.username)
+        unique_slugify(self, self.user.username)
         super(Player, self).save(*args, **kwargs)
 
     def __str__(self):
