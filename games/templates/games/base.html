@@ -94,13 +94,21 @@
                         </button>
                         {{ message }}
                     </div>
-                {% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO or message.level == DEFAULT_MESSAGE_LEVELS.DEBUG %}
-                    <div class="alert alert-info alert-dismissible debug-msg">
+                {% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+                    <div class="alert alert-info alert-dismissible info-msg">
                         <button type="button" class="close" data-dismiss="alert"
                                 aria-hidden="true">
                             &times;
                         </button>
                         {{ message }}
+                    </div>
+                {% elif message.level == DEFAULT_MESSAGE_LEVELS.DEBUG %}
+                    <div class="alert alert-info alert-dismissible debug-msg">
+                        <button type="button" class="close" data-dismiss="alert"
+                                aria-hidden="true">
+                            &times;
+                        </button>
+                        DEBUG: {{ message }}
                     </div>
                 {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
                     <div class="alert alert-success alert-dismissible success-msg">

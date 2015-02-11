@@ -16,6 +16,7 @@ import json
 with open(os.path.dirname(__file__) + "/../client_secrets.json", "r") as jsonf:
     client_secrets = json.load(jsonf)
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
@@ -155,6 +156,10 @@ if "DYNO" in os.environ:
     STATIC_ROOT = 'staticfiles'
     import dj_database_url
     DATABASES['default'] = dj_database_url.config()
+
+if DEBUG:
+    from django.contrib.messages import constants as message_constants
+    MESSAGE_LEVEL = message_constants.DEBUG
 
 LOGIN_URL = "/login/"
 LOGOUT_URL = "/logout/"

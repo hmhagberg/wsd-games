@@ -140,6 +140,9 @@ ol {
 .warning-msg {
 	background-color: #ec971f;
 }
+.info-msg {
+    background-color: #31b0d5;
+}
 .debug-msg {
 	background-color: #31b0d5;
 }
