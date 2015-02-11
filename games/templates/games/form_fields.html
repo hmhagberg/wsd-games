@@ -9,8 +9,8 @@ If the field contains errors (after submitting the form) a tooltip with the erro
 
 {% for field in form %}
     <div class="form-group">
-        <label class="col-md-4 control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-        <div class="col-md-8 form-field"
+        <label class="col-md-5 control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+        <div class="col-md-7 form-field"
                 {% if field.errors %}
                     data-toggle="tooltip" data-placement="right" data-trigger="manual focus"
                     {# Errors must be iterated becaus using just 'field.errors' would result in a list. #}

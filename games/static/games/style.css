@@ -112,6 +112,11 @@ ol {
 	text-align: left;
 }
 
+/* Force the form labels to appear on one row */
+.control-label {
+	white-space: nowrap;
+}
+
 /* google sign in image */
 #g-signin {
 	height: 40px;
@@ -148,8 +153,4 @@ ol {
 }
 .success-msg {
 	background-color: #449d44;
-}
-
-.control-label {
-
 }
