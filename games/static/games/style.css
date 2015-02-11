@@ -98,6 +98,7 @@ h1 {
 /* Cards that are not in a grid (e.g. profile, login, signup...) */
 .card-container {
 	text-align: center;
+	max-width: 100%;
 }
 .card {
 	display: inline-block;
