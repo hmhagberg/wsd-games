@@ -75,7 +75,7 @@
 		</nav>
 
         {% if messages %}
-            <ul>
+            <ul id="messages-ul">
             {% for message in messages %}
                 <li>
                 {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}

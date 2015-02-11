@@ -93,6 +93,8 @@ h1 {
 /* Share button */
 #share-button-container {
 	text-align: center;
+	margin-top: 1%;
+	margin-bottom: 1%;
 }
 
 /* Cards that are not in a grid (e.g. profile, login, signup...) */
@@ -103,6 +105,11 @@ h1 {
 .card {
 	display: inline-block;
 	padding: 30px;
+}
+
+/* Highscore list */
+ol {
+	text-align: left;
 }
 
 /* google sign in image */
@@ -118,4 +125,13 @@ h1 {
 .is-invalid {
     border-color: #900;
     background-color: #FDD;
+}
+
+#messages-ul {
+	padding-left: 0;
+}
+
+.alert {
+	background-color: #337ab7;
+	color: white;
 }

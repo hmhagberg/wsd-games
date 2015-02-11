@@ -62,7 +62,7 @@
                 {% url 'developer_detail' game.developer.slug %}">{{game.developer.name}}</a></p>
                 <p>Categories: {% for category in game.categories.all %}<a href="
                 {% url 'category_detail' category.slug %}">{{category}}</a> | {% endfor %}</p>
-                <p class="price">Price: {{game.price|floatformat:2}}€</p>
+                <p>Price: {{game.price|floatformat:2}}€</p>
                 <h3> You can't play this game with mobile or tablet devices!</h3>
             </div>
         </div>
@@ -91,7 +91,7 @@
                 {% url 'developer_detail' game.developer.slug %}">{{game.developer.name}}</a></p>
                 <p>Categories: {% for category in game.categories.all %}<a href="
                 {% url 'category_detail' category.slug %}">{{category}}</a> | {% endfor %}</p>
-                <p class="price">Price: {{game.price|floatformat:2}}€</p>
+                <p>Price: {{game.price|floatformat:2}}€</p>
                 <!-- If the user is logged in as a player and hasn't purchased the game, show the link for buying the game -->
                 {% if user.is_authenticated %}
                     {% if user.is_player %}
