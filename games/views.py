@@ -34,7 +34,7 @@ class LoginView(FormView):
 
     def form_valid(self, form):
         login(self.request, form.get_user())
-        messages.success(self.request, "You have logged in")
+        messages.success(self.request, "You have logged in.")
         return redirect(self.request.GET.get("next") or "home")
 
 

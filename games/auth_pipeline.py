@@ -1,5 +1,6 @@
 from social.pipeline.partial import partial
 from django.shortcuts import redirect
+from django.contrib import messages
 
 from games.utils import set_query_params
 from games.models import Player
@@ -21,3 +22,7 @@ def save_player_profile(user, is_new=False, *args, **kwargs):
     if is_new:
         player = Player(user=user)
         player.save()
+
+
+def set_login_message(strategy, *args, **kwargs):
+    messages.success(strategy.request, "You have logged in.")

@@ -53,7 +53,8 @@ SOCIAL_AUTH_PIPELINE = (
         'games.auth_pipeline.save_player_profile',
         'social.pipeline.social_auth.associate_user',
         'social.pipeline.social_auth.load_extra_data',
-        'social.pipeline.user.user_details'
+        'social.pipeline.user.user_details',
+        'games.auth_pipeline.set_login_message',
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -161,8 +162,8 @@ if DEBUG:
     from django.contrib.messages import constants as message_constants
     MESSAGE_LEVEL = message_constants.DEBUG
 
-LOGIN_URL = "/login/"
-LOGOUT_URL = "/logout/"
+LOGIN_URL = "/login"
+LOGOUT_URL = "/logout"
 LOGIN_REDIRECT_URL = "/"
 
 PAYMENT_SUCCESS_URL = DOMAIN + "/payment/success"
