@@ -16,7 +16,12 @@
             if (data.messageType === "LOAD_REQUEST") {
                 var game_data = "{{ownership.saved_data}}";
                 var child = document.getElementById("game").contentWindow;
-                var msg = {"messageType": "LOAD", "gameState": {"score": {{ownership.saved_score}}, "playerItems": game_data.split(",")}};
+                if (game_data === "[]") {
+                    var msg = {"messageType": "MESSAGE","message": "NO SAVED DATA"};
+                }
+                else {
+                    var msg = {"messageType": "LOAD", "gameState": {"score": {{ownership.saved_score}}, "playerItems": game_data.split(",")}};
+                }
                 child.postMessage(msg, "*");
             }
             else if (data.messageType === "SCORE") {
@@ -39,11 +44,6 @@
                     });
                 }
             }
-        });
-        $( "#message" ).click(function() {
-            var child = document.getElementById("game").contentWindow;
-            var msg = {"messageType": "MESSAGE","message": "TEST MESSAGE"};
-            child.postMessage(msg, "*");
         });
     });
 </script>
