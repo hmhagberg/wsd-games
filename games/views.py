@@ -28,7 +28,7 @@ class LoginView(FormView):
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated():
-            messages.info(request, "You are already logged in.")
+            messages.warning(request, "You already are logged in.")
             return redirect("home")
         return super(LoginView, self).get(request, *args, **kwargs)
 
@@ -64,6 +64,7 @@ class SignupView(FormView):
         register again.
         """
         if request.user.is_authenticated():
+            messages.warning(request, "You already have an account.")
             return redirect("home")
 
         activation_key = request.GET.get("activation_key")
@@ -85,7 +86,10 @@ class SignupView(FormView):
     def form_valid(self, form):
         user = form.save()
         link = SignupView.send_activation_mail(user)
-        return render(self.request, "games/auth/activate_pending.html", {"username": user.username, "link": link})
+        messages.success(self.request, "An activation email has been sent to the address you gave. "
+                                       "To complete the signup process click the activation link in the email.")
+        messages.debug(self.request, "Activation link: %s" % link)
+        return redirect("home")
 
     @staticmethod
     def send_activation_mail(user):
