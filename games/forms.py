@@ -7,7 +7,7 @@ from games.models import Player, Developer, Game
 
 
 name_regex = r"^[a-zA-Z]+$"
-username_regex = r"^[a-zA-Z.@+-]+$"
+username_regex = r"^[a-zA-Z0-9.@+-_]+$"
 
 
 class LoginForm(AuthenticationForm):

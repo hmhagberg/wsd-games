@@ -18,7 +18,7 @@ urlpatterns = patterns('',
 
     url(r'^edit_profile$', login_required(EditProfileView.as_view()), name="edit_profile"),
     url(r'^change_password$', login_required(ChangePasswordView.as_view()), name="change_password"),
-    url(r'^profiles/([a-z0-9\-]+)$', 'games.views.profiles', name="profiles"),
+    url(r'^profiles/([a-zA-Z0-9.@+-_]+)$', 'games.views.profiles', name="profiles"),
 
 
     url(r'^payment/(success|cancel|error)?$', PaymentView.as_view(), name="payment"),
