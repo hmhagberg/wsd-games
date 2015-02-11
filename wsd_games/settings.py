@@ -39,22 +39,13 @@ SOCIAL_AUTH_PIPELINE = (
         'social.pipeline.social_auth.auth_allowed',
         'social.pipeline.social_auth.social_user',
         'social.pipeline.user.get_username',
-
-        # Send a validation email to the user to verify its email address.
-        # Disabled by default.
-        # 'social.pipeline.mail.mail_validation',
-
-        # Associates the current social details with another user account with
-        # a similar email address. Disabled by default.
-        # 'social.pipeline.social_auth.associate_by_email',
-
-        'games.auth_pipeline.ask_username',
+        'games.social_auth_pipeline.ask_username',
         'social.pipeline.user.create_user',
-        'games.auth_pipeline.save_player_profile',
+        'games.social_auth_pipeline.save_player_profile',
         'social.pipeline.social_auth.associate_user',
         'social.pipeline.social_auth.load_extra_data',
         'social.pipeline.user.user_details',
-        'games.auth_pipeline.set_login_message',
+        'games.social_auth_pipeline.set_login_message',
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
