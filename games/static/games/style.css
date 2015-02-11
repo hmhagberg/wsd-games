@@ -127,11 +127,26 @@ ol {
     background-color: #FDD;
 }
 
+/* Popup messages (e.g. after login, logout, purchase...) */
 #messages-ul {
 	padding-left: 0;
 }
-
 .alert {
-	background-color: #337ab7;
 	color: white;
+}
+.error-msg {
+	background-color: #B32C2C;
+}
+.warning-msg {
+	background-color: #ec971f;
+}
+.debug-msg {
+	background-color: #31b0d5;
+}
+.success-msg {
+	background-color: #449d44;
+}
+
+.control-label {
+
 }
