@@ -9,7 +9,7 @@
 {% block content %}
     <div class="card-container">
         <div class="card gradient">
-            <!-- Profile picture is same for everyone -->
+            {# Profile picture is same for everyone #}
             <div class="img-container">
                 <img src="http://www.comicbookmovie.com/images/uploads/nerd.jpg" class="img-responsive img-circle" alt=" profile image">
             </div>
@@ -20,7 +20,7 @@
                 <p>There's nothing to know about me!</p>
             {% endif %}
 
-            <!-- Show profile information and settings buttons only for the player who owns the profile -->
+            {# Show profile information and settings buttons only for the player who owns the profile #}
             {% if profile.user == user %}
                 <p>Name: {{profile.user.first_name}} {{profile.user.last_name}}</p>
                 <p>Email: {{profile.user.email}}</p>
