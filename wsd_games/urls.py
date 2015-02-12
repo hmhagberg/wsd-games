@@ -30,7 +30,6 @@ urlpatterns = patterns('',
 
     # MANAGE GAMES
     url(r'^edit_game/([a-z0-9\-_]+)$', login_required(EditGameView.as_view()), name='edit_game'),
-    url(r'^unpublish_game_confirm/([a-z0-9\-_]+)$', 'games.views.unpublish_game_confirm', name='unpublish_game_confirm'),
     url(r'^unpublish_game/([a-z0-9\-_]+)$', 'games.views.unpublish_game', name='unpublish_game'),
     url(r'^publish-game/?$', login_required(GamePublishingView.as_view()), name="game_publishing"),
 
