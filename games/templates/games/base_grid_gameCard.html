@@ -58,7 +58,7 @@
 				</div>
 				<div class="modal-body">
 					<div class="img-container">
-						<img src="{{game.image_url}}" class="img-responsive img-circle" alt="{{game.developer.name}} image">
+						<img src="{{game.image_url}}" class="img-responsive img-circle" alt="{{game.name}} image">
 					</div>
 					<p>{{game.description}}</p>
 					<p>Developer: <a href="
@@ -71,18 +71,21 @@
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     {# If user is logged as a player and has purchased the game, show "Play game" button #}
 					{% if game in user.player.games %}
-						<a href="{% url 'game_detail' game.slug %}"><button type="button" class="btn btn-primary">Play
-                            Game</button></a>
+						<a href="{% url 'game_detail' game.slug %}">
+							<button type="button" class="btn btn-primary">Play Game</button>
+						</a>
                     {# If the user is logged as developer, show "Inspect" button #}
                     {% elif user.is_developer %}
-                        <a href="{% url 'game_detail' game.slug %}"><button type="button" class="btn btn-primary">Inspect</button></a>
+                        <a href="{% url 'game_detail' game.slug %}">
+                        	<button type="button" class="btn btn-primary">Inspect</button>
+                        </a>
                     {# If the is logged as a player and hasn't purchased the game, show "Buy game" button #}
 					{% else %}
 				        {% if user.is_authenticated %}
         					<form action="{% url 'payment' %}" method="POST">
             					{% csrf_token %}
            	 					<input type="hidden" name="game_id" value="{{ game.id }}">
-           	 					<button type="button submit" class="btn btn-primary">Buy Game</button>
+           	 					<button type="submit" class="btn btn-primary">Buy Game</button>
         					</form>
     					{% endif %}
 					{% endif %}

@@ -91,7 +91,7 @@
     {% if ownership_status == "owned" %}
         <div class="card-container">
             <div id="desktop" class="card gradient">
-                <iframe id="game" class=""src="{{game.url}}"></iframe>
+                <iframe id="game" src="{{game.url}}"></iframe>
             </div>
             <div id="mobile" class="card gradient">
                 <div class="img-container">
@@ -141,13 +141,15 @@
                         <td>{{ sales_count_hour }}</td>
                     </tr>
                 </table>
-                <a class="btn btn-primary" href="{% url 'edit_game' game.slug %}">Edit game</a>
-                <a class="btn btn-primary"  data-toggle="modal" data-target="#modal{{game.id}}">Unpublish game</a>
+                <a href="{% url 'edit_game' game.slug %}">
+                    <button type="button" class="btn btn-primary">Edit game</button>
+                </a>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal{{game.id}}">Unpublish game</button>
             </div>
         </div>
-        
+
         {# Modal for confirming the removal of the game #}
-        <div class="modal fade" id="modal{{game.id}}" tabindex="-1" role="dialog" aria-labelledby="{{game.name}}" aria-hidden="true">
+        <div class="modal fade" id="modal{{game.id}}" tabindex="-1" role="dialog" aria-labelledby="modal{{game.id}}" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content gradient">
                     <div class="modal-header">
@@ -159,7 +161,9 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <a href="{% url 'unpublish_game' game.slug %}"><button type="button" class="btn btn-danger">Remove</button></a>
+                        <a href="{% url 'unpublish_game' game.slug %}">
+                            <button type="button" class="btn btn-danger">Remove</button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -208,8 +212,4 @@
             <table id="highscore-list"></table>
         </div>
     </div>
-
-
-
-
 {% endblock %}
