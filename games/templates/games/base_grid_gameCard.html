@@ -6,10 +6,25 @@
 
 {% block header %}{{ title }}{% endblock %}
 
+
+{% block developer %}
+	{% if developer %}
+		<div id="developer-info" class="card-container">
+		    <div class="card gradient">
+		    	<div class="img-container">
+					<img src="{{developer.image_url}}" class="img-responsive img-circle" alt="{{developer.name}} image">
+				</div>
+				<p>{{ developer.description }}</p>
+		    </div>
+		</div>
+	{% endif %}
+{% endblock %}
+
+
 {% block sort %}
 {# Sort games #}
 <div id="sort-div" class="input-group-btn">
-    <button id="sort" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Name <span class="caret"></span></button>
+    <button id="sort" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Sort by <span class="caret"></span></button>
     <ul id="sort-menu" class="dropdown-menu" role="menu">
         <li><a>Name</a></li>
         <li><a>Price</a></li>
