@@ -267,7 +267,7 @@ class EditGameView(GenericWsdFormView):
 
     title = "Edit game"
     header = "Edit game"
-    submit_button_text = "Submit change"
+    submit_button_text = "Submit changes"
 
     def get(self, request, *args, **kwargs):
         game = get_object_or_404(Game, slug=self.args[0])
@@ -275,7 +275,7 @@ class EditGameView(GenericWsdFormView):
             messages.error(request, "You must be a developer to manage the game.")
             return redirect("home")
         elif game.developer != request.user.developer:
-            messages.error(request, "You must be the developer of the game to manage the game.")
+            messages.error(request, "You must be the developer of the game to manage it.")
             return redirect("home")
         else:
             return super(EditGameView, self).get(request, *args, **kwargs)
