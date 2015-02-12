@@ -37,7 +37,6 @@ class AbstractSlugModel(models.Model):
 
 
 class WsdGamesUser(AbstractUser):
-
     api_token = models.CharField(max_length=40, unique=True)
 
     def save(self, *args, **kwargs):
@@ -56,7 +55,8 @@ class WsdGamesUser(AbstractUser):
 
     def is_social_auth_user(self):
         """
-        Check if user is authenticated through social auth by check if there's record of her in social auth DB tables.
+        Check if user is authenticated through social auth by checking if there's record of her in social auth DB
+        tables.
         """
         try:
             self.social_auth.get(user=self)
@@ -65,6 +65,9 @@ class WsdGamesUser(AbstractUser):
             return False
 
     def generate_new_token(self):
+        """
+        Generate new API token based on time and user's username
+        """
         msg = str(datetime.datetime.now())+self.username
         h = hmac.new(settings.API_SECRET, msg.encode("ascii"), "sha1")
         return h.hexdigest()
@@ -96,6 +99,9 @@ class Player(models.Model):
             return False
 
     def games(self):
+        """
+        Return list of games this player owns
+        """
         return [o.game for o in self.ownerships.all()]
 
 
@@ -164,13 +170,15 @@ class Game(AbstractSlugModel):
 
 
 class Ownership(models.Model):
-    RATING_OPTIONS = ((1, 1), (2, 2), (3, 3), (4, 4), (5, 5),)
+    """
+    Models which links (owned) games to players. Related data (e.g. user's highscore) is also stored here.
+    """
+
     game = models.ForeignKey(Game, related_name="ownerships")
     player = models.ForeignKey(Player, related_name='ownerships')
     highscore = models.PositiveIntegerField(default=0)
     saved_score = models.PositiveIntegerField(default=0)
     saved_data = models.TextField(default='[]')
-    rating = models.PositiveIntegerField(null=True, choices=RATING_OPTIONS)
     timestamp = models.DateTimeField(auto_now_add=True, default=datetime.datetime.now())
 
     class Meta:
@@ -180,7 +188,9 @@ class Ownership(models.Model):
         return self.player.user.username + " owns " + self.game.name
 
     def set_new_score(self, new_score):
-        """Returns True if the given score is a new highscore"""
+        """
+        Set new highscore if new_score is higher than existing highscore. Return True if new highscore was set.
+        """
         if new_score > self.highscore:
             self.highscore = new_score
             self.save()
@@ -195,6 +205,9 @@ class Ownership(models.Model):
 
 
 class Payment(models.Model):
+    """
+    Payment data
+    """
     game = models.ForeignKey(Game, related_name="sales")
     player = models.ForeignKey(Player, related_name="payments")
 
