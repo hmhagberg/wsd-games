@@ -113,9 +113,10 @@ h1 {
 	padding: 20px;
 }
 
-/* Highscore list */
-#highscore-list {
+/* Highscore and sales info*/
+table {
 	text-align: left;
+	margin-bottom: 20px;
 }
 th {
 	text-decoration: underline;

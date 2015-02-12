@@ -100,12 +100,36 @@
         <div class="card-container">
             <div class="card gradient">
                 <h2>Sales info</h2>
-                <p>Since its publication on {{ publish_date }} this game has been sold: {{ sales_count }}</p>
-                <p>In last year: {{ sales_count_year }} </p>
-                <p>In last 30 days: {{ sales_count_month }} </p>
-                <p>In last 7 days: {{ sales_count_week }} </p>
-                <p>In last day: {{ sales_count_day }} </p>
-                <p>In last hour: {{ sales_count_hour }} </p>
+                <table>
+                    <tr>
+                        <th>Time</th>
+                        <th>Amount</th>
+                    </tr>
+                    <tr>
+                        <td>Since {{ publish_date }}:</td>
+                        <td>{{ sales_count }}</td>
+                    </tr>
+                    <tr>
+                        <td>In last year:</td>
+                        <td>{{ sales_count_year }}</td>
+                    </tr>
+                    <tr>
+                        <td>In last 30 days:</td>
+                        <td>{{ sales_count_month }}</td>
+                    </tr>
+                    <tr>
+                        <td>In last 7 days:</td>
+                        <td>{{ sales_count_week }}</td>
+                    </tr>
+                    <tr>
+                        <td>In last day:</td>
+                        <td>{{ sales_count_day }}</td>
+                    </tr>
+                    <tr>
+                        <td>In last hour:</td>
+                        <td>{{ sales_count_hour }}</td>
+                    </tr>
+                </table>
                 <a class="btn btn-primary" href="{% url 'edit_game' game.slug %}">Edit game</a>
                 <a class="btn btn-primary" href="{% url 'unpublish_game_confirm' game.slug %}">Unpublish game</a>
             </div>
