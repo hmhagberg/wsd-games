@@ -13,39 +13,68 @@
         'use strict';
         $(window).on('message', function(evt) {
             var data = evt.originalEvent.data;
+            // Answer games load request with saved data or if no saved data then inform the game about it
             if (data.messageType === "LOAD_REQUEST") {
                 var game_data = "{{ownership.saved_data}}";
                 var child = document.getElementById("game").contentWindow;
-                var msg = {"messageType": "LOAD", "gameState": {"score": {{ownership.saved_score}}, "playerItems": game_data.split(",")}};
+                if (game_data === "[]") {
+                    var msg = {"messageType": "MESSAGE","message": "NO SAVED DATA"};
+                }
+                else {
+                    var msg = {"messageType": "LOAD", "gameState": {"score": {{ownership.saved_score}}, "playerItems": game_data.split(",")}};
+                }
                 child.postMessage(msg, "*");
             }
+            // Forward submitted score to django
             else if (data.messageType === "SCORE") {
                 if (!isNaN(data.score)){
+                    $("#highscore-header").html("Loading...");
+
+                    $("#highscore-list").html("");
                     $.ajax({
-                        'type': 'POST',
-                        'url': '{% url 'game_detail' game.slug %}',
-                        'headers': { "X-CSRFToken": '{{ csrf_token }}' },
-                        'data': data
+                        type: 'POST',
+                        url: '{% url 'game_detail' game.slug %}',
+                        headers: { "X-CSRFToken": '{{ csrf_token }}' },
+                        data: data
                     });
+                    // Update highscores when new score is submitted
+                    updateHighscores();
                 }
             }
+            // Forward game state to django
             else if (data.messageType === "SAVE") {
                 if (!isNaN(data.gameState.score)) {
                     $.ajax({
-                        'type': 'POST',
-                        'url': '{% url 'game_detail' game.slug %}',
-                        'headers': { "X-CSRFToken": '{{ csrf_token }}' },
-                        'data': data
+                        type: 'POST',
+                        url: '{% url 'game_detail' game.slug %}',
+                        headers: { "X-CSRFToken": '{{ csrf_token }}' },
+                        data: data
                     });
                 }
             }
         });
-        $( "#message" ).click(function() {
-            var child = document.getElementById("game").contentWindow;
-            var msg = {"messageType": "MESSAGE","message": "TEST MESSAGE"};
-            child.postMessage(msg, "*");
-        });
+
+        // Update highscores
+        function updateHighscores() {
+            var data;
+            $.ajax({
+                dataType: 'json',
+                url: '/api/v1/games/{{game.slug}}.json',
+                data: data,
+            }).done(function(data) {
+                $("#highscore-list").html("<tr><th>Username</th><th>Score</th><tr>");
+                $("#highscore-header").html("Highscores");
+                for (var i = 0; i < data.highscores.length; i++) {
+                    $("#highscore-list").append("<tr><td>" + (i+1) + ". " + data.highscores[i].username + "</td><td>" + data.highscores[i].score + "</td></tr>");
+                }
+            });
+        };
+
+        // Add highscores when page is loaded
+        updateHighscores();
     });
+
+    
 </script>
     {#  If the user is logged in as a player and has purchased the game, show the iframe that contains the game #}
     {% if ownership_status == "owned" %}
@@ -121,12 +150,8 @@
     {# Highscores #}
     <div class="card-container">
         <div class="card gradient">
-            <h3>Highscores</h3>
-            <ol>
-                {% for highscore in game.get_highscores %}
-                    <li>{{highscore.player.user.username}} {{highscore.highscore}}</li>
-                {% endfor %}
-            </ol>
+            <h3 id="highscore-header">Highscores</h3>
+            <table id="highscore-list"></table>
         </div>
     </div>
 
