@@ -66,7 +66,7 @@
                 <h3> You can't play this game with mobile or tablet devices!</h3>
             </div>
         </div>
-    {# If the user is logged as a developer and has published this game, show sales info of the game #}
+    {# If the user is logged as a developer and has published this game, show sales info of the game and link to game editing page #}
     {% elif ownership_status == "developer"  %}
         <div class="card-container">
             <div class="card gradient">
@@ -77,6 +77,8 @@
                 <p>In last 7 days: {{ sales_count_week }} </p>
                 <p>In last day: {{ sales_count_day }} </p>
                 <p>In last hour: {{ sales_count_hour }} </p>
+                <a class="btn btn-primary" href="{% url 'edit_game' game.slug %}">Edit game</a>
+                <a class="btn btn-primary" href="{% url 'unpublish_game_confirm' game.slug %}">Unpublish game</a>
             </div>
         </div>
 
@@ -127,4 +129,8 @@
             </ol>
         </div>
     </div>
+
+
+
+
 {% endblock %}
