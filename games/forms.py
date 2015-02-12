@@ -6,6 +6,7 @@ from django import forms
 
 from games.models import Player, Developer, Game
 
+
 name_regex = r"^[a-zA-Z]+$"
 username_regex = r"^[a-zA-Z0-9.@+-_]+$"
 
@@ -22,7 +23,7 @@ class LoginForm(AuthenticationForm):
         'invalid_login': _("Please enter a correct %(username)s and password. "
                            "Note that both fields may be case-sensitive."),
         'not_activated': _("You must activate your account before logging in."),
-        }
+    }
 
     def confirm_login_allowed(self, user):
         if not user.is_active:
@@ -43,7 +44,7 @@ class WsdGamesUserSignupForm(forms.ModelForm):
         "duplicate_username": _("A user with that username already exists."),
         "duplicate_email": _("A user with that email already exists."),
         "password_mismatch": _("The two password fields didn't match."),
-        }
+    }
     username = forms.RegexField(label=_("Username"), max_length=30, regex=username_regex,
                                 help_text=_("Required"),
                                 error_messages={
@@ -120,7 +121,7 @@ class DeveloperSignupForm(WsdGamesUserSignupForm):
     error_messages = WsdGamesUserSignupForm.error_messages.copy()
     error_messages.update({
         "duplicate_name": _("A developer with that name already exists.")
-        })
+    })
 
     name = forms.RegexField(label=_("Company name"), max_length=50, regex=name_regex)
     image_url = forms.URLField(label=_("Logo URL"), required=False)
@@ -156,7 +157,7 @@ class UsernameForm(forms.Form):
     """
     error_messages = {
         "duplicate_username": _("A user with that username already exists."),
-        }
+    }
 
     user_model = get_user_model()
 
@@ -189,7 +190,7 @@ class EditProfileForm(forms.Form):
         "duplicate_username": _("A user with that username already exists."),
         "duplicate_email": _("A user with that email already exists."),
         "password_mismatch": _("The two password fields didn't match."),
-        }
+    }
 
     username = forms.RegexField(label=_("Username"), max_length=30, regex=username_regex,
                                 error_messages={
@@ -236,7 +237,7 @@ class PlayerEditProfileForm(EditProfileForm):
     """
     Form which has profile editing functionality specific to player
     """
-    first_name = forms.RegexField(label=_("First name"), min_length=1,  max_length=50, regex=name_regex)
+    first_name = forms.RegexField(label=_("First name"), min_length=1, max_length=50, regex=name_regex)
     last_name = forms.RegexField(label=_("Last name"), min_length=1, max_length=50, regex=name_regex)
     about_me = forms.CharField(label=_("About me"), required=False, widget=forms.Textarea)
 
@@ -307,14 +308,15 @@ GAME MANAGING FORMS
 
 
 class GamePublishingForm(forms.ModelForm):
-
     class Meta:
         model = Game
         fields = ("name", "url", "image_url", "description", "categories", "price")
+        widgets = {
+            "categories": CheckboxSelectMultiple(),
+        }
 
 
 class GameEditForm(forms.ModelForm):
-
     class Meta:
         model = Game
         fields = ("name", "url", "image_url", "description", "categories", "price")
