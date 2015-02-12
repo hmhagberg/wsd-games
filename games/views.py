@@ -438,7 +438,7 @@ def category_detail(request, category_slug):
 def developer_detail(request, developers_slug):
     developer = get_object_or_404(Developer, slug=developers_slug)
     games = developer.games.all()
-    context = {"title": "Games by " + developer.name, "games": games}
+    context = {"title": "Games by " + developer.name, "games": games, "developer": developer}
     return render(request, "games/base_grid_gameCard.html", context)
 
 

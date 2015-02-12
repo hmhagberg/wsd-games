@@ -13,6 +13,11 @@ h1 {
 	color: #B32C2C;
 }
 
+/* Margin between developer info and search bar */
+#developer-info {
+	margin-bottom: 20px;
+}
+
 /* Search */
 #search-div {
 	margin: auto;
@@ -142,7 +147,8 @@ td, th {
 
 /* Popup messages (e.g. after login, logout, purchase...) */
 #messages-ul {
-	padding-left: 0;
+	padding-left: 20px;
+	padding-right: 20px;
 }
 .alert {
 	color: white;
