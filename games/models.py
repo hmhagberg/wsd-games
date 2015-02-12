@@ -3,6 +3,7 @@ import hmac
 import datetime
 
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.urlresolvers import reverse
@@ -52,6 +53,16 @@ class WsdGamesUser(AbstractUser):
 
     def is_developer(self):
         return hasattr(self, "developer")
+
+    def is_social_auth_user(self):
+        """
+        Check if user is authenticated through social auth by check if there's record of her in social auth DB tables.
+        """
+        try:
+            self.social_auth.get(user=self)
+            return True
+        except ObjectDoesNotExist:
+            return False
 
     def generate_new_token(self):
         msg = str(datetime.datetime.now())+self.username
