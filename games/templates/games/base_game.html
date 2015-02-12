@@ -21,7 +21,7 @@
                     var msg = {"messageType": "MESSAGE","message": "NO SAVED DATA"};
                 }
                 else {
-                    var msg = {"messageType": "LOAD", "gameState": {"score": {{ownership.saved_score}}, "playerItems": game_data.split(",")}};
+                    var msg = {"messageType": "LOAD", "gameState": {"score": {% if ownership.saved_score %}{{ownership.saved_score }}{% else %}0{% endif %}, "playerItems": game_data.split(",")}};
                 }
                 child.postMessage(msg, "*");
             }
@@ -200,7 +200,7 @@
     {# Google+ Share button #}
     <div id="share-button-container">
         <span class="hidden" itemprop="name">{{game.name}} - {{game.description}}</span>
-        <img class="hidden" itemprop="image" src="{{game.image_url}}">
+        <img class="hidden" itemprop="image" src="{{game.image_url}}" alt="{{game.name}} image">
         <script src="https://apis.google.com/js/platform.js" async defer></script>
         <div class="g-plus" data-action="share" data-annotation="none" data-height="24"></div>
     </div>
