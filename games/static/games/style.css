@@ -49,10 +49,21 @@ h1 {
 }
 .inner h2 {
 	text-align: center;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 .inner:hover {
 	border: 5px solid #B32C2C;
 	cursor: pointer;
+}
+.inner .game-description {
+	height: 80px;
+	overflow: hidden;
+}
+.inner .description {
+	height: 180px;
+	overflow: hidden;
 }
 
 /* Remove link decoration from category and developer cards */
@@ -111,6 +122,10 @@ h1 {
 .card {
 	display: inline-block;
 	padding: 20px;
+}
+
+.card-description {
+	max-width: 600px;
 }
 
 /* Highscore and sales info*/

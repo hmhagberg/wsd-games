@@ -142,7 +142,7 @@
                 <div class="img-container">
                     <img src="{{game.image_url}}" class="img-responsive img-circle" alt="{{game.name}} image">
                 </div>
-                <p>{{game.description}}</p>
+                <p class="card-description">{{game.description}}</p>
                 <p class="developer">Developer: <a href="
                 {% url 'developer_detail' game.developer.slug %}">{{game.developer.name}}</a></p>
                 <p>Categories: {% for category in game.categories.all %}<a href="

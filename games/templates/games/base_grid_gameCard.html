@@ -14,7 +14,7 @@
 		    	<div class="img-container">
 					<img src="{{developer.image_url}}" class="img-responsive img-circle" alt="{{developer.name}} image">
 				</div>
-				<p>{{ developer.description }}</p>
+				<p class="card-description">{{ developer.description }}</p>
 		    </div>
 		</div>
 	{% endif %}
@@ -42,7 +42,7 @@
 		<div class="img-container">
 			<img src="{{game.image_url}}" class="img-responsive img-circle" alt="{{game.name}} image">
 		</div>
-		<p>{{game.description}}</p>
+		<p class="game-description">{{game.description}}</p>
 		<p class="developer">Developer: <a href="{% url 'developer_detail' game.developer.slug %}">{{game.developer.name}}</a></p>
 		<p>Categories: {% for category in game.categories.all %}<a href="
 		{% url 'category_detail' category.slug %}">{{category}}</a> | {% endfor %}</p>
