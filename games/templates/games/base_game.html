@@ -78,19 +78,22 @@
         function isMobile() {
             return navigator.userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i);
         }
-        if( isMobile()) alert('Mobile');
-        else alert('desktop');
-    });
-
-    
+        // Hide divs based on users device
+        if( isMobile()) {
+            $("#desktop").addClass("hidden");
+        }
+        else {
+            $("#mobile").addClass("hidden");
+        }
+    }); 
 </script>
     {#  If the user is logged in as a player and has purchased the game, show the iframe that contains the game #}
     {% if ownership_status == "owned" %}
         <div class="card-container">
-            <div class="card gradient hidden-xs hidden-sm">
+            <div id="desktop" class="card gradient">
                 <iframe id="game" class=""src="{{game.url}}"></iframe>
             </div>
-            <div class="card gradient hidden-md hidden-lg">
+            <div id="mobile" class="card gradient">
                 <div class="img-container">
                     <img src="{{game.image_url}}" class="img-responsive img-circle" alt="{{game.name}} image">
                 </div>
