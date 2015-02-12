@@ -1,0 +1,17 @@
+{% extends "games/base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}WSD-Games - {{ game.name }}{% endblock %}
+
+{% block header %}Removing {{ game.name }}?{% endblock %}
+
+{% block content %}
+    <div class="card-container">
+        <div class="card gradient">
+            <h2>Are you sure you want to remove {{ game.name }}?</h2>
+            <a class="btn btn-danger" href="{% url 'unpublish_game' game.slug %}">Remove the game</a>
+            <a class="btn btn-primary" href="{% url 'game_detail' game.slug %}">Return</a>
+        </div>
+    </div>
+{% endblock %}

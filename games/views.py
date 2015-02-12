@@ -186,23 +186,40 @@ class SocialSignupSelectUsernameView(GenericWsdFormView):
         return response
 
 
-class EditGameView(View):
+class EditGameView(GenericWsdFormView):
+
+    form_class = GameEditForm
+    success_message = "Changes to the game have been saved."
+
+    title = "Edit game"
+    header = "Edit game"
+    submit_button_text = "Submit change"
 
     def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated():
-            form = GameEditForm()
-            return render(request, "games/base_edit_game.html", {"form": form,})
-
-    def post(self, request, *args, **kwargs):
-        form = GameEditForm(request.POST)
-
-        if form.is_valid():
-            game = form.save(commit=False)
-            game.developer = request.user.developer
-            game.save()
-            return redirect("games/"+game.slug)
+        game = get_object_or_404(Game, slug=self.args[0])
+        if not request.user.is_developer():
+            messages.error(request, "You must be a developer to manage the game.")
+            return redirect("home")
+        if  game.developer != request.user.developer:
+            messages.error(request, "You must be the developer of the game to manage the game.")
+            return redirect("home")
         else:
-            return render(request, "games/base_edit_game.html", {"form": form,})
+            return super(EditGameView, self).get(request, *args, **kwargs)
+            
+    def post(self, request, *args, **kwargs):
+        game = get_object_or_404(Game, slug=self.args[0])
+        form = GameEditForm(request.POST, instance=game)
+        if form.is_valid():
+            form.save()
+            messages.success(request, self.success_message)
+            return redirect(game.get_absolute_url())
+        else:
+            return super(EditGameView, self).post(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super(EditGameView, self).get_form_kwargs()
+        kwargs["instance"] = get_object_or_404(Game, slug=self.args[0])
+        return kwargs
 
 
 class GamePublishingView(GenericWsdFormView):
@@ -279,6 +296,33 @@ class EditProfileView(GenericWsdFormView):
         else:
             return EditProfileForm
 
+
+def unpublish_game_confirm(request, game_slug):
+    game = get_object_or_404(Game, slug=game_slug)
+    game_name = game.name
+    context = {'game': game}
+    if not request.user.is_developer():
+        messages.error(request, "You must log in as developer to manage games.")
+        return redirect("home")
+    elif game.developer != request.user.developer:
+        messages.error(request, "You can not manage a game published by someone else.")
+        return redirect("home")
+    else:
+        return render(request, 'games/game_removal_confirmation.html', context)
+
+def unpublish_game(request, game_slug):
+    game = get_object_or_404(Game, slug=game_slug)
+    game_name = game.name
+    if not request.user.is_developer():
+        messages.error(request, "You must log in as developer to manage games.")
+        return redirect("home")
+    elif game.developer != request.user.developer:
+        messages.error(request, "You can not manage a game published by someone else.")
+        return redirect("home")
+    else:
+        game.delete()
+        messages.success(request, game_name + " has been removed from the store.")
+        return redirect("home")
 
 def logout_view(request):
     logout(request)
