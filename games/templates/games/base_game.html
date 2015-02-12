@@ -72,6 +72,14 @@
 
         // Add highscores when page is loaded
         updateHighscores();
+
+        // Check for mobile users
+        // http://www.abeautifulsite.net/detecting-mobile-devices-with-javascript/
+        function isMobile() {
+            return navigator.userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i);
+        }
+        if( isMobile()) alert('Mobile');
+        else alert('desktop');
     });
 
     
