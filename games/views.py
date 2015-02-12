@@ -1,6 +1,5 @@
 import hashlib
 
-from django.conf import settings
 from django.contrib.auth import login, logout
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.auth.forms import PasswordChangeForm
@@ -16,96 +15,9 @@ from games.forms import *
 from games.utils import set_query_params
 
 
-def home(request):
-    games = Game.objects.all()
-    context = {"title": "Games", "games": games}
-    return render(request, 'games/base_grid_gameCard.html', context)
-
-
-class LoginView(FormView):
-    template_name = "games/auth/base_login.html"
-    form_class = LoginForm
-
-    def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated():
-            messages.warning(request, "You already are logged in.")
-            return redirect("home")
-        return super(LoginView, self).get(request, *args, **kwargs)
-
-    def form_valid(self, form):
-        login(self.request, form.get_user())
-        messages.success(self.request, "You have logged in.")
-        return redirect(self.request.GET.get("next") or "home")
-
-
-class SignupView(FormView):
-    """
-    View for handling signup.
-    """
-    template_name = "games/auth/base_signup.html"
-    form_class = WsdGamesUserSignupForm
-
-    def get_form_class(self):
-        if self.kwargs["dev_signup"] is None:
-            return PlayerSignupForm
-        else:
-            return DeveloperSignupForm
-
-    def get_context_data(self, **kwargs):
-        context = super(SignupView, self).get_context_data(**kwargs)
-        context.update(self.kwargs)
-        return context
-
-    def get(self, request, *args, **kwargs):
-        """
-        Display signup form. Player form is displayed by default but if dev_signup is set Developer form is displayed
-        instead. If request contains parameter 'activation_key' instead of displaying any form the key is checked
-        against any unactivated users. If match is found user is either activated or, if expired, prompted to
-        register again.
-        """
-        if request.user.is_authenticated():
-            messages.warning(request, "You already have an account.")
-            return redirect("home")
-
-        activation_key = request.GET.get("activation_key")
-        if activation_key:
-            confirmation = get_object_or_404(SignupActivation, key=activation_key)
-            if confirmation.has_expired():
-                confirmation.delete()
-                messages.error(request, "This account activation confirmation has expired. You have to sign up again")
-                return redirect("signup")
-            else:
-                confirmation.user.is_active = True
-                confirmation.user.save()
-                confirmation.delete()
-                messages.success(request, "Congratulations! Your account has been activated. You can now log in.")
-                return redirect("login")
-        else:
-            return super(SignupView, self).get(request, *args, **kwargs)
-
-    def form_valid(self, form):
-        user = form.save()
-        link = SignupView.send_activation_mail(user)
-        messages.success(self.request, "An activation email has been sent to the address you gave. "
-                                       "To complete the signup process click the activation link in the email.")
-        messages.debug(self.request, "Activation link: %s" % link)
-        return redirect("home")
-
-    @staticmethod
-    def send_activation_mail(user):
-        """
-        Create activation instance and send activation email to user.
-        """
-        activation = SignupActivation(user=user)
-        activation.save()
-
-        activation_link = "{domain}/signup?activation_key={key}".format(domain=settings.DOMAIN, key=activation.key)
-        message = "Thank you for signing up, {username}\n" \
-                  "To activate your account click the following link: {link}\n" \
-                  "The link expires in {expires_in} hours".format(username=user.username, link=activation_link,
-                                                                  expires_in=settings.ACTIVATION_EXPIRATION_HOURS)
-        send_mail("WSD Games Account Activation", message, "noreply@wsd-games.fi", [user.email])
-        return activation_link
+"""
+BASE VIEWS
+"""
 
 
 class GenericWsdFormView(FormView):
@@ -157,11 +69,116 @@ class GenericWsdFormView(FormView):
         return super(GenericWsdFormView, self).form_valid(form)
 
 
+"""
+AUTH VIEWS
+"""
+
+
+class LoginView(FormView):
+    """
+    View for logging in.
+    """
+
+    template_name = "games/auth/base_login.html"
+    form_class = LoginForm
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            messages.warning(request, "You already are logged in.")
+            return redirect("home")
+        return super(LoginView, self).get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        login(self.request, form.get_user())
+        messages.success(self.request, "You have logged in.")
+        return redirect(self.request.GET.get("next") or "home")
+
+
+def logout_view(request):
+    logout(request)
+    messages.success(request, "You have logged out")
+    return redirect("home")
+
+
+class SignupView(FormView):
+    """
+    View for handling signup.
+    """
+
+    template_name = "games/auth/base_signup.html"
+    form_class = WsdGamesUserSignupForm
+
+    def get_form_class(self):
+        if self.kwargs["dev_signup"] is None:
+            return PlayerSignupForm
+        else:
+            return DeveloperSignupForm
+
+    def get_context_data(self, **kwargs):
+        context = super(SignupView, self).get_context_data(**kwargs)
+        context.update({"dev_signup": self.kwargs["dev_signup"]})
+        return context
+
+    def get(self, request, *args, **kwargs):
+        """
+        Display signup form. Player form is displayed by default but if dev_signup is set Developer form is displayed
+        instead. If request contains parameter 'activation_key' instead of displaying any form the key is checked
+        against any unactivated users. If match is found user is either activated or, if expired, prompted to
+        register again.
+        """
+
+        if request.user.is_authenticated():
+            messages.warning(request, "You already have an account.")
+            return redirect("home")
+
+        activation_key = request.GET.get("activation_key")
+        if activation_key:
+            confirmation = get_object_or_404(SignupActivation, key=activation_key)
+            if confirmation.has_expired():
+                confirmation.delete()
+                messages.error(request, "This account activation confirmation has expired. You have to sign up again")
+                return redirect("signup")
+            else:
+                confirmation.user.is_active = True
+                confirmation.user.save()
+                confirmation.delete()
+                messages.success(request, "Congratulations! Your account has been activated. You can now log in.")
+                return redirect("login")
+        else:
+            return super(SignupView, self).get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        user = form.save()
+        link = SignupView.send_activation_mail(user)
+        messages.success(self.request, "An activation email has been sent to the address you gave. "
+                                       "To complete the signup process click the activation link in the email.")
+        messages.debug(self.request, "Activation link: %s" % link)
+        return redirect("home")
+
+    @staticmethod
+    def send_activation_mail(user):
+        """
+        Create activation instance and send activation email to user.
+        """
+        activation = SignupActivation(user=user)
+        activation.save()
+
+        activation_link = "{domain}/signup?activation_key={key}".format(domain=settings.DOMAIN, key=activation.key)
+        message = "Thank you for signing up, {username}\n" \
+                  "To activate your account click the following link: {link}\n" \
+                  "The link expires in {expires_in} hours".format(username=user.username, link=activation_link,
+                                                                  expires_in=settings.ACTIVATION_EXPIRATION_HOURS)
+        send_mail("WSD Games Account Activation", message, "noreply@wsd-games.fi", [user.email])
+        return activation_link
+
+
 class SocialSignupSelectUsernameView(GenericWsdFormView):
     """
-    View for selecting username when user logs in for the first time using social login. View checks that user has
-    'pipeline_ask_username' which is set in social auth pipeline. If the flag is not set user is redirected.
+    View for selecting username when user logs in for the first time using social login. View checks that session has
+    'pipeline_ask_username' flag which is set in ask_usernam in auth pipeline. If the flag is not set user is
+    redirected.
     """
+
     form_class = UsernameForm
 
     title = "Select username"
@@ -186,67 +203,9 @@ class SocialSignupSelectUsernameView(GenericWsdFormView):
         return response
 
 
-class EditGameView(GenericWsdFormView):
-
-    form_class = GameEditForm
-    success_message = "Changes to the game have been saved."
-
-    title = "Edit game"
-    header = "Edit game"
-    submit_button_text = "Submit change"
-
-    def get(self, request, *args, **kwargs):
-        game = get_object_or_404(Game, slug=self.args[0])
-        if not request.user.is_developer():
-            messages.error(request, "You must be a developer to manage the game.")
-            return redirect("home")
-        if  game.developer != request.user.developer:
-            messages.error(request, "You must be the developer of the game to manage the game.")
-            return redirect("home")
-        else:
-            return super(EditGameView, self).get(request, *args, **kwargs)
-            
-    def post(self, request, *args, **kwargs):
-        game = get_object_or_404(Game, slug=self.args[0])
-        form = GameEditForm(request.POST, instance=game)
-        if form.is_valid():
-            form.save()
-            messages.success(request, self.success_message)
-            return redirect(game.get_absolute_url())
-        else:
-            return super(EditGameView, self).post(request, *args, **kwargs)
-
-    def get_form_kwargs(self):
-        kwargs = super(EditGameView, self).get_form_kwargs()
-        kwargs["instance"] = get_object_or_404(Game, slug=self.args[0])
-        return kwargs
-
-
-class GamePublishingView(GenericWsdFormView):
-    """
-    View for publishing games. Only developers are allowed to publish games.
-    """
-
-    form_class = GamePublishingForm
-    success_message = "Your game has been published."
-
-    title = "Publish game"
-    header = "Publish game"
-    submit_button_text = "Publish"
-
-    def get(self, request, *args, **kwargs):
-        if not request.user.is_developer():
-            messages.error(request, "You must be developer to publish games")
-            return redirect("home")
-        else:
-            return super(GamePublishingView, self).get(request, *args, **kwargs)
-
-    def form_valid(self, form):
-        game = form.save(commit=False)
-        game.developer = self.request.user.developer
-        game.save()
-        messages.success(self.request, self.success_message)
-        return redirect(game.get_absolute_url())
+"""
+PROFILE EDITING VIEWS
+"""
 
 
 class ChangePasswordView(GenericWsdFormView):
@@ -297,9 +256,75 @@ class EditProfileView(GenericWsdFormView):
             return EditProfileForm
 
 
+"""
+GAME MANAGING VIEWS
+"""
+
+
+class EditGameView(GenericWsdFormView):
+    form_class = GameEditForm
+    success_message = "Changes to the game have been saved."
+
+    title = "Edit game"
+    header = "Edit game"
+    submit_button_text = "Submit change"
+
+    def get(self, request, *args, **kwargs):
+        game = get_object_or_404(Game, slug=self.args[0])
+        if not request.user.is_developer():
+            messages.error(request, "You must be a developer to manage the game.")
+            return redirect("home")
+        elif game.developer != request.user.developer:
+            messages.error(request, "You must be the developer of the game to manage the game.")
+            return redirect("home")
+        else:
+            return super(EditGameView, self).get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        game = get_object_or_404(Game, slug=self.args[0])
+        form = GameEditForm(request.POST, instance=game)
+        if form.is_valid():
+            form.save()
+            messages.success(request, self.success_message)
+            return redirect(game.get_absolute_url())
+        else:
+            return super(EditGameView, self).post(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super(EditGameView, self).get_form_kwargs()
+        kwargs["instance"] = get_object_or_404(Game, slug=self.args[0])
+        return kwargs
+
+
+class GamePublishingView(GenericWsdFormView):
+    """
+    View for publishing games. Only developers are allowed to publish games.
+    """
+
+    form_class = GamePublishingForm
+    success_message = "Your game has been published."
+
+    title = "Publish game"
+    header = "Publish game"
+    submit_button_text = "Publish"
+
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_developer():
+            messages.error(request, "You must be developer to publish games")
+            return redirect("home")
+        else:
+            return super(GamePublishingView, self).get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        game = form.save(commit=False)
+        game.developer = self.request.user.developer
+        game.save()
+        messages.success(self.request, self.success_message)
+        return redirect(game.get_absolute_url())
+
+
 def unpublish_game_confirm(request, game_slug):
     game = get_object_or_404(Game, slug=game_slug)
-    game_name = game.name
     context = {'game': game}
     if not request.user.is_developer():
         messages.error(request, "You must log in as developer to manage games.")
@@ -309,6 +334,7 @@ def unpublish_game_confirm(request, game_slug):
         return redirect("home")
     else:
         return render(request, 'games/game_removal_confirmation.html', context)
+
 
 def unpublish_game(request, game_slug):
     game = get_object_or_404(Game, slug=game_slug)
@@ -324,11 +350,16 @@ def unpublish_game(request, game_slug):
         messages.success(request, game_name + " has been removed from the store.")
         return redirect("home")
 
-def logout_view(request):
-    logout(request)
-    messages.success(request, "You have logged out")
-    return redirect("home")
 
+"""
+DISPLAY VIEWS
+"""
+
+
+def home(request):
+    games = Game.objects.all()
+    context = {"title": "Games", "games": games}
+    return render(request, 'games/base_grid_gameCard.html', context)
 
 def profiles(request, profile_slug):
     profile = get_object_or_404(Player, slug=profile_slug)
@@ -409,6 +440,11 @@ def developer_detail(request, developers_slug):
     games = developer.games.all()
     context = {"title": "Games by " + developer.name, "games": games}
     return render(request, "games/base_grid_gameCard.html", context)
+
+
+"""
+PAYMENT VIEWS
+"""
 
 
 class PaymentView(View):
@@ -492,7 +528,12 @@ class PaymentView(View):
         return render(request, "games/base_payment.html", {"game": game, "form": form})
 
 
-def api_objects(request, api_version, collection, response_format, object_id=""):
+"""
+API VIEWS
+"""
+
+
+def api_view(request, api_version, collection, response_format, object_id=""):
     """
     View for handling API requests. Supported query parameters are:
     - offset: Offset for returned object range
@@ -525,7 +566,7 @@ def api_objects(request, api_version, collection, response_format, object_id="")
 
         model, serializer, check_owner, id_field_name = api.model_info[collection]
         if object_id == "":
-            objs = model.objects.all()[offset:offset+limit]
+            objs = model.objects.all()[offset:offset + limit]
             data = []
             for obj in objs:
                 data.append(serializer(obj))

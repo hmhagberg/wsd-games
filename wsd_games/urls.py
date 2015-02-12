@@ -42,7 +42,7 @@ urlpatterns = patterns('',
     url(r'^my_games[/]?$', 'games.views.my_games', name='my_games'),
 
     url(r'^api/v(?P<api_version>\d+)/(?P<collection>profiles|games|categories|developers).(?P<response_format>json)$',
-        'games.views.api_objects'),
+        'games.views.api_view'),
     url(r'^api/v(?P<api_version>\d+)/(?P<collection>profiles|games|categories|developers)/(?P<object_id>[a-z0-9\-]+).'
-        r'(?P<response_format>json)$', 'games.views.api_objects'),
+        r'(?P<response_format>json)$', 'games.views.api_view'),
 )
