@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
+# Load Google API client secrets
 import json
 with open(os.path.dirname(__file__) + "/../client_secrets.json", "r") as jsonf:
     client_secrets = json.load(jsonf)
@@ -30,6 +31,7 @@ SID_KEY = "5dd2d7e5adfb3cfb061e4f134d6c1821"
 # HMAC key for generating API tokens
 API_SECRET = b"4B93C6C44D61C877FF58C7A5728C7"
 
+# Social auth keys
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = client_secrets["web"]["client_id"]
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = client_secrets["web"]["client_secret"]
 
@@ -61,6 +63,7 @@ ALLOWED_HOSTS = [
     "localhost",
 ]
 
+# Custom user model
 AUTH_USER_MODEL = 'games.WsdGamesUser'
 
 
@@ -119,7 +122,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = False  # FIXME: Enabling timezones leads to problems in SignupActivation.has_expired()
+USE_TZ = False
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
@@ -142,7 +145,7 @@ STATIC_URL = '/static/'
 DOMAIN = "http://localhost:8000"
 
 if "DYNO" in os.environ:
-    #DEBUG = False
+    DEBUG = False
     DOMAIN = "http://wsd-games.herokuapp.com"
     ALLOWED_HOSTS = ['*']    
     STATIC_ROOT = 'staticfiles'

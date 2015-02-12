@@ -1,15 +1,14 @@
 import json
 
-from django.shortcuts import get_object_or_404
-
 from games.models import *
 
-response_formats = {
-           # MIME type              Function to dump dict to proper format
-    "json": ("application/json",    lambda x: json.dumps(x, indent=2)),
-}
+"""
+Serializers serialize a single object into dict. If include_confidential is set to true then confidential (e.g. sales
+numbers) are included in serialized data. Serializers are free to decide resulting structure as long as it only contains
+dicts, lists and strings (or objects with __str__).
 
-# NOTE: Serializers must be here before serializers-dict
+NOTE: Serializers must be here before serializers-dict
+"""
 
 
 def _serialize_player(player_obj, include_confidential=False):
@@ -74,6 +73,12 @@ def _serialize_developer(developer_obj, include_confidential=False):
     return serialized
 
 
+"""
+_check_owner functions check if some user owns some object. If user own the object then confidential data is included in
+serialization.
+"""
+
+
 def _check_owner_player(player_obj, user):
     return player_obj.user == user
 
@@ -90,6 +95,9 @@ def _check_owner_developer(developer_obj, user):
     return developer_obj.user == user
 
 
+"""
+Model info mapping which is used to select proper serialization and ownership check functions.
+"""
 model_info = {     # Model      Serializer func         Ownership check func    Object id field name
     "profiles":     (Player,    _serialize_player,      _check_owner_player,    "slug"),
     "games":        (Game,      _serialize_game,        _check_owner_game,      "slug"),
@@ -98,23 +106,9 @@ model_info = {     # Model      Serializer func         Ownership check func    
 }
 
 
-def get_data(model_name, response_format, object_id, user):
-    data = None
-    serialized = ""
-    model, serializer, check_owner, id_field_name = model_info[model_name]
-    if object_id == "":
-        objs = model.objects.all()
-        data = []
-        for obj in objs:
-            data.append(serializer(obj))
-    else:
-        obj = get_object_or_404(model, **{id_field_name: object_id})
-        include_confidential = check_owner(obj, user)
-        data = serializer(obj, include_confidential)
-
-    # Add other format handlers here
-    if response_format == "json":
-        serialized = json.dumps(data, indent=2)
-
-    return serialized
-
+"""
+Mapping of supported response formats.
+"""
+response_formats = {   # MIME type              Function used to dump dict to proper format
+    "json":             ("application/json",    lambda x: json.dumps(x, indent=2)),
+    }
