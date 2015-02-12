@@ -381,6 +381,13 @@ function saveGame() {
 	msg = {"messageType": "SAVE", "gameState": {"playerItems": playerItems, "score": score}};
 	window.parent.postMessage(msg, "*");
 
+	var gameSaved = new createjs.Text("Game has been saved!", "30px Arial", "#ff0000");
+	gameSaved.x = 10;
+	gameSaved.y = 500;
+
+	stage.addChild(gameSaved);
+	stage.update();
+
 	// Save data to the game
 	saved_data = true;
 	saved_score = score;
@@ -409,6 +416,13 @@ function transferData() {
 function submitScore() {
 	msg = {"messageType": "SCORE", "score": score};
 	window.parent.postMessage(msg, "*");
+
+	var scoreSubmitted = new createjs.Text("Score has been submitted!", "30px Arial", "#ff0000");
+	scoreSubmitted.x = 10;
+	scoreSubmitted.y = 500;
+
+	stage.addChild(scoreSubmitted);
+	stage.update();
 };
 
 // Listens for key presses
@@ -445,14 +459,24 @@ function onKeyDown(x) {
   	// Submit your highscore after game
   	else if (x.keyCode === 49 && view === "endGame") submitScore();
   	// Return to main menu
-  	else if (x.keyCode === 50 && view === "endGame") mainMenu();
+  	else if (x.keyCode === 50 && view === "endGame") {
+  		loadData();
+		setTimeout(function(){
+			mainMenu();
+		}, 500);
+	}
 
   	// Continue a paused game
   	else if (x.keyCode === 49 && view === "pauseGame") continueGame();
   	// Save current game
   	else if (x.keyCode === 50 && view === "pauseGame") saveGame();
   	// Exit the game without saving and return to main menu
-  	else if (x.keyCode === 51 && view === "pauseGame") mainMenu();
+  	else if (x.keyCode === 51 && view === "pauseGame") {
+  		loadData();
+		setTimeout(function(){
+			mainMenu();
+		}, 500);
+	}
 };
 
 $(document).keydown(onKeyDown);
@@ -464,6 +488,9 @@ window.addEventListener("message", function(evt) {
 		saved_score = parseInt(evt.data.gameState.score);
 		saved_level = parseInt(evt.data.gameState.playerItems[0]);
 		var wormLength = parseInt(evt.data.gameState.playerItems[1]);
+
+		// Clear saved worm
+		saved_worm = [];
 
 		// Create worms head object from saved data
 		var headGraphics = new createjs.Graphics();
@@ -486,6 +513,9 @@ window.addEventListener("message", function(evt) {
 
 		saved_appleBoolean = evt.data.gameState.playerItems[wormLength + 2];
 		saved_direction = evt.data.gameState.playerItems[wormLength + 3];
+
+		// Clear saved apples
+		saved_apples = [];
 
 		// Create apple object from saved data
 		var appleGraphics = new createjs.Graphics();
