@@ -311,18 +311,12 @@ class GamePublishingForm(forms.ModelForm):
     class Meta:
         model = Game
         fields = ("name", "url", "image_url", "description", "categories", "price")
-        widgets = {
-            "categories": CheckboxSelectMultiple(),
-        }
 
 
 class GameEditForm(forms.ModelForm):
     class Meta:
         model = Game
         fields = ("name", "url", "image_url", "description", "categories", "price")
-        widgets = {
-            "categories": CheckboxSelectMultiple(),
-        }
 
 
 """
