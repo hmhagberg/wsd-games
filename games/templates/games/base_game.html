@@ -28,6 +28,9 @@
             // Forward submitted score to django
             else if (data.messageType === "SCORE") {
                 if (!isNaN(data.score)){
+                    $("#highscore-header").html("Loading...");
+
+                    $("#highscore-list").html("");
                     $.ajax({
                         type: 'POST',
                         url: '{% url 'game_detail' game.slug %}',
@@ -60,6 +63,7 @@
                 data: data,
             }).done(function(data) {
                 $("#highscore-list").html("<tr><th>Username</th><th>Score</th><tr>");
+                $("#highscore-header").html("Highscores");
                 for (var i = 0; i < data.highscores.length; i++) {
                     $("#highscore-list").append("<tr><td>" + (i+1) + ". " + data.highscores[i].username + "</td><td>" + data.highscores[i].score + "</td></tr>");
                 }
@@ -144,7 +148,7 @@
     {# Highscores #}
     <div class="card-container">
         <div class="card gradient">
-            <h3>Highscores</h3>
+            <h3 id="highscore-header">Highscores</h3>
             <table id="highscore-list"></table>
         </div>
     </div>
