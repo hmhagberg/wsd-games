@@ -109,9 +109,14 @@ h1 {
 }
 
 /* Highscore list */
-ol {
+#highscore-list {
 	text-align: left;
-	padding-left: 20px;
+}
+th {
+	text-decoration: underline;
+}
+td, th {
+    padding: 10px;
 }
 
 /* Force the form labels to appear on one row */
@@ -129,6 +134,7 @@ ol {
 	float: right;
 }
 
+/* Color invalid input field (e.g. login signup) */
 .is-invalid {
     border-color: #900;
     background-color: #FDD;
