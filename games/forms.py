@@ -6,12 +6,18 @@ from django import forms
 
 from games.models import Player, Developer, Game
 
-
 name_regex = r"^[a-zA-Z]+$"
 username_regex = r"^[a-zA-Z0-9.@+-_]+$"
 
+"""
+AUTH FORMS
+"""
+
 
 class LoginForm(AuthenticationForm):
+    """
+    Login form
+    """
     error_messages = {
         'invalid_login': _("Please enter a correct %(username)s and password. "
                            "Note that both fields may be case-sensitive."),
@@ -30,6 +36,9 @@ class LoginForm(AuthenticationForm):
 
 
 class WsdGamesUserSignupForm(forms.ModelForm):
+    """
+    Base signup form for registering to the service. Based on Django's UserCreationForm
+    """
     error_messages = {
         "duplicate_username": _("A user with that username already exists."),
         "duplicate_email": _("A user with that email already exists."),
@@ -83,6 +92,9 @@ class WsdGamesUserSignupForm(forms.ModelForm):
 
 
 class PlayerSignupForm(WsdGamesUserSignupForm):
+    """
+    Form which has signup functionality specific to players
+    """
     first_name = forms.RegexField(label=_("First name"), max_length=50, regex=name_regex)
     last_name = forms.RegexField(label=_("Last name"), max_length=50, regex=name_regex)
 
@@ -102,6 +114,9 @@ class PlayerSignupForm(WsdGamesUserSignupForm):
 
 
 class DeveloperSignupForm(WsdGamesUserSignupForm):
+    """
+    Form which has signup functionality specific to developers
+    """
     error_messages = WsdGamesUserSignupForm.error_messages.copy()
     error_messages.update({
         "duplicate_name": _("A developer with that name already exists.")
@@ -135,7 +150,39 @@ class DeveloperSignupForm(WsdGamesUserSignupForm):
         return user
 
 
+class UsernameForm(forms.Form):
+    """
+    Form for asking username when users sign in with social auth for the first time
+    """
+    error_messages = {
+        "duplicate_username": _("A user with that username already exists."),
+        }
+
+    user_model = get_user_model()
+
+    username_from_user = forms.RegexField(label=_("Username"), max_length=30, regex=username_regex,
+                                          error_messages={
+                                              "invalid": _("This value may contain only letters, numbers and "
+                                                           "@/./+/-/_ characters.")})
+
+    def clean_username_from_user(self):
+        username_from_user = self.cleaned_data["username_from_user"]
+        try:
+            self.user_model._default_manager.get(username=username_from_user)
+        except self.user_model.DoesNotExist:
+            return username_from_user
+        raise forms.ValidationError(self.error_messages["duplicate_username"], code="duplicate_username")
+
+
+"""
+PROFILE FORMS
+"""
+
+
 class EditProfileForm(forms.Form):
+    """
+    Base form for editing user profiles.
+    """
     user_model = get_user_model()
 
     error_messages = {
@@ -186,6 +233,9 @@ class EditProfileForm(forms.Form):
 
 
 class PlayerEditProfileForm(EditProfileForm):
+    """
+    Form which has profile editing functionality specific to player
+    """
     first_name = forms.RegexField(label=_("First name"), min_length=1,  max_length=50, regex=name_regex)
     last_name = forms.RegexField(label=_("Last name"), min_length=1, max_length=50, regex=name_regex)
     about_me = forms.CharField(label=_("About me"), required=False, widget=forms.Textarea)
@@ -210,6 +260,14 @@ class PlayerEditProfileForm(EditProfileForm):
 
 
 class DeveloperEditProfileForm(EditProfileForm):
+    """
+    Form which has profile editing functionality specific to player
+    """
+    error_messages = EditProfileForm.error_messages.copy()
+    error_messages.update({
+        "duplicate_name": _("A developer with that name already exists.")
+    })
+
     name = forms.RegexField(label=_("Company name"), max_length=50, regex=name_regex)
     image_url = forms.URLField(label=_("Logo URL"), required=False)
     description = forms.CharField(label=_("Company description"), required=False, widget=forms.Textarea)
@@ -222,6 +280,16 @@ class DeveloperEditProfileForm(EditProfileForm):
                                   "description": self.user.developer.description})
         super(DeveloperEditProfileForm, self).__init__(user, *args, **kwargs)
 
+    def clean_name(self):
+        name = self.cleaned_data["name"]
+        try:
+            other = Developer.objects.get(name=name)
+            if self.user.id == other.id:
+                return name
+        except Developer.DoesNotExist:
+            return name
+        raise forms.ValidationError(self.error_messages["duplicate_name"], code="duplicate_name")
+
     def save(self, commit=True):
         super(DeveloperEditProfileForm, self).save(commit=True)
 
@@ -231,6 +299,11 @@ class DeveloperEditProfileForm(EditProfileForm):
         if commit:
             self.user.developer.save()
         return self.user
+
+
+"""
+GAME MANAGING FORMS
+"""
 
 
 class GamePublishingForm(forms.ModelForm):
@@ -250,7 +323,15 @@ class GameEditForm(forms.ModelForm):
         }
 
 
+"""
+PAYMENT FORMS
+"""
+
+
 class PaymentForm(forms.Form):
+    """
+    Form which has data necessary to make payments with payment service.
+    """
     pid = forms.CharField(widget=forms.HiddenInput)
     sid = forms.CharField(widget=forms.HiddenInput)
     success_url = forms.URLField(widget=forms.HiddenInput)
@@ -260,23 +341,4 @@ class PaymentForm(forms.Form):
     amount = forms.DecimalField(widget=forms.HiddenInput)
 
 
-class UsernameForm(forms.Form):
-    error_messages = {
-        "duplicate_username": _("A user with that username already exists."),
-        }
-
-    user_model = get_user_model()
-
-    username_from_user = forms.RegexField(label=_("Username"), max_length=30, regex=username_regex,
-                                          error_messages={
-                                          "invalid": _("This value may contain only letters, numbers and "
-                                                       "@/./+/-/_ characters.")})
-
-    def clean_username_from_user(self):
-        username_from_user = self.cleaned_data["username_from_user"]
-        try:
-            self.user_model._default_manager.get(username=username_from_user)
-        except self.user_model.DoesNotExist:
-            return username_from_user
-        raise forms.ValidationError(self.error_messages["duplicate_username"], code="duplicate_username")
 
