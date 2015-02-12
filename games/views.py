@@ -23,7 +23,7 @@ BASE VIEWS
 class GenericWsdFormView(FormView):
     """
     Generic view that can be used when a single form needs to be displayed. Designed to be used with
-    'games/base_generic_form.html' template.
+    'games/base_genericForm.html' template.
 
     In addition to what there normally is in FormView, the following attributes can be changed:
     - title: Title of the page
@@ -35,7 +35,7 @@ class GenericWsdFormView(FormView):
     All attributes have getter methods if their content needs to be changed dynamically.
     """
 
-    template_name = "games/base_generic_form.html"
+    template_name = "games/base_genericForm.html"
     success_url = "/"
 
     title = ""
@@ -333,7 +333,7 @@ def unpublish_game_confirm(request, game_slug):
         messages.error(request, "You can not manage a game published by someone else.")
         return redirect("home")
     else:
-        return render(request, 'games/game_removal_confirmation.html', context)
+        return render(request, 'games/base_gameRemovalConfirmation.html', context)
 
 
 def unpublish_game(request, game_slug):
@@ -494,7 +494,9 @@ class PaymentView(View):
     def post(self, request, *args, **kwargs):
         """
         POST requests generate a form with payment details for game specified in the request. Payment is associated
-        with the authenticated user. The generated form should be submitted to the payment service.
+        with the authenticated user. The generated form should be submitted to the payment service (i.e. this view
+        renders confirmation page and when user clicks submit the form generated in this view is submitted to payment
+        service.)
         """
         game = get_object_or_404(Game, id=request.POST["game_id"])
 
