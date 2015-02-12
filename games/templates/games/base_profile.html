@@ -22,11 +22,13 @@
 
             {# Show profile information and settings buttons only for the player who owns the profile #}
             {% if profile.user == user %}
-                <p>Name: {{profile.user.first_name}} {{profile.user.last_name}}</p>
-                <p>Email: {{profile.user.email}}</p>
+                <p>Name: {{ profile.user.get_full_name }}</p>
+                <p>Email: {{ profile.user.email }}</p>
                 <p>API token: {{ profile.user.api_token }}</p>
+                {% if not profile.user.is_social_auth_user %}
+                    <a class="btn btn-primary" href="{% url 'change_password' %}">Change password</a>
+                {% endif %}
                 <a class="btn btn-primary" href="{% url 'edit_profile' %}">Edit profile</a>
-                <a class="btn btn-primary" href="{% url 'change_password' %}">Change password</a>
             {% endif %}
         </div>
     </div>

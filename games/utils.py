@@ -3,6 +3,7 @@ import re
 
 from django.utils.text import slugify
 
+
 def set_query_params(response, **kwargs):
     """
     Set (GET) query parameters for response. NOTE: This function does not support multiple calls for single response.
