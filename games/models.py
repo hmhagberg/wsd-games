@@ -37,6 +37,9 @@ class AbstractSlugModel(models.Model):
 
 
 class WsdGamesUser(AbstractUser):
+    """
+    Custom user model
+    """
     api_token = models.CharField(max_length=40, unique=True)
 
     def save(self, *args, **kwargs):
