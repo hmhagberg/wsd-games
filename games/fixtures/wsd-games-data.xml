@@ -79,16 +79,19 @@
     <object pk="1" model="games.player">
         <field type="SlugField" name="slug">pekkis</field>
         <field to="games.wsdgamesuser" name="user" rel="OneToOneRel">1</field>
+        <field type="TextField" name="about_me">They want to break his legs. It's a good thing he's already got that little scooter. They don't appreciate him. It's his glasses… they make him look like a lizard. Plus he's self-conscious. Even it means me taking a chubby… I will suck it up. Why are you squeezing me with your body? Fried cheese… with club sauce. Popcorn shrimp… with club sauce. Chicken fingers… with spicy club sauce.</field>
     </object>
 
     <object pk="2" model="games.player">
         <field type="SlugField" name="slug">s1mppa</field>
         <field to="games.wsdgamesuser" name="user" rel="OneToOneRel">2</field>
+        <field type="TextField" name="about_me">We need a name. Maybe 'Operation Hot Mother'. You're Killing Me, Buster. Everybody dance… NOW. Hey, if I can't find a horny immigrant by then, I don't deserve to stay. When a.. man.. needs to prove to a woman that he's actually.. [pause].. When a man loves a woman.. I'M A MONSTER!! You can always tell a Milford man.</field>
     </object>
 
     <object pk="3" model="games.player">
         <field type="SlugField" name="slug">jessemies</field>
         <field to="games.wsdgamesuser" name="user" rel="OneToOneRel">3</field>
+        <field type="TextField" name="about_me">I was once called the worst audience participant Cirque du Soleil ever had. Oh please. They didn't sneak into this country to be your friends. Here he comes. Here comes John Wayne. Ah, it is a rock, though. Should beat everything. Gob: There's not a lot of logic to it. The only thing more terrifying than the escaped lunatic's hook was his twisted call… Hey campers! Look, you are playing adults…with fully formed libidos, not 2 young men playing grab-ass in the shower. Family Love Michael. The Man Inside Me seems well reviewed.</field>
     </object>
 
     <!-- DEVELOPERS -->
@@ -97,6 +100,7 @@
         <field type="SlugField" name="slug">pelifirma</field>
         <field type="CharField" name="name">Pelifirma</field>
         <field to="games.wsdgamesuser" name="user" rel="OneToOneRel">4</field>
+        <field type="TextField" name="description">Bacon ipsum dolor amet ribeye adipisicing t-bone beef ribs turkey velit qui pancetta brisket enim exercitation. Ex biltong deserunt, in ball tip sunt culpa. In brisket pork chop exercitation officia turducken. Non sausage reprehenderit short loin spare ribs commodo pig, ham landjaeger ut do andouille pancetta. Dolore aliquip pork loin ad. Dolore esse salami, pastrami consequat doner chuck fatback meatball ham hock shoulder sint hamburger.</field>
     </object>
 
     <object pk="2" model="games.developer">
@@ -104,6 +108,7 @@
         <field type="CharField" name="name">Rovio</field>
         <field to="games.wsdgamesuser" name="user" rel="OneToOneRel">5</field>
         <field type="URLField" name="image_url">http://phandroid.s3.amazonaws.com/wp-content/uploads/2011/09/Rovio_Academy_logo-150x150.png</field>
+        <field type="TextField" name="description">Ut bacon strip steak, doner tri-tip nulla alcatra ex drumstick porchetta ut ipsum et ea cupidatat. Brisket laborum spare ribs landjaeger eu veniam in consectetur pork non aliqua corned beef ground round filet mignon. Turkey short ribs occaecat spare ribs, kevin ham ullamco nostrud swine venison salami pig pariatur eiusmod. Corned beef kielbasa landjaeger commodo ut.</field>
     </object>
 
     <object pk="3" model="games.developer">
@@ -111,6 +116,7 @@
         <field type="CharField" name="name">SuperCell</field>
         <field to="games.wsdgamesuser" name="user" rel="OneToOneRel">6</field>
         <field type="URLField" name="image_url">https://unityads.unity3d.com/assets/img/logo-supercell.png</field>
+        <field type="TextField" name="description">Ipsum magna nisi jerky, sint tail consectetur exercitation. Aliqua exercitation jerky ad. Swine bacon ground round mollit eiusmod. Venison ball tip pastrami ad voluptate deserunt ipsum chuck ut reprehenderit.</field>
     </object>
 
     <object pk="4" model="games.developer">
@@ -118,6 +124,7 @@
         <field type="CharField" name="name">Valve</field>
         <field to="games.wsdgamesuser" name="user" rel="OneToOneRel">7</field>
         <field type="URLField" name="image_url">http://combineoverwiki.net/images/thumb/6/6a/Head_anim.gif/200px-Head_anim.gif</field>
+        <field type="TextField" name="description">Ipsum prosciutto boudin id cupim eu capicola. Nostrud dolore jerky, excepteur andouille capicola consectetur sunt pork chop adipisicing. Drumstick dolore cupidatat ipsum tri-tip exercitation nulla sunt incididunt bacon pork loin. Labore nulla laborum voluptate kielbasa short ribs veniam.</field>
     </object>
 
     <object pk="4" model="games.developer">
@@ -125,6 +132,7 @@
         <field type="CharField" name="name">Rockstar</field>
         <field to="games.wsdgamesuser" name="user" rel="OneToOneRel">8</field>
         <field type="URLField" name="image_url">http://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Rockstar_Games_logo.svg/2000px-Rockstar_Games_logo.svg.png</field>
+        <field type="TextField" name="description">Esse pastrami strip steak mollit ullamco enim quis minim chuck in cillum cupim tongue ground round sint. Salami corned beef cillum prosciutto consectetur tri-tip ut dolore do ball tip irure lorem. Fugiat nulla mollit cillum officia magna. Tongue jowl biltong ham hock tail. Elit et ullamco ribeye leberkas capicola incididunt meatloaf adipisicing alcatra shoulder qui. Excepteur culpa qui frankfurter. Quis bacon consequat velit pancetta anim lorem fugiat shank flank enim jowl.</field>
     </object>
 
     <object pk="5" model="games.developer">
@@ -132,6 +140,7 @@
         <field type="CharField" name="name">King</field>
         <field to="games.wsdgamesuser" name="user" rel="OneToOneRel">9</field>
         <field type="URLField" name="image_url">http://www.thedrum.com/uploads/drum_basic_article/105567/main_images/k2_0.png</field>
+        <field type="TextField" name="description">Cillum ex kevin dolore beef ribs. Strip steak picanha velit anim, turkey jerky shankle salami voluptate ribeye chicken. Kielbasa jerky tempor pancetta, cupidatat pork belly doner hamburger laborum enim reprehenderit. Meatball duis consequat, nisi kielbasa cupidatat reprehenderit salami shank capicola. Sausage est turducken, ea velit nisi jerky et cupim porchetta sint incididunt. Frankfurter rump cupidatat jerky sint short loin officia.</field>
     </object>
 
     <!-- CATEGORIES -->
@@ -140,24 +149,28 @@
         <field type="CharField" name="name">Action</field>
         <field type="SlugField" name="slug">action</field>
         <field type="URLField" name="image_url">http://www.gamekyo.com/Webmasters/Images/8169620091020_225701_7_big.jpg</field>
+        <field type="TextField" name="description">The action game is a video game genre that emphasizes physical challenges, including hand–eye coordination and reaction-time. The genre includes diverse subgenres such as fighting games, shooter games and platform games which are widely considered the most important action games, though some real-time strategy games are also considered to be action games.</field>
     </object>
 
     <object pk="2" model="games.category">
         <field type="CharField" name="name">Puzzle</field>
         <field type="SlugField" name="slug">puzzle</field>
         <field type="URLField" name="image_url">http://www.psdgraphics.com/file/jigsaw-puzzle-piece.jpg</field>
+        <field type="TextField" name="description">Puzzle video games are a genre of video games that emphasize puzzle solving. The types of puzzles can test many problem solving skills including logic, pattern recognition, sequence solving, and word completion.</field>
     </object>
 
     <object pk="3" model="games.category">
         <field type="CharField" name="name">Adventure</field>
         <field type="SlugField" name="slug">adventure</field>
         <field type="URLField" name="image_url">http://fc03.deviantart.net/fs71/f/2013/232/e/6/bilbo_baggins_by_otisframpton-d6iys22.jpg</field>
+        <field type="TextField" name="description">An adventure game is a video game in which the player assumes the role of protagonist in an interactive story driven by exploration and puzzle-solving.[1] The genre's focus on story allows it to draw heavily from other narrative-based media such as literature and film, encompassing a wide variety of literary genres. Nearly all adventure games (text and graphic) are designed for a single player, since this emphasis on story and character makes multi-player design difficult.[2]</field>
     </object>
 
     <object pk="4" model="games.category">
         <field type="CharField" name="name">Arcade</field>
         <field type="SlugField" name="slug">arcade</field>
         <field type="URLField" name="image_url">http://arcadeheroes.com/wp-content/uploads/2011/12/331535_220752601333564_220740004668157_507099_1849497045_o.jpg</field>
+        <field type="TextField" name="description">An arcade game (or coin-op) is a coin-operated entertainment machine, usually installed in public businesses, such as restaurants, bars, and particularly amusement arcades. Most arcade games are video games, pinball machines, electro-mechanical games, redemption games, and merchandisers (such as claw cranes).</field>
     </object>
 
     <!-- GAMES -->
@@ -177,7 +190,7 @@
 
     <object pk="2" model="games.game">
         <field type="CharField" name="name">Angry Birds</field>
-        <field type="TextField" name="description">Super awesome game!!!</field>
+        <field type="TextField" name="description">Zombie ipsum reversus ab viral inferno, nam rick grimes malum cerebro. De carne lumbering animata corpora quaeritis. Summus brains sit​​, morbo vel maleficia? De apocalypsi gorger omero undead survivor dictum mauris. </field>
         <field type="URLField" name="url">http://webcourse.cs.hut.fi/game.html</field>
         <field type="URLField" name="image_url">http://www.jbgnews.com/wp-content/uploads/2014/10/Angry-Birds-Maker-Rovio-Entertainment-Slashing-130-Jobs.jpg</field>
         <field type="SlugField" name="slug">angry-birds</field>
@@ -191,7 +204,7 @@
 
     <object pk="3" model="games.game">
         <field type="CharField" name="name">Crash Bandicoot</field>
-        <field type="TextField" name="description">Awesome game</field>
+        <field type="TextField" name="description">So get a witch's shawl on a broomstick you can crawl on. Were gonna pay a call on the Addams Family. He's gainin' on you so you better look alive. He busy revin' up his Powerful Mach 5. Sunday Monday Happy Days. Tuesday Wednesday Happy Days. Thursday Friday Happy Days.Saturday what a day. Groovin' all week with you.</field>
         <field type="URLField" name="url">http://webcourse.cs.hut.fi/game.html</field>
         <field type="URLField" name="image_url">http://fc09.deviantart.net/fs43/f/2009/065/1/8/crash_bandicoot_by_leomitsu.jpg</field>
         <field type="SlugField" name="slug">crash-bandicoot</field>
@@ -219,7 +232,7 @@
 
     <object pk="5" model="games.game">
         <field type="CharField" name="name">Spyro Adventures</field>
-        <field type="TextField" name="description">Go for an adventure with a crazy dragon</field>
+        <field type="TextField" name="description">Collaboratively administrate empowered markets via plug-and-play networks. Dynamically procrastinate B2C users after installed base benefits. Dramatically visualize customer directed convergence without revolutionary ROI.</field>
         <field type="URLField" name="url">http://webcourse.cs.hut.fi/game.html</field>
         <field type="URLField" name="image_url">http://www.skylanders.com/content/dam/atvi/skylanders/base/explore-skylands/explore-ssa/spyro.png</field>
         <field type="SlugField" name="slug">spyro-adventures</field>
@@ -249,7 +262,7 @@
 
     <object pk="7" model="games.game">
         <field type="CharField" name="name">Fruit Ninja</field>
-        <field type="TextField" name="description">Slash some fruits</field>
+        <field type="TextField" name="description">SVHS 8-bit High Life taxidermy Bushwick gastropub. Brunch wolf YOLO, vegan tofu Thundercats roof party hella fixie Etsy. Roof party gentrify Shoreditch Banksy, gastropub crucifix XOXO retro mustache fingerstache occupy. Cliche Etsy Godard, food truck fashion axe vinyl ennui 8-bit kale chips McSweeney's distillery bicycle rights meh 90's artisan.</field>
         <field type="URLField" name="url">http://webcourse.cs.hut.fi/game.html</field>
         <field type="URLField" name="image_url">http://3.bp.blogspot.com/-yA3Cchia2WA/UNg69Dcp2kI/AAAAAAAAANc/gWjQUnvzf-U/s1600/fruit-ninja1.png</field>
         <field type="SlugField" name="slug">fruit-ninja</field>
@@ -263,7 +276,7 @@
 
     <object pk="8" model="games.game">
         <field type="CharField" name="name">Final Fantasy XVI</field>
-        <field type="TextField" name="description">Make your fantasy come true</field>
+        <field type="TextField" name="description">Phasellizzle i'm in the shizzle volutpizzle shizzle my nizzle crocodizzle. Ut go to hizzle adipiscing lorem. Boom shackalack nizzle est. Shit sapizzle massa, ghetto nizzle, brizzle fo shizzle, fermentum quizzle, pede.</field>
         <field type="URLField" name="url">http://webcourse.cs.hut.fi/game.html</field>
         <field type="URLField" name="image_url">http://cdn.segmentnext.com/wp-content/uploads/2014/11/Final-Fantasy-Explorers.png</field>
         <field type="SlugField" name="slug">final-fantasy-xvi</field>
@@ -276,7 +289,7 @@
 
     <object pk="9" model="games.game">
         <field type="CharField" name="name">Call of Duty</field>
-        <field type="TextField" name="description">Play the most awesome game in the the world</field>
+        <field type="TextField" name="description">Vangelis. Globular star cluster ship of the imagination. Light years? Drake Equation dream of the mind's eye courage of our questions corpus callosum a very small stage in a vast cosmic arena hearts of the stars, permanence of the stars! Colonies Flatland encyclopaedia galactica citizens </field>
         <field type="URLField" name="url">http://webcourse.cs.hut.fi/game.html</field>
         <field type="URLField" name="image_url">http://www.luxeimprints.com/wp-content/uploads/2013/10/COD-Ghost.jpg</field>
         <field type="SlugField" name="slug">call-of-duty</field>
@@ -290,7 +303,7 @@
 
     <object pk="10" model="games.game">
         <field type="CharField" name="name">Need for Speed</field>
-        <field type="TextField" name="description">Race your car to victory</field>
+        <field type="TextField" name="description">Lorizzle shizznit my shizz sizzle sure, fizzle adipiscing check out this. Nullizzle sapizzle velit, away volutpat, fizzle quis, pot vizzle, dizzle. Pellentesque eget tortizzle. Crackalackin erizzle. Fo shizzle izzle dolor dapibus gangster i saw beyonces tizzles and my pizzle went crizzle fizzle. Maurizzle pellentesque nibh et bling bling. Hizzle crazy tortor.</field>
         <field type="URLField" name="url">http://webcourse.cs.hut.fi/game.html</field>
         <field type="URLField" name="image_url">http://cdn.www.needforspeed.com/sites/default/files/imagecache/car_main/car/images/moviemustang3_10.jpg</field>
         <field type="SlugField" name="slug">need-for-speed</field>
@@ -303,7 +316,7 @@
 
     <object pk="11" model="games.game">
         <field type="CharField" name="name">Counter Strike</field>
-        <field type="TextField" name="description">Shoot some terrorists</field>
+        <field type="TextField" name="description">User experience client lean startup holy grail business model canvas influencer business plan buyer non-disclosure agreement angel investor deployment gamification infrastructure burn rate. Customer non-disclosure agreement first mover advantage iPhone accelerator. </field>
         <field type="URLField" name="url">http://webcourse.cs.hut.fi/game.html</field>
         <field type="URLField" name="image_url">http://hizli-torrent.com/dynamic/glry/images45.jpg</field>
         <field type="SlugField" name="slug">counter-strike</field>
@@ -317,7 +330,7 @@
 
     <object pk="12" model="games.game">
         <field type="CharField" name="name">Pokemon</field>
-        <field type="TextField" name="description">A game you must play</field>
+        <field type="TextField" name="description">Prototype research development freemium conversion. Rockstar strategy customer. Infographic long tail social proof freemium stealth assets responsive web design ecosystem gen-z. Channels business-to-consumer success. Holy grail hypotheses direct mailing</field>
         <field type="URLField" name="url">http://webcourse.cs.hut.fi/game.html</field>
         <field type="URLField" name="image_url">http://assets22.pokemon.com/assets/cms2/img/pokedex/full/007.png</field>
         <field type="SlugField" name="slug">pokemon</field>
@@ -334,28 +347,24 @@
         <field to="games.game" name="game" rel="ManyToOneRel">2</field>
         <field to="games.player" name="player" rel="ManyToOneRel">3</field>
         <field type="PositiveIntegerField" name="highscore">100</field>
-        <field type="PositiveIntegerField" name="rating">3</field>
     </object>
 
     <object pk="2" model="games.ownership">
         <field to="games.game" name="game" rel="ManyToOneRel">2</field>
         <field to="games.player" name="player" rel="ManyToOneRel">1</field>
         <field type="PositiveIntegerField" name="highscore">300</field>
-        <field type="PositiveIntegerField" name="rating">4</field>
     </object>
 
     <object pk="3" model="games.ownership">
         <field to="games.game" name="game" rel="ManyToOneRel">1</field>
         <field to="games.player" name="player" rel="ManyToOneRel">2</field>
         <field type="PositiveIntegerField" name="highscore">147</field>
-        <field type="PositiveIntegerField" name="rating">2</field>
     </object>
 
     <object pk="4" model="games.ownership">
         <field to="games.game" name="game" rel="ManyToOneRel">3</field>
         <field to="games.player" name="player" rel="ManyToOneRel">2</field>
         <field type="PositiveIntegerField" name="highscore">10</field>
-        <field type="PositiveIntegerField" name="rating">1</field>
     </object>
 
     <!-- PAYMENTS -->
