@@ -168,3 +168,8 @@ td, th {
 .success-msg {
 	background-color: #449d44;
 }
+
+/* Don't allow user to resize the textareas (e.g. edit profile and edit game description) */
+textarea {
+	resize: none;
+}
