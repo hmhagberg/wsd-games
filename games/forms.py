@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
+from django.forms import CheckboxSelectMultiple
 from django.utils.translation import ugettext_lazy as _
 from django import forms
 
@@ -244,6 +245,9 @@ class GameEditForm(forms.ModelForm):
     class Meta:
         model = Game
         fields = ("name", "url", "image_url", "description", "categories", "price")
+        widgets = {
+            "categories": CheckboxSelectMultiple(),
+        }
 
 
 class PaymentForm(forms.Form):
