@@ -58,12 +58,29 @@ h1 {
 	cursor: pointer;
 }
 .inner .game-description {
-	height: 80px;
+	/*height: 80px;
+	overflow: hidden;*/
+
+	display: block;
+  	display: -webkit-box;
+  	height: 14px*1.5*4;
+  	margin: 0 auto;
+  	font-size: 14px;
+  	line-height: 1.5;
+  	-webkit-line-clamp: 4;
+	-webkit-box-orient: vertical;
 	overflow: hidden;
+	text-overflow: ellipsis;	 
 }
 .inner .description {
-	height: 180px;
+	/*height: 180px;
+	overflow: hidden;*/
+
+	display: -webkit-box;
+  	-webkit-line-clamp: 9;
+	-webkit-box-orient: vertical;
 	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 /* Remove link decoration from category and developer cards */
