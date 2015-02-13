@@ -1,8 +1,7 @@
-/*global $, jQuery */
-"use strict";
+/* global $, jQuery */
 
 $(document).ready(function() {
-
+    "use strict";
     // Showing tooltips without delay positions them wrong
     window.setTimeout(function(){
         $(".form-field").tooltip("show");

@@ -8,10 +8,11 @@
 
 {% block content %}
 <script>
+    /* global $ */
     // Handle messages between the game site and the game in the iframe
     $(document).ready(function() {
-        'use strict';
-        $(window).on('message', function(evt) {
+        "use strict";
+        $(window).on("message", function(evt) {
             var data = evt.originalEvent.data;
             // Answer game's load request with saved data or if no saved data then inform the game about it
             if (data.messageType === "LOAD_REQUEST") {
@@ -33,9 +34,9 @@
 
                     $("#highscore-list").html("");
                     $.ajax({
-                        type: 'POST',
-                        url: '{% url 'game_detail' game.slug %}',
-                        headers: { "X-CSRFToken": '{{ csrf_token }}' },
+                        type: "POST",
+                        url: "{% url 'game_detail' game.slug %}",
+                        headers: { "X-CSRFToken": "{{ csrf_token }}" },
                         data: data
                     });
                     // Update highscores when new score is submitted
@@ -49,9 +50,9 @@
             else if (data.messageType === "SAVE") {
                 if (!isNaN(data.gameState.score)) {
                     $.ajax({
-                        type: 'POST',
-                        url: '{% url 'game_detail' game.slug %}',
-                        headers: { "X-CSRFToken": '{{ csrf_token }}' },
+                        type: "POST",
+                        url: "{% url 'game_detail' game.slug %}",
+                        headers: { "X-CSRFToken": "{{ csrf_token }}" },
                         data: data
                     });
                 }
@@ -62,8 +63,8 @@
         function updateHighscores() {
             var data = {"highscores": []};
             $.ajax({
-                dataType: 'json',
-                url: '/api/v1/games/{{game.slug}}.json',
+                dataType: "json",
+                url: "/api/v1/games/{{game.slug}}.json",
                 data: data
             }).done(function(data) {
                 var highscoreList =  $("#highscore-list");
@@ -74,7 +75,7 @@
                                          data.highscores[i].score + "</td></tr>");
                 }
             });
-        };
+        }
 
         // Add highscores when page is loaded
         updateHighscores();
