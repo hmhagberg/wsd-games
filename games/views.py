@@ -328,20 +328,6 @@ class GamePublishingView(GenericWsdFormView):
         messages.success(self.request, self.success_message)
         return redirect(game.get_absolute_url())
 
-
-def unpublish_game_confirm(request, game_slug):
-    game = get_object_or_404(Game, slug=game_slug)
-    context = {'game': game}
-    if not request.user.is_developer():
-        messages.error(request, "You must log in as developer to manage games.")
-        return redirect("home")
-    elif game.developer != request.user.developer:
-        messages.error(request, "You can not manage a game published by someone else.")
-        return redirect("home")
-    else:
-        return render(request, 'games/base_gameRemovalConfirmation.html', context)
-
-
 def unpublish_game(request, game_slug):
     game = get_object_or_404(Game, slug=game_slug)
     game_name = game.name

@@ -21,7 +21,7 @@
                     var msg = {"messageType": "MESSAGE","message": "NO SAVED DATA"};
                 }
                 else {
-                    var msg = {"messageType": "LOAD", "gameState": {"score": {{ownership.saved_score}}, "playerItems": game_data.split(",")}};
+                    var msg = {"messageType": "LOAD", "gameState": {"score": {% if ownership.saved_score %}{{ownership.saved_score }}{% else %}0{% endif %}, "playerItems": game_data.split(",")}};
                 }
                 child.postMessage(msg, "*");
             }
@@ -72,17 +72,28 @@
 
         // Add highscores when page is loaded
         updateHighscores();
-    });
 
-    
+        // Check for mobile users
+        // http://www.abeautifulsite.net/detecting-mobile-devices-with-javascript/
+        function isMobile() {
+            return navigator.userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i);
+        }
+        // Hide divs based on users device
+        if( isMobile()) {
+            $("#desktop").addClass("hidden");
+        }
+        else {
+            $("#mobile").addClass("hidden");
+        }
+    }); 
 </script>
     {#  If the user is logged in as a player and has purchased the game, show the iframe that contains the game #}
     {% if ownership_status == "owned" %}
         <div class="card-container">
-            <div class="card gradient hidden-xs hidden-sm">
-                <iframe id="game" class=""src="{{game.url}}"></iframe>
+            <div id="desktop" class="card gradient">
+                <iframe id="game" src="{{game.url}}"></iframe>
             </div>
-            <div class="card gradient hidden-md hidden-lg">
+            <div id="mobile" class="card gradient">
                 <div class="img-container">
                     <img src="{{game.image_url}}" class="img-responsive img-circle" alt="{{game.name}} image">
                 </div>
@@ -131,7 +142,26 @@
                     </tr>
                 </table>
                 <a class="btn btn-primary" href="{% url 'edit_game' game.slug %}">Edit game</a>
-                <a class="btn btn-primary" href="{% url 'unpublish_game_confirm' game.slug %}">Unpublish game</a>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal{{game.id}}">Unpublish game</button>
+            </div>
+        </div>
+
+        {# Modal for confirming the removal of the game #}
+        <div class="modal fade" id="modal{{game.id}}" tabindex="-1" role="dialog" aria-labelledby="modal{{game.id}}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content gradient">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">{{game.name}}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h3>Are you sure you want to remove this game?</h3>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <a class="btn btn-danger" href="{% url 'unpublish_game' game.slug %}">Remove</a>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -142,7 +172,7 @@
                 <div class="img-container">
                     <img src="{{game.image_url}}" class="img-responsive img-circle" alt="{{game.name}} image">
                 </div>
-                <p>{{game.description}}</p>
+                <p class="card-description">{{game.description}}</p>
                 <p class="developer">Developer: <a href="
                 {% url 'developer_detail' game.developer.slug %}">{{game.developer.name}}</a></p>
                 <p>Categories: {% for category in game.categories.all %}<a href="
@@ -166,7 +196,7 @@
     {# Google+ Share button #}
     <div id="share-button-container">
         <span class="hidden" itemprop="name">{{game.name}} - {{game.description}}</span>
-        <img class="hidden" itemprop="image" src="{{game.image_url}}">
+        <img class="hidden" itemprop="image" src="{{game.image_url}}" alt="{{game.name}} image">
         <script src="https://apis.google.com/js/platform.js" async defer></script>
         <div class="g-plus" data-action="share" data-annotation="none" data-height="24"></div>
     </div>
@@ -178,8 +208,4 @@
             <table id="highscore-list"></table>
         </div>
     </div>
-
-
-
-
 {% endblock %}
