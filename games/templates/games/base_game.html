@@ -39,13 +39,13 @@
                         data: data
                     });
                     // Update highscores when new score is submitted
-                    // Delay added to make sure that has been saved to DB before fetching it
+                    // Delay added to make sure that highscores have been saved to DB before fetching them
                     window.setTimeout(function() {
                         updateHighscores();
                     }, 500);
                 }
             }
-            // Forward game state to django
+            // Forward game state to Django
             else if (data.messageType === "SAVE") {
                 if (!isNaN(data.gameState.score)) {
                     $.ajax({
@@ -74,7 +74,7 @@
                                          data.highscores[i].score + "</td></tr>");
                 }
             });
-        };
+        }
 
         // Add highscores when page is loaded
         updateHighscores();
@@ -93,6 +93,7 @@
         }
     }); 
 </script>
+
     {#  If the user is logged in as a player and has purchased the game, show the iframe that contains the game #}
     {% if ownership_status == "owned" %}
         <div class="card-container">

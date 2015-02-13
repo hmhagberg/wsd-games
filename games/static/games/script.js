@@ -37,11 +37,10 @@ $(document).ready(function() {
     // Sort games (base_grid_gameCard.html)
     $("#sort-menu").find("a").click(function() {
         $("#sort").html($(this).text() + " <span class='caret'></span>");
-        var sort = "";
         var compare = "";
         var count = 0;
         var count2 = 0;
-        sort = $(this).text();
+        var sort = $(this).text();
         var grid = $("#grid");
         var cardsCount = grid.children().length;
         if (sort === "Name") {
