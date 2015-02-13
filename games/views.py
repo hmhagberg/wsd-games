@@ -232,6 +232,13 @@ class ChangePasswordView(GenericWsdFormView):
         kwargs["user"] = self.request.user
         return kwargs
 
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = self.get_form_class()
+        form = form_class(**self.get_form_kwargs())
+        form.fields["new_password2"].label = "New password again"
+        return form
+
     def form_valid(self, form, save=True):
         form.save()
         update_session_auth_hash(self.request, form.user)  # Change session hash so that user isn't logged out
