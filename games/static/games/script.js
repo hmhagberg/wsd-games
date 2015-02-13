@@ -71,12 +71,14 @@ $(document).ready(function() {
     }
 
     // Sort games (base_grid_gameCard.html)
-    $("#sort-menu a").click(function() {
+    $("#sort-menu").find("a").click(function() {
         $("#sort").html($(this).text() + " <span class='caret'></span>");
         
         sort = $(this).text();
+        var grid = $("#grid");
+        var cardsCount = grid.children().length;
         if (sort === "Name") {
-            for (var i = 0; i < $("#grid").children().length; i++) {
+            for (var i = 0; i < cardsCount; i++) {
                 compare = "";
                 compare_values(i);
                 $("#grid > div:nth-child(" + (count2 + 1).toString() + ")").prependTo("#grid");
@@ -85,7 +87,7 @@ $(document).ready(function() {
             }
         }
         else if (sort === "Price") {
-            for (var j = 0; j < $("#grid").children().length; j++) {
+            for (var j = 0; j < cardsCount; j++) {
                 compare = "";
                 compare_values(j);
                 $("#grid > div:nth-child(" + (count2 + 1).toString() + ")").prependTo("#grid");
@@ -94,7 +96,7 @@ $(document).ready(function() {
             }
         }
         else if (sort === "Developer") {
-            for (var k = 0; k < $("#grid").children().length; k++) {
+            for (var k = 0; k < cardsCount; k++) {
                 compare = "";
                 compare_values(k);
                 $("#grid > div:nth-child(" + (count2 + 1).toString() + ")").prependTo("#grid");

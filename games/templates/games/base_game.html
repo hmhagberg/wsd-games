@@ -13,15 +13,16 @@
         'use strict';
         $(window).on('message', function(evt) {
             var data = evt.originalEvent.data;
-            // Answer games load request with saved data or if no saved data then inform the game about it
+            // Answer game's load request with saved data or if no saved data then inform the game about it
             if (data.messageType === "LOAD_REQUEST") {
                 var game_data = "{{ownership.saved_data}}";
                 var child = document.getElementById("game").contentWindow;
+                var msg;
                 if (game_data === "[]") {
-                    var msg = {"messageType": "MESSAGE","message": "NO SAVED DATA"};
+                    msg = {"messageType": "MESSAGE","message": "NO SAVED DATA"};
                 }
                 else {
-                    var msg = {"messageType": "LOAD", "gameState": {"score": {% if ownership.saved_score %}{{ownership.saved_score }}{% else %}0{% endif %}, "playerItems": game_data.split(",")}};
+                    msg = {"messageType": "LOAD", "gameState": {"score": {% if ownership.saved_score %}{{ownership.saved_score }}{% else %}0{% endif %}, "playerItems": game_data.split(",")}};
                 }
                 child.postMessage(msg, "*");
             }
@@ -57,18 +58,20 @@
             }
         });
 
-        // Update highscores
+        // Load highscores from API and update highscore table
         function updateHighscores() {
-            var data;
+            var data = {"highscores": []};
             $.ajax({
                 dataType: 'json',
                 url: '/api/v1/games/{{game.slug}}.json',
-                data: data,
+                data: data
             }).done(function(data) {
-                $("#highscore-list").html("<tr><th>Username</th><th>Score</th></tr>");
+                var highscoreList =  $("#highscore-list");
+               highscoreList.html("<tr><th>Username</th><th>Score</th></tr>");
                 $("#highscore-header").html("Highscores");
                 for (var i = 0; i < data.highscores.length; i++) {
-                    $("#highscore-list").append("<tr><td>" + (i+1) + ". " + data.highscores[i].username + "</td><td>" + data.highscores[i].score + "</td></tr>");
+                    highscoreList.append("<tr><td>" + (i+1) + ". " + data.highscores[i].username + "</td><td>" +
+                                         data.highscores[i].score + "</td></tr>");
                 }
             });
         };
