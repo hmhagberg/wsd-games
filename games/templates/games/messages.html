@@ -10,7 +10,7 @@ Display a list of Django messages if there are any. Debug messages are prefixed 
     <ul id="messages-ul">
         {% for message in messages %}
             <li>
-                <div class="alert alert-danger alert-dismissible
+                <div class="alert alert-danger alert-dismissible fade in
                     {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
                         error-msg
                     {% elif  message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
@@ -26,7 +26,7 @@ Display a list of Django messages if there are any. Debug messages are prefixed 
                             aria-hidden="true">
                         &times;
                     </button>
-                    {% if message.level == DEFAULT_MESSAGE_LEVELS.DEBUG %}DEBUG: {% endif %}{{ message }}
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.DEBUG %}<strong>DEBUG:</strong> {% endif %}{{ message }}
                 </div>
             </li>
         {% endfor %}

@@ -1,6 +1,6 @@
 import hashlib
 
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, update_session_auth_hash
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
@@ -62,8 +62,9 @@ class GenericWsdFormView(FormView):
                         "submit_button_text": self.get_submit_button_text()})
         return context
 
-    def form_valid(self, form):
-        form.save()
+    def form_valid(self, form, save=True):
+        if save:
+            form.save()
         if self.success_message is not None:
             messages.success(self.request, self.get_success_message())
         return super(GenericWsdFormView, self).form_valid(form)
@@ -82,11 +83,11 @@ class LoginView(FormView):
     template_name = "games/auth/base_login.html"
     form_class = LoginForm
 
-    def get(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated():
             messages.warning(request, "You already are logged in.")
             return redirect("home")
-        return super(LoginView, self).get(request, *args, **kwargs)
+        return super(LoginView, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
         login(self.request, form.get_user())
@@ -95,8 +96,9 @@ class LoginView(FormView):
 
 
 def logout_view(request):
-    logout(request)
-    messages.success(request, "You have logged out")
+    if request.user.is_authenticated():
+        logout(request)
+        messages.success(request, "You have logged out")
     return redirect("home")
 
 
@@ -107,6 +109,12 @@ class SignupView(FormView):
 
     template_name = "games/auth/base_signup.html"
     form_class = WsdGamesUserSignupForm
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            messages.warning(request, "You already have an account.")
+            return redirect("home")
+        return super(SignupView, self).dispatch(request, *args, **kwargs)
 
     def get_form_class(self):
         if self.kwargs["dev_signup"] is None:
@@ -126,10 +134,6 @@ class SignupView(FormView):
         against any unactivated users. If match is found user is either activated or, if expired, prompted to
         register again.
         """
-
-        if request.user.is_authenticated():
-            messages.warning(request, "You already have an account.")
-            return redirect("home")
 
         activation_key = request.GET.get("activation_key")
         if activation_key:
@@ -185,19 +189,14 @@ class SocialSignupSelectUsernameView(GenericWsdFormView):
     header = "Select username"
     submit_button_text = "OK"
 
-    def get(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         if request.session.get("pipeline_ask_username") is not None:
-            return super(SocialSignupSelectUsernameView, self).get(request, *args, **kwargs)
+            return super(SocialSignupSelectUsernameView, self).dispatch(request, *args, **kwargs)
         else:
+            messages.info(request, "You can change your username through your profile settings.")
             return redirect("home")
 
-    def post(self, request, *args, **kwargs):
-        if request.session.get("pipeline_ask_username") is not None:
-            return super(SocialSignupSelectUsernameView, self).post(request, *args, **kwargs)
-        else:
-            return redirect("home")
-
-    def form_valid(self, form):
+    def form_valid(self, form, save=True):
         response = redirect("social:complete", self.request.GET.get("backend"))
         response = set_query_params(response, username_from_user=form.cleaned_data["username_from_user"])
         return response
@@ -219,6 +218,12 @@ class ChangePasswordView(GenericWsdFormView):
     title = "Change password"
     submit_button_text = "Change password"
 
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_social_auth_user():
+            messages.warning(request, "You must change your password on you login provider's page.")
+            return redirect("home")
+        return super(ChangePasswordView, self).dispatch(request, *args, **kwargs)
+
     def get_header(self):
         return self.request.user.username
 
@@ -226,6 +231,11 @@ class ChangePasswordView(GenericWsdFormView):
         kwargs = super(ChangePasswordView, self).get_form_kwargs()
         kwargs["user"] = self.request.user
         return kwargs
+
+    def form_valid(self, form, save=True):
+        form.save()
+        update_session_auth_hash(self.request, form.user)  # Change session hash so that user isn't logged out
+        return super(ChangePasswordView, self).form_valid(form, save=False)
 
 
 class EditProfileView(GenericWsdFormView):
@@ -272,7 +282,7 @@ class EditGameView(GenericWsdFormView):
     def get(self, request, *args, **kwargs):
         game = get_object_or_404(Game, slug=self.args[0])
         if not request.user.is_developer():
-            messages.error(request, "You must be a developer to manage the game.")
+            messages.error(request, "You must be developer to manage the game.")
             return redirect("home")
         elif game.developer != request.user.developer:
             messages.error(request, "You must be the developer of the game to manage it.")
@@ -308,25 +318,26 @@ class GamePublishingView(GenericWsdFormView):
     header = "Publish game"
     submit_button_text = "Publish"
 
-    def get(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         if not request.user.is_developer():
-            messages.error(request, "You must be developer to publish games")
+            messages.error(request, "You must be developer to publish games.")
             return redirect("home")
         else:
-            return super(GamePublishingView, self).get(request, *args, **kwargs)
+            return super(GamePublishingView, self).dispatch(request, *args, **kwargs)
 
-    def form_valid(self, form):
+    def form_valid(self, form, save=True):
         game = form.save(commit=False)
         game.developer = self.request.user.developer
         game.save()
         messages.success(self.request, self.success_message)
         return redirect(game.get_absolute_url())
 
+
 def unpublish_game(request, game_slug):
     game = get_object_or_404(Game, slug=game_slug)
     game_name = game.name
     if not request.user.is_developer():
-        messages.error(request, "You must log in as developer to manage games.")
+        messages.error(request, "You must be developer to manage games.")
         return redirect("home")
     elif game.developer != request.user.developer:
         messages.error(request, "You can not manage a game published by someone else.")
@@ -346,6 +357,7 @@ def home(request):
     games = Game.objects.all()
     context = {"title": "Games", "games": games}
     return render(request, 'games/base_grid_gameCard.html', context)
+
 
 def profiles(request, profile_slug):
     profile = get_object_or_404(Player, slug=profile_slug)
@@ -438,13 +450,11 @@ class PaymentView(View):
     View for handling payments
     """
 
-
     def get(self, request, payment_status, *args, **kwargs):
         """
         It is assumed that only payment service makes GET requests to this view. If some of the required payment
         parameters (PID, REF or checksum) are missing user is simply redirected to home. Otherwise parameters are
         verified and, if valid, payment is completed according to payment status.
-
         """
 
         pid = request.GET.get("pid")

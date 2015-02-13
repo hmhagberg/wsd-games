@@ -11,9 +11,11 @@ $(document).ready(function() {
 
     // Timeout for messages (e.g. login, logout...)
     window.setTimeout(function() {
-        $(".alert").alert('close');
-        $("#messages-ul").addClass("hidden");
-    }, 4000);
+        $(".alert").fadeTo(500, 0).slideUp(500, function(){
+            $(this).remove();
+            $("#messages-ul").addClass("hidden");
+        });
+    }, 5000);
 
     // Search (base_grid.html)
     // http://stackoverflow.com/questions/8746882/jquery-contains-selector-uppercase-and-lower-case-issue
