@@ -35,7 +35,7 @@ $(document).ready(function() {
     });
 
     // Sort games (base_grid_gameCard.html)
-    $("#sort-menu a").click(function() {
+    $("#sort-menu").find("a").click(function() {
         $("#sort").html($(this).text() + " <span class='caret'></span>");
         var sort = "";
         var compare = "";
@@ -54,7 +54,7 @@ $(document).ready(function() {
                     }
                     count++;
                 });
-                $("#grid > div:nth-child(" + (count2 + 1).toString() + ")").prependTo("#grid");
+                grid.children("div:nth-child(" + (count2 + 1).toString() + ")").prependTo("#grid");
                 count = 0;
                 count2 = 0;
             }
@@ -69,7 +69,7 @@ $(document).ready(function() {
                     }
                     count++;
                 });
-                $("#grid > div:nth-child(" + (count2 + 1).toString() + ")").prependTo("#grid");
+                grid.children("div:nth-child(" + (count2 + 1).toString() + ")").prependTo("#grid");
                 count = 0;
                 count2 = 0;
             }
@@ -84,7 +84,7 @@ $(document).ready(function() {
                     }
                     count++;
                 });
-                $("#grid > div:nth-child(" + (count2 + 1).toString() + ")").prependTo("#grid");
+                grid.children("div:nth-child(" + (count2 + 1).toString() + ")").prependTo("#grid");
                 count = 0;
                 count2 = 0;
             }
