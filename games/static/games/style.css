@@ -140,9 +140,10 @@ td, th {
     padding: 10px;
 }
 
-/* Force the form labels to appear on one row */
+/* Force the form labels to appear on one row align them with fields */
 .control-label {
 	white-space: nowrap;
+	vertical-align: middle;
 }
 
 /* google sign in image */
