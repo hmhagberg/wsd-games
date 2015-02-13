@@ -15,6 +15,11 @@
 					<img src="{{developer.image_url}}" class="img-responsive img-circle" alt="{{developer.name}} image">
 				</div>
 				<p class="card-description">{{ developer.description }}</p>
+                {% if developer == user.developer %}
+                    <a class="btn btn-primary" href="{% url 'change_password' %}">Change password</a>
+                    <a class="btn btn-primary" href="{% url 'edit_profile' %}">Edit profile</a>
+                    <a class="btn btn-primary" href="{% url 'game_publishing' %}">Publish Game</a>
+                {% endif %}
 		    </div>
 		</div>
 	{% endif %}

@@ -58,9 +58,10 @@
                                         <li><a href="{% url 'my_games' %}">My Games</a></li>
                                     {# If user is logged in as a developer show these links in the navigation bar #}
                                     {% elif user.is_developer %}
-                                        <li><a href="{% url 'edit_profile' %}">Edit profile</a> </li>
-                                    	<li><a href="{% url 'developer_detail' user.developer.slug %}">My Games</a></li>
-                                    	<li><a href="{% url 'game_publishing' %}">Publish Game</a></li>
+                                        <li><a href="{% url 'developer_detail' user.developer.slug %}">Profile</a></li>
+                                        <li><a href="{% url 'edit_profile' %}">Edit profile</a></li>
+                                        <li><a href="{% url 'change_password' %}">Change password</a> </li>
+                                        <li><a href="{% url 'game_publishing' %}">Publish Game</a></li>
                                     {% endif %}
                                     {# Show the logout link for all authenticated users #}
 									<li><a href="{% url 'logout' %}">Logout</a></li>
