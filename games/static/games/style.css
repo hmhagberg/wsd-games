@@ -56,7 +56,7 @@ h1 {
 }
 
 
-
+/* Adapted from http://codepen.io/martinwolf/pen/qlFdp */
 .inner .game-description {
 	display: block;
   	display: -webkit-box;
@@ -69,11 +69,10 @@ h1 {
 	overflow: hidden;
 	text-overflow: ellipsis;	 
 }
-
 .inner .description {
     display: block;
 	display: -webkit-box;
-    height: 189px; /* == 1.5*4*14px */
+    height: 189px; /* == 1.5*9*14px */
     margin: 14px auto;
     font-size: 14px;
     line-height: 1.5;
