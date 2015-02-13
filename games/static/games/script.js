@@ -1,12 +1,15 @@
+/*global $, jQuery */
+"use strict";
+
 $(document).ready(function() {
 
     // Showing tooltips without delay positions them wrong
     window.setTimeout(function(){
-        $('.form-field').tooltip('show');
+        $(".form-field").tooltip("show");
     }, 50);
 
     window.setTimeout(function(){
-        $('.form-field').tooltip('hide');
+        $(".form-field").tooltip("hide");
     }, 3500);
 
     // Timeout for messages (e.g. login, logout...)
@@ -19,14 +22,14 @@ $(document).ready(function() {
 
     // Search (base_grid.html)
     // http://stackoverflow.com/questions/8746882/jquery-contains-selector-uppercase-and-lower-case-issue
-    jQuery.expr[':'].contains = function(a, i, m) {
+    jQuery.expr[":"].contains = function(a, i, m) {
         return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
     };
     $("#searchForm").submit(function(event) {
         var search = $("#search").val();
         $(".col-xs-12").each(function(){
            $(this).removeClass("hidden");
-           $(this).not(':contains(' + search + ')').addClass("hidden");
+           $(this).not(":contains(" + search + ")").addClass("hidden");
         });
         event.preventDefault();
     });
@@ -55,10 +58,10 @@ $(document).ready(function() {
             }
         }
         else if (sort === "Price") {
-            for (var i = 0; i < $("#grid").children().length; i++) {
+            for (var j = 0; j < $("#grid").children().length; j++) {
                 compare = "";
                 $("#grid").children().each(function() {
-                    if (parseFloat($(this).find(".price").html().substring(7)) > compare && count >= i) {
+                    if (parseFloat($(this).find(".price").html().substring(7)) > compare && count >= j) {
                         compare = parseFloat($(this).find(".price").html().substring(7));
                         count2 = count;
                     }
@@ -70,10 +73,10 @@ $(document).ready(function() {
             }
         }
         else if (sort === "Developer") {
-            for (var i = 0; i < $("#grid").children().length; i++) {
+            for (var k = 0; k < $("#grid").children().length; k++) {
                 compare = "";
                 $("#grid").children().each(function() {
-                    if ($(this).find(".developer").html() > compare && count >= i) {
+                    if ($(this).find(".developer").html() > compare && count >= k) {
                         compare = $(this).find(".developer").html();
                         count2 = count;
                     }
