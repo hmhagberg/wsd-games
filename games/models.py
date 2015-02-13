@@ -169,7 +169,7 @@ class Game(AbstractSlugModel):
         if time_scope == 0:
             return self.ownerships.count()
         else:
-            return self.ownerships.filter(timestamp__lte=datetime.datetime.now()+datetime.timedelta(hours=time_scope)).count()
+            return self.ownerships.filter(timestamp__gte=datetime.datetime.now()-datetime.timedelta(hours=time_scope)).count()
 
 
 class Ownership(models.Model):
