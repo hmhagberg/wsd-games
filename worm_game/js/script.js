@@ -1,6 +1,8 @@
 //left top (10,60)
 //right bottom (590,640)
+/* global createjs, $ */
 
+"use strict";
 var stage;
 var step = 20;
 var scoreText;
@@ -31,7 +33,7 @@ function init() {
 	setTimeout(function(){
 		mainMenu();
 	}, 500);
-};
+}
 
 // Ask for saved data from the service
 function loadData() {
@@ -54,7 +56,7 @@ function mainMenu() {
 		continueGameText.y = 200;
 		stage.addChild(continueGameText);
 	}
-	
+
 	var start = new createjs.Text("2: New game", "30px Arial", "#000000");
 	start.x = 10;
 	start.y = 250;
@@ -69,7 +71,7 @@ function mainMenu() {
 
 	stage.addChild(title, start, instructions, settings);
 	stage.update();
-};
+}
 
 // Resets the game variables
 function resetGame(){
@@ -78,7 +80,7 @@ function resetGame(){
 	appleBoolean = false;
 	apples = [];
 	direction = "r";
-};
+}
 
 // Start a new game
 function newGame() {
@@ -105,7 +107,7 @@ function newGame() {
 	}
 
 	startGame();
-};
+}
 
 // Continue a paused or saved game
 function continueGame() {
@@ -119,7 +121,7 @@ function continueGame() {
 	stage.addChild(apple);
 
 	startGame();
-};
+}
 
 // Initializes the game view
 function initializeGame() {
@@ -137,7 +139,7 @@ function initializeGame() {
 	levelText.y = 10;
 
 	stage.addChild(box, scoreText, levelText);
-};
+}
 
 // Starts the game
 function startGame() {
@@ -153,10 +155,10 @@ function startGame() {
 }
 
 // Game animation
-function tick(event) {
+function tick() {
 	if (!createjs.Ticker.getPaused()){
 		// Create a new apple if previuous is eaten
-		if (appleBoolean == false) {
+		if (appleBoolean === false) {
 			createApple();
 		}
 		for (var i = worm.length - 1 ; i > 0; i--) {
@@ -182,7 +184,7 @@ function tick(event) {
 		collision();
 		stage.update();
 	}
-};
+}
 
 // Detects collisions
 function collision() {
@@ -219,7 +221,7 @@ function collision() {
 		worm.push(tail);
 		stage.addChild(tail);
 	}
-};
+}
 
 // Updates the score in game view
 function updateScore() {
@@ -228,7 +230,7 @@ function updateScore() {
 	scoreText.x = 10;
 	scoreText.y = 10;
 	stage.addChild(scoreText);
-};
+}
 
 // Creates a new apple when the previous is eaten
 function createApple() {
@@ -274,7 +276,7 @@ function endGame() {
 
 	stage.addChild(endTitle, endScore, submitScore, endMainMenu);
 	stage.update();	
-};
+}
 
 // Pause the game
 function pauseGame() {
@@ -334,7 +336,7 @@ function instructionsPage() {
 
 	stage.addChild(instructionsTitle, instructions1, instructions2, instructions3, instructions4, instructionsBack);
 	stage.update();
-};
+}
 
 // Display game settings
 function settingsPage() {
@@ -359,8 +361,7 @@ function settingsPage() {
 
 	stage.addChild(settingsTitle, levelSetting, settingInstruction, settingsBack);
 	stage.update();
-
-};
+}
 
 // Save current game
 function saveGame() {
@@ -397,7 +398,7 @@ function saveGame() {
 	saved_apple = apple;
 	saved_apples = apples;
 	saved_direction = direction;
-};
+}
 
 // Transfer saved data to current data to continue saved game
 function transferData() {
@@ -410,7 +411,7 @@ function transferData() {
 		apples = saved_apples;
 		direction = saved_direction;
 	}
-};
+}
 
 // Submit highscore to the service
 function submitScore() {
@@ -423,7 +424,7 @@ function submitScore() {
 
 	stage.addChild(scoreSubmitted);
 	stage.update();
-};
+}
 
 // Listens for key presses
 function onKeyDown(x) {
@@ -439,12 +440,12 @@ function onKeyDown(x) {
   	// Increase level
   	else if (x.keyCode === 87 && view === "settings" && level < 10) {
   		level += 1;
-  		settingsPage()
+  		settingsPage();
   	}
   	// Decrease level
   	else if (x.keyCode === 83 && view === "settings" && level > 1) {
   		level -= 1;
-  		settingsPage()
+  		settingsPage();
   	}
 
   	// Continue a saved game
@@ -460,7 +461,6 @@ function onKeyDown(x) {
   	else if (x.keyCode === 49 && view === "endGame") submitScore();
   	// Return to main menu
   	else if (x.keyCode === 50 && view === "endGame") {
-  		loadData();
 		setTimeout(function(){
 			mainMenu();
 		}, 500);
@@ -472,12 +472,11 @@ function onKeyDown(x) {
   	else if (x.keyCode === 50 && view === "pauseGame") saveGame();
   	// Exit the game without saving and return to main menu
   	else if (x.keyCode === 51 && view === "pauseGame") {
-  		loadData();
 		setTimeout(function(){
 			mainMenu();
 		}, 500);
 	}
-};
+}
 
 $(document).keydown(onKeyDown);
 
@@ -530,6 +529,6 @@ window.addEventListener("message", function(evt) {
 			saved_data = false;
 		}
 	}
-})
+});
 
 init();
