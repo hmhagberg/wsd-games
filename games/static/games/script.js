@@ -41,8 +41,9 @@ $(document).ready(function() {
     var count2 = 0;
 
     function compare_values(i) {
+        var grid = $("#grid");
         if (sort === "Name") {
-            $("#grid").children().each(function() {
+            grid.children().each(function() {
                 if ($(this).find("h2").html() > compare && count >= i) {
                     compare = $(this).find("h2").html();
                     count2 = count;
@@ -51,7 +52,7 @@ $(document).ready(function() {
             });
         }
         else if (sort === "Price") {
-            $("#grid").children().each(function() {
+            grid.children().each(function() {
                 if (parseFloat($(this).find(".price").html().substring(7)) > compare && count >= i) {
                     compare = parseFloat($(this).find(".price").html().substring(7));
                     count2 = count;
@@ -60,7 +61,7 @@ $(document).ready(function() {
             });
         }
         else if (sort === "Developer") {
-            $("#grid").children().each(function() {
+            grid.children().each(function() {
                 if ($(this).find(".developer").html() > compare && count >= i) {
                     compare = $(this).find(".developer").html();
                     count2 = count;
@@ -81,7 +82,7 @@ $(document).ready(function() {
             for (var i = 0; i < cardsCount; i++) {
                 compare = "";
                 compare_values(i);
-                $("#grid > div:nth-child(" + (count2 + 1).toString() + ")").prependTo("#grid");
+                grid.children("div:nth-child(" + (count2 + 1).toString() + ")").prependTo("#grid");
                 count = 0;
                 count2 = 0;
             }
@@ -90,7 +91,7 @@ $(document).ready(function() {
             for (var j = 0; j < cardsCount; j++) {
                 compare = "";
                 compare_values(j);
-                $("#grid > div:nth-child(" + (count2 + 1).toString() + ")").prependTo("#grid");
+                grid.children("div:nth-child(" + (count2 + 1).toString() + ")").prependTo("#grid");
                 count = 0;
                 count2 = 0;
             }
@@ -99,7 +100,7 @@ $(document).ready(function() {
             for (var k = 0; k < cardsCount; k++) {
                 compare = "";
                 compare_values(k);
-                $("#grid > div:nth-child(" + (count2 + 1).toString() + ")").prependTo("#grid");
+                grid.children("div:nth-child(" + (count2 + 1).toString() + ")").prependTo("#grid");
                 count = 0;
                 count2 = 0;
             }
