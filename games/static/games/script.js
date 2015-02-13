@@ -34,24 +34,51 @@ $(document).ready(function() {
         event.preventDefault();
     });
 
+    // Sorting games
+    var sort = "";
+    var compare = "";
+    var count = 0;
+    var count2 = 0;
+
+    function compare_values(i) {
+        if (sort === "Name") {
+            $("#grid").children().each(function() {
+                if ($(this).find("h2").html() > compare && count >= i) {
+                    compare = $(this).find("h2").html();
+                    count2 = count;
+                }
+                count++;
+            });
+        }
+        else if (sort === "Price") {
+            $("#grid").children().each(function() {
+                if (parseFloat($(this).find(".price").html().substring(7)) > compare && count >= i) {
+                    compare = parseFloat($(this).find(".price").html().substring(7));
+                    count2 = count;
+                }
+                count++;
+            });
+        }
+        else if (sort === "Developer") {
+            $("#grid").children().each(function() {
+                if ($(this).find(".developer").html() > compare && count >= i) {
+                    compare = $(this).find(".developer").html();
+                    count2 = count;
+                }
+                count++;
+            });
+        }
+    }
+
     // Sort games (base_grid_gameCard.html)
     $("#sort-menu a").click(function() {
         $("#sort").html($(this).text() + " <span class='caret'></span>");
-        var sort = "";
-        var compare = "";
-        var count = 0;
-        var count2 = 0;
+        
         sort = $(this).text();
         if (sort === "Name") {
             for (var i = 0; i < $("#grid").children().length; i++) {
                 compare = "";
-                $("#grid").children().each(function() {
-                    if ($(this).find("h2").html() > compare && count >= i) {
-                        compare = $(this).find("h2").html();
-                        count2 = count;
-                    }
-                    count++;
-                });
+                compare_values(i);
                 $("#grid > div:nth-child(" + (count2 + 1).toString() + ")").prependTo("#grid");
                 count = 0;
                 count2 = 0;
@@ -60,13 +87,7 @@ $(document).ready(function() {
         else if (sort === "Price") {
             for (var j = 0; j < $("#grid").children().length; j++) {
                 compare = "";
-                $("#grid").children().each(function() {
-                    if (parseFloat($(this).find(".price").html().substring(7)) > compare && count >= j) {
-                        compare = parseFloat($(this).find(".price").html().substring(7));
-                        count2 = count;
-                    }
-                    count++;
-                });
+                compare_values(j);
                 $("#grid > div:nth-child(" + (count2 + 1).toString() + ")").prependTo("#grid");
                 count = 0;
                 count2 = 0;
@@ -75,13 +96,7 @@ $(document).ready(function() {
         else if (sort === "Developer") {
             for (var k = 0; k < $("#grid").children().length; k++) {
                 compare = "";
-                $("#grid").children().each(function() {
-                    if ($(this).find(".developer").html() > compare && count >= k) {
-                        compare = $(this).find(".developer").html();
-                        count2 = count;
-                    }
-                    count++;
-                });
+                compare_values(k);
                 $("#grid > div:nth-child(" + (count2 + 1).toString() + ")").prependTo("#grid");
                 count = 0;
                 count2 = 0;
