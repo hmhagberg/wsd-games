@@ -1,6 +1,6 @@
 import hashlib
 
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, update_session_auth_hash
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
@@ -62,8 +62,9 @@ class GenericWsdFormView(FormView):
                         "submit_button_text": self.get_submit_button_text()})
         return context
 
-    def form_valid(self, form):
-        form.save()
+    def form_valid(self, form, save=True):
+        if save:
+            form.save()
         if self.success_message is not None:
             messages.success(self.request, self.get_success_message())
         return super(GenericWsdFormView, self).form_valid(form)
@@ -197,7 +198,7 @@ class SocialSignupSelectUsernameView(GenericWsdFormView):
         else:
             return redirect("home")
 
-    def form_valid(self, form):
+    def form_valid(self, form, save=True):
         response = redirect("social:complete", self.request.GET.get("backend"))
         response = set_query_params(response, username_from_user=form.cleaned_data["username_from_user"])
         return response
@@ -226,6 +227,11 @@ class ChangePasswordView(GenericWsdFormView):
         kwargs = super(ChangePasswordView, self).get_form_kwargs()
         kwargs["user"] = self.request.user
         return kwargs
+
+    def form_valid(self, form, save=True):
+        form.save()
+        update_session_auth_hash(self.request, form.user)  # Change session hash so that user isn't logged out
+        return super(ChangePasswordView, self).form_valid(form, save=False)
 
 
 class EditProfileView(GenericWsdFormView):
@@ -315,7 +321,7 @@ class GamePublishingView(GenericWsdFormView):
         else:
             return super(GamePublishingView, self).get(request, *args, **kwargs)
 
-    def form_valid(self, form):
+    def form_valid(self, form, save=True):
         game = form.save(commit=False)
         game.developer = self.request.user.developer
         game.save()
@@ -360,6 +366,7 @@ def home(request):
     games = Game.objects.all()
     context = {"title": "Games", "games": games}
     return render(request, 'games/base_grid_gameCard.html', context)
+
 
 def profiles(request, profile_slug):
     profile = get_object_or_404(Player, slug=profile_slug)
