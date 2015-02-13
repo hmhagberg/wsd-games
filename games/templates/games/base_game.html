@@ -62,7 +62,7 @@
                 url: '/api/v1/games/{{game.slug}}.json',
                 data: data,
             }).done(function(data) {
-                $("#highscore-list").html("<tr><th>Username</th><th>Score</th><tr>");
+                $("#highscore-list").html("<tr><th>Username</th><th>Score</th></tr>");
                 $("#highscore-header").html("Highscores");
                 for (var i = 0; i < data.highscores.length; i++) {
                     $("#highscore-list").append("<tr><td>" + (i+1) + ". " + data.highscores[i].username + "</td><td>" + data.highscores[i].score + "</td></tr>");
