@@ -42,10 +42,12 @@ $(document).ready(function() {
         var count = 0;
         var count2 = 0;
         sort = $(this).text();
+        var grid = $("#grid");
+        var cardsCount = grid.children().length;
         if (sort === "Name") {
-            for (var i = 0; i < $("#grid").children().length; i++) {
+            for (var i = 0; i < cardsCount; i++) {
                 compare = "";
-                $("#grid").children().each(function() {
+                grid.children().each(function() {
                     if ($(this).find("h2").html() > compare && count >= i) {
                         compare = $(this).find("h2").html();
                         count2 = count;
@@ -58,9 +60,9 @@ $(document).ready(function() {
             }
         }
         else if (sort === "Price") {
-            for (var j = 0; j < $("#grid").children().length; j++) {
+            for (var j = 0; j < cardsCount; j++) {
                 compare = "";
-                $("#grid").children().each(function() {
+                grid.children().each(function() {
                     if (parseFloat($(this).find(".price").html().substring(7)) > compare && count >= j) {
                         compare = parseFloat($(this).find(".price").html().substring(7));
                         count2 = count;
@@ -73,9 +75,9 @@ $(document).ready(function() {
             }
         }
         else if (sort === "Developer") {
-            for (var k = 0; k < $("#grid").children().length; k++) {
+            for (var k = 0; k < cardsCount; k++) {
                 compare = "";
-                $("#grid").children().each(function() {
+                grid.children().each(function() {
                     if ($(this).find(".developer").html() > compare && count >= k) {
                         compare = $(this).find(".developer").html();
                         count2 = count;
