@@ -71,14 +71,10 @@
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     {# If user is logged as a player and has purchased the game, show "Play game" button #}
 					{% if game in user.player.games %}
-						<a href="{% url 'game_detail' game.slug %}">
-							<button type="button" class="btn btn-primary">Play Game</button>
-						</a>
+						<a class="btn btn-primary" href="{% url 'game_detail' game.slug %}">Play Game</a>
                     {# If the user is logged as developer, show "Inspect" button #}
                     {% elif user.is_developer %}
-                        <a href="{% url 'game_detail' game.slug %}">
-                        	<button type="button" class="btn btn-primary">Inspect</button>
-                        </a>
+                        <a class="btn btn-primary" href="{% url 'game_detail' game.slug %}">Inspect</a>
                     {# If the is logged as a player and hasn't purchased the game, show "Buy game" button #}
 					{% else %}
 				        {% if user.is_authenticated %}

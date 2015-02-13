@@ -26,13 +26,9 @@
                 <p>Email: {{ profile.user.email }}</p>
                 <p>API token: {{ profile.user.api_token }}</p>
                 {% if not profile.user.is_social_auth_user %}
-                    <a href="{% url 'change_password' %}">
-                        <button type="button" class="btn btn-primary">Change password</button>
-                    </a>
+                    <a class="btn btn-primary" href="{% url 'change_password' %}">Change password</a>
                 {% endif %}
-                <a href="{% url 'edit_profile' %}">
-                    <button type="button" class="btn btn-primary">Edit profile</button>
-                </a>
+                <a class="btn btn-primary" href="{% url 'edit_profile' %}">Edit profile</a>
             {% endif %}
         </div>
     </div>

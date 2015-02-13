@@ -141,9 +141,7 @@
                         <td>{{ sales_count_hour }}</td>
                     </tr>
                 </table>
-                <a href="{% url 'edit_game' game.slug %}">
-                    <button type="button" class="btn btn-primary">Edit game</button>
-                </a>
+                <a class="btn btn-primary" href="{% url 'edit_game' game.slug %}">Edit game</a>
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal{{game.id}}">Unpublish game</button>
             </div>
         </div>
@@ -161,9 +159,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <a href="{% url 'unpublish_game' game.slug %}">
-                            <button type="button" class="btn btn-danger">Remove</button>
-                        </a>
+                        <a class="btn btn-danger" href="{% url 'unpublish_game' game.slug %}">Remove</a>
                     </div>
                 </div>
             </div>
