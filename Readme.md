@@ -10,9 +10,10 @@ The service is running at http://wsd-games.herokuapp.com. The service has been i
 
 For testing things use these credentials:
 
-Type        Username    Password
-Player      pekkis      test
-Developer   pelifirma   test
+    Type        Username    Password
+    --------------------------------
+    Player      pekkis      test
+    Developer   pelifirma   test
 
 
 ## Mandatory features
